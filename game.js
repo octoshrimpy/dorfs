@@ -4,11 +4,14 @@ import Rock from "/resources/rock.js"
 import Storage from "/resources/storage.js"
 import { rand, scaleVal, scaleX, scaleY, weightedList, mapTimes, byWeight, idxFromPos, sample } from "/helpers.js"
 
-var map_w = 51, map_h = 31
+var map_w = 45, map_h = 23
 var config = {
   type: Phaser.AUTO,
   width: scaleX(map_w),
   height: scaleY(map_h),
+  scale: {
+    zoom: 1.5,
+  },
   scene: {
     preload: preload,
     create: create,
@@ -32,12 +35,15 @@ function preload() {
 
   //TODO: extract to its own json file. this.load.json("path.json")
   ctx.sprites = {
+    ground: {
+      grass: { base: { start: [26, 0], length: 4 } },
+    },
     things: {
-      rock: { start: [0, 1], length: 2 },
-      iron_ore: { start: [0, 0], length: 2 },
-      stump: { start: [0, 2], length: 2 },
-      chest: { start: [21, 0], length: 2 },
-      sign: { start: [22, 0], length: 2 },
+      rock: { base: { start: [0, 1], length: 2 } },
+      iron_ore: { base: { start: [0, 0], length: 2 } },
+      stump: { base: { start: [0, 2], length: 2 } },
+      chest: { base: { start: [21, 0], length: 2 } },
+      sign: { base: { start: [22, 0], length: 2 } },
     },
     alives: {
       dorfs: {
@@ -47,7 +53,7 @@ function preload() {
         },
         adult: {
           stand: [10, 0],
-          walk: { start: [11, 0], length: 2 }
+          walk: { start: [11, 0], length: 2, speed: 5 }
         },
         old: {
           stand: [10, 0],
@@ -76,7 +82,7 @@ function preload() {
     }
   }
 
-  ctx.addSprite = function(x, y, sprite_path) {
+  ctx.addSpriteAnim = function(x, y, sprite_path) {
     var obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
     for (let [key, anims] of Object.entries(obj)) {
       if (Array.isArray(anims)) { anims = { start: anims, length: 1 } }
@@ -89,7 +95,7 @@ function preload() {
         ctx.env.anims.create({
           key: sprite_path + "." + key,
           frames: ctx.env.anims.generateFrameNumbers("master", { frames: frames }),
-          frameRate: 10,
+          frameRate: anims.speed || 10,
           repeat: -1
         })
       })
@@ -108,12 +114,18 @@ function create() {
 
   ctx.world = world
 
-  new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
-  new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
-  new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  mapTimes(10, function() {
+    new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  })
 
-  new Tree(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
-  new Rock(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  mapTimes(3, function() {
+    new Tree(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  })
+
+  mapTimes(4, function() {
+    new Rock(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  })
+
   new Storage(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
 }
 
@@ -122,7 +134,7 @@ function update() { // ~60fps
 }
 
 function generate_map(ctx) {
-  let flat_grass = idxFromPos(15, 10, 8), short_grass = idxFromPos(15, 10, 9), flowers = idxFromPos(15, 11, 8), long_grass = idxFromPos(15, 11, 9)
+  let flat_grass = idxFromPos(32, 25, 0), short_grass = idxFromPos(32, 26, 0), flowers = idxFromPos(32, 27, 0), long_grass = idxFromPos(32, 28, 0)
   let weights = weightedList([flat_grass, 500], [short_grass, 100], [long_grass, 50], [flowers, 1])
 
   let level = mapTimes(map_h, function(y) {
@@ -136,7 +148,7 @@ function generate_map(ctx) {
   })
 
   var map = ctx.make.tilemap({ data: level, tileWidth: 16, tileHeight: 16 })
-  var tiles = map.addTilesetImage("map")
+  var tiles = map.addTilesetImage("master")
   var layer = map.createLayer(0, tiles, 0, 0)
   return map
 }

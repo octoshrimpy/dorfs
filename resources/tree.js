@@ -14,7 +14,7 @@ export default class Tree extends Base {
 
     this.resources = 100
 
-    this.sprite = ctx.addSprite(opts.x, opts.y, "things.stump").setDepth(1)
+    this.sprite = ctx.addSpriteAnim(opts.x, opts.y, "things.stump").setDepth(1)
 
     Tree.objs.push(this)
   }

@@ -14,7 +14,7 @@ export default class Rock extends Base {
 
     this.resources = 100
 
-    this.sprite = ctx.addSprite(opts.x, opts.y, "things.rock").setDepth(1)
+    this.sprite = ctx.addSpriteAnim(opts.x, opts.y, "things.rock").setDepth(1)
 
     Rock.objs.push(this)
   }

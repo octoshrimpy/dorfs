@@ -10,3 +10,11 @@
 * task list
     * dorfs can
 * sprites
+
+
+
+Rocco Notes
+* Villager should select the resource cell, and stick with that one.
+  * If there are multiple trees, some villagers should go to one and others go to the other
+* Z index based on Y
+* Names
