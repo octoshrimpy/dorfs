@@ -139,11 +139,11 @@ function generate_map(ctx) {
 
   let level = mapTimes(map_h, function(y) {
     return mapTimes(map_w, function(x) {
-      if (x == 0 || x == map_w - 1 || y == 0 || y == map_h - 1) {
-        return idxFromPos(11, 3)
-      } else {
+      // if (x == 0 || x == map_w - 1 || y == 0 || y == map_h - 1) {
+      //   return idxFromPos(11, 3)
+      // } else {
         return sample(weights)
-      }
+      // }
     })
   })
 

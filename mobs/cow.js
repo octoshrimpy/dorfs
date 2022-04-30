@@ -1,10 +1,6 @@
 import Base from "./base.js"
-import Tree from "/resources/tree.js"
-import Rock from "/resources/rock.js"
-import Storage from "/resources/storage.js"
-import { sum, sample, rand, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
 
-export default class Villager extends Base {
+export default class Cow extends Base {
   static objs = []
   constructor(ctx, opts) {
     super()
@@ -12,18 +8,13 @@ export default class Villager extends Base {
     opts = opts || {}
 
     this.destination = undefined
-    this.inventory = {}
-    this.task = sample(["tree", "rock", undefined])
-    this.unloading = false
-    this.walk_speed = rand(20, 60) // 0-100
-    this.collect_speed = rand(20, 60) // 0-100
-    this.selected_resource = undefined
+    this.walk_speed = rand(5, 15) // 0-100
 
-    this.anim_key = "alives.dorfs.adult"
-    this.sprite = ctx.addSpriteAnim(opts.x, opts.y, this.anim_key).setDepth(10)
+    this.anim_key = "animals.cow"
+    this.sprite = ctx.addSpriteAnim(opts.x, opts.y, this.anim_key)
 
-    Villager.objs.push(this)
-    if (!this.task) { this.changeDest() }
+    Cow.objs.push(this)
+    this.changeDest()
   }
 
   changeDest() {
