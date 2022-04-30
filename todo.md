@@ -10,17 +10,27 @@
 * task list
     * dorfs can
 * sprites
+    * buildings
+        * House
+        * Bakery
+        * Smith
+  * Resources:
+    * Full size Trees
+    * Full size Boulders
+    * Full size Field/Grasses
 
-Sprites needed:
-  Buildings:
-    House
-    Bakery
-    Smith
-  Resources:
-    Full size Trees
-    Full size Boulders
-    Full size Field/Grasses
+===
 
+# V2
+
+* slimes for hire
+    * _slime shop when too much to do, costs money instead of food/sleep_
+    * money acquired by selling to random wandering traders
+    * forge money with gold
+
+
+
+===
 
 Rocco Notes
   Villagers should have hunger / sleep
