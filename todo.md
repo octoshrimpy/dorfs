@@ -10,5 +10,3 @@
 * task list
     * dorfs can
 * sprites
-    * stuff
-    * 
