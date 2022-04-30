@@ -1,10 +1,14 @@
 import Villager from "/villager/villager.js"
+import Tree from "/resources/tree.js"
+import Rock from "/resources/rock.js"
+import Storage from "/resources/storage.js"
+import { scaleX, scaleY, weightedList, mapTimes, byWeight, idxFromPos, sample } from "/helpers.js"
 
-var map_w = 50, map_h = 30
+var map_w = 51, map_h = 31
 var config = {
   type: Phaser.AUTO,
-  width: map_w * 16,
-  height: map_h * 16,
+  width: scaleX(map_w),
+  height: scaleY(map_h),
   scene: {
     preload: preload,
     create: create,
@@ -15,10 +19,6 @@ var config = {
 var game = new Phaser.Game(config)
 var ctx
 var world
-// var v
-// var chief
-// var player, platforms, stars, scoreText, bombs, gameOver
-// var score = 0
 
 function preload() {
   this.load.spritesheet("map", "assets/tiles/map/basictiles.png", { frameWidth: 16, frameHeight: 16 })
@@ -32,13 +32,16 @@ function create() {
     game: game,
     world: world,
   }
-  new Villager(ctx, { x: config.width/2, y: config.height/2 })
-  new Villager(ctx, { x: config.width/2, y: config.height/2 })
+  new Villager(ctx, { x: Math.random() * config.width, y: Math.random() * config.height })
+  new Villager(ctx, { x: Math.random() * config.width, y: Math.random() * config.height })
+  new Villager(ctx, { x: scaleX(8), y: scaleY(25) })
+
+  new Tree(ctx, { x: scaleX(8), y: scaleY(25) })
+  new Rock(ctx, { x: scaleX(40), y: scaleY(22) })
+  new Storage(ctx, { x: config.width/2, y: config.height/2 })
 }
 
 function update() { // ~60fps
-  // var cursors = this.input.keyboard.createCursorKeys()
-  // chief.tick(cursors)
   Villager.tick()
 }
 
@@ -46,9 +49,13 @@ function generate_map(ctx) {
   let flat_grass = idxFromPos(10, 8), short_grass = idxFromPos(10, 9), flowers = idxFromPos(11, 8), long_grass = idxFromPos(11, 9)
   let weights = weightedList([flat_grass, 500], [short_grass, 100], [long_grass, 50], [flowers, 1])
 
-  let level = mapTimes(map_h, function() {
-    return mapTimes(map_w, function() {
-      return sample(weights)
+  let level = mapTimes(map_h, function(y) {
+    return mapTimes(map_w, function(x) {
+      if (x == 0 || x == map_w - 1 || y == 0 || y == map_h - 1) {
+        return idxFromPos(11, 3)
+      } else {
+        return sample(weights)
+      }
     })
   })
 
@@ -56,28 +63,4 @@ function generate_map(ctx) {
   var tiles = map.addTilesetImage("map")
   var layer = map.createLayer(0, tiles, 0, 0)
   return map
-}
-
-function weightedList() {
-  return Array.from(arguments).map(function(arg) {
-    return byWeight(arg[0], arg[1])
-  }).flat()
-}
-
-function mapTimes(times, fn) {
-  return Array(times).fill().map(fn)
-}
-
-function byWeight(obj, weight) {
-  return mapTimes(weight, function() { return obj })
-}
-
-function idxFromPos(x, y) {
-  // 0 based pos
-  let tilemap_w = 15, tilemap_h = 11
-  return (y * tilemap_w) + x
-}
-
-function sample(arr) {
-  return arr[Math.floor(Math.random() * arr.length)]
 }

@@ -1,18 +1,23 @@
 import Base from "./base.js"
-
-var villagers = []
+import Tree from "/resources/tree.js"
+import Rock from "/resources/rock.js"
+import Storage from "/resources/storage.js"
+import { sum, sample } from "/helpers.js"
 
 export default class Villager extends Base {
+  static objs = []
   constructor(ctx, opts) {
     super()
     this.ctx = ctx
     opts = opts || {}
 
     this.destination = undefined
+    this.inventory = {}
+    this.task = sample(["tree", "rock", undefined])
+    this.unloading = false
+    this.speed = 40 // 0-100
 
-    this.sprite = this.ctx.env.add.sprite(opts.x || 0, opts.y || 0, "slime")
-    // this.sprite.setScale(4, 4)
-    // this.sprite.setCollideWorldBounds(true)
+    this.sprite = this.ctx.env.add.sprite(opts.x || 0, opts.y || 0, "slime").setDepth(10)
 
     this.ctx.env.anims.create({
       key: "down",
@@ -48,21 +53,14 @@ export default class Villager extends Base {
       frameRate: 20
     })
 
-    villagers.push(this)
+    Villager.objs.push(this)
     this.changeDest()
-  }
-
-  // Class method
-  static tick() {
-    villagers.forEach(function(villager) {
-      villager.tick()
-    })
   }
 
   changeDest() {
     this.destination = {
-      x: Math.floor(Math.random() * this.ctx.game.config.width),
-      y: Math.floor(Math.random() * this.ctx.game.config.height),
+      x: 16 + Math.floor(Math.random() * this.ctx.game.config.width - 32),
+      y: 16 + Math.floor(Math.random() * this.ctx.game.config.height - 32),
     }
   }
 
@@ -90,42 +88,60 @@ export default class Villager extends Base {
       dir = dy > 0 ? "down" : "up"
     }
     this.sprite.anims.play(dir, true)
-    var speed = 1
-    var speed_scale = speed / (Math.abs(dx) + Math.abs(dy))
+    var max_speed = 2, max_speed_scale = 100
+    var scaled_speed = (this.speed / max_speed_scale) * max_speed
+    var speed_scale = scaled_speed / (Math.abs(dx) + Math.abs(dy))
 
     this.sprite.x += dx * speed_scale
     this.sprite.y += dy * speed_scale
   }
 
-  // motion(cursors) {
-  //   var up = cursors.up.isDown
-  //   var right = cursors.right.isDown
-  //   var down = cursors.down.isDown
-  //   var left = cursors.left.isDown
-  //
-  //   var directionY, directionX, spriteDirection
-  //   directionY = (up && !down) ? "up" : (down && !up) ? "down" : undefined
-  //   directionX = (left && !right) ? "left" : (right && !left) ? "right" : undefined
-  //   spriteDirection = directionX || directionY
-  //
-  //   if (spriteDirection) {
-  //     this.sprite.anims.play(spriteDirection, true)
-  //   } else {
-  //     this.sprite.anims.stop(null)
-  //   }
-  //
-  //   if (directionY == "up") { this.sprite.setVelocityY(-160) }
-  //   if (directionY == "down") { this.sprite.setVelocityY(160) }
-  //   if (directionY == undefined) { this.sprite.setVelocityY(0) }
-  //
-  //   if (directionX == "left") { this.sprite.setVelocityX(-160) }
-  //   if (directionX == "right") { this.sprite.setVelocityX(160) }
-  //   if (directionX == undefined) { this.sprite.setVelocityX(0) }
-  // }
+  fullInventory() {
+    return sum(Object.values(this.inventory)) >= 100
+  }
 
   tick() {
-    if (Math.random() * 60) { // 1/1000 - Roughly every 16 seconds
-      this.changeDest()
+    let fps = 60
+    if (!this.task) {
+      if (Math.floor(Math.random() * fps * 5) == 0) {
+        this.changeDest()
+      }
+    } else if (!this.destination) {
+      var obj = undefined
+
+      if (this.fullInventory() || this.unloading) {
+        this.unloading = true
+        obj = Storage.all()[0]
+      } else {
+        if (this.task == "tree") {
+          obj = Tree.all()[0]
+        } else if (this.task == "rock") {
+          obj = Rock.all()[0]
+        }
+      }
+
+      if (obj) {
+        this.destination = {}
+        this.destination.x = obj.sprite.x
+        this.destination.y = obj.sprite.y
+
+        if (Math.abs(this.sprite.x - obj.sprite.x) < 5 && Math.abs(this.sprite.y - obj.sprite.y) < 5) {
+          if (obj.constructor.name == "Storage") {
+            obj.inventory[this.task] ||= 0
+            if (this.inventory[this.task] > 0) {
+              obj.inventory[this.task] += 1
+              this.inventory[this.task] -= 1
+              console.log("unloading " + this.task, this.inventory[this.task]);
+            } else {
+              this.unloading = false
+            }
+          } else {
+            this.inventory[this.task] ||= 0
+            this.inventory[this.task] += 1
+            console.log("collecting " + this.task, this.inventory[this.task]);
+          }
+        }
+      }
     }
 
     this.walkTowardsDest()
