@@ -1,6 +1,7 @@
 import Villager from "/villager/villager.js"
 import Tree from "/resources/tree.js"
 import Rock from "/resources/rock.js"
+import Cow from "/mobs/cow.js"
 import Storage from "/resources/storage.js"
 import { rand, scaleVal, scaleX, scaleY, weightedList, mapTimes, byWeight, idxFromPos, sample } from "/helpers.js"
 
@@ -122,6 +123,10 @@ function create() {
     new Tree(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
   })
 
+  mapTimes(3, function() {
+    new Cow(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  })
+
   mapTimes(4, function() {
     new Rock(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
   })
@@ -131,6 +136,7 @@ function create() {
 
 function update() { // ~60fps
   Villager.tick()
+  Cow.tick()
 }
 
 function generate_map(ctx) {
