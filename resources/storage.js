@@ -11,7 +11,7 @@ export default class Storage extends Base {
 
     this.inventory = {}
 
-    this.sprite = ctx.env.add.sprite(opts.x, opts.y, "map", idxFromPos(8, 5)).setScale(1, 1).setDepth(1)
+    this.sprite = ctx.addSprite(opts.x, opts.y, "things.chest").setDepth(1)
 
     Storage.objs.push(this)
   }

@@ -21,17 +21,93 @@ var ctx
 var world
 
 function preload() {
-  this.load.spritesheet("map", "assets/tiles/map/basictiles.png", { frameWidth: 16, frameHeight: 16 })
+  ctx = {
+    env: this,
+    game: game,
+  }
+
+  // this.load.spritesheet("map", "assets/tiles/map/basictiles.png", { frameWidth: 16, frameHeight: 16 })
   this.load.spritesheet("slime", "assets/sprites/slimes/Slime_Medium_Blue.png", { frameWidth: 32, frameHeight: 32 })
+  this.load.spritesheet("master", "assets/master.png", { frameWidth: 16, frameHeight: 16 })
+
+  //TODO: extract to its own json file. this.load.json("path.json")
+  ctx.sprites = {
+    things: {
+      rock: { start: [0, 1], length: 2 },
+      iron_ore: { start: [0, 0], length: 2 },
+      stump: { start: [0, 2], length: 2 },
+      chest: { start: [21, 0], length: 2 },
+      sign: { start: [22, 0], length: 2 },
+    },
+    alives: {
+      dorfs: {
+        child: {
+          stand: [10, 1],
+          walk: { start: [11, 1], length: 2 }
+        },
+        adult: {
+          stand: [10, 0],
+          walk: { start: [11, 0], length: 2 }
+        },
+        old: {
+          stand: [10, 0],
+          walk: { start: [11, 0], length: 2 },
+          addons:{
+            beard_silver: [13, 0]
+          }
+        },
+        senile: {
+          stand: [10, 0],
+          walk: { start: [11, 0], length: 2 },
+          addons: {
+            beard_white: [13, 1]
+          }
+        },
+        ghost: {
+          idle: { start: [10, 2], length: 2 },
+          haunt: { start: [12, 2], length: 2 }
+        }
+      },
+      animals: {
+        cow: {
+          stand: [10, 4]
+        }
+      }
+    }
+  }
+
+  ctx.addSprite = function(x, y, sprite_path) {
+    var obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
+    for (let [key, anims] of Object.entries(obj)) {
+      if (Array.isArray(anims)) { anims = { start: anims, length: 1 } }
+
+      var frames = mapTimes(anims.length, function(t) {
+        return idxFromPos(32, anims.start[0] + t, anims.start[1])
+      })
+
+      anims.start.forEach(function(anim) {
+        ctx.env.anims.create({
+          key: sprite_path + "." + key,
+          frames: ctx.env.anims.generateFrameNumbers("master", { frames: frames }),
+          frameRate: 10,
+          repeat: -1
+        })
+      })
+    }
+
+    var first = obj[Object.keys(obj)[0]]
+    if (!Array.isArray(first)) { first = first.start }
+    var frame = idxFromPos(32, ...first)
+
+    return ctx.env.add.sprite(x, y, "master", frame)
+  }
 }
 
 function create() {
   world = generate_map(this)
-  ctx = {
-    env: this,
-    game: game,
-    world: world,
-  }
+
+  ctx.world = world
+
   new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
   new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
   new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
@@ -46,7 +122,7 @@ function update() { // ~60fps
 }
 
 function generate_map(ctx) {
-  let flat_grass = idxFromPos(10, 8), short_grass = idxFromPos(10, 9), flowers = idxFromPos(11, 8), long_grass = idxFromPos(11, 9)
+  let flat_grass = idxFromPos(15, 10, 8), short_grass = idxFromPos(15, 10, 9), flowers = idxFromPos(15, 11, 8), long_grass = idxFromPos(15, 11, 9)
   let weights = weightedList([flat_grass, 500], [short_grass, 100], [long_grass, 50], [flowers, 1])
 
   let level = mapTimes(map_h, function(y) {

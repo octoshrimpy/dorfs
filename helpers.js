@@ -19,10 +19,9 @@ export function byWeight(obj, weight) {
   return mapTimes(weight, function() { return obj })
 }
 
-export function idxFromPos(x, y) {
+export function idxFromPos(sheet_w, x, y) {
   // 0 based pos
-  let tilemap_w = 15, tilemap_h = 11
-  return (y * tilemap_w) + x
+  return (y * sheet_w) + x
 }
 
 export function sum(arr) {

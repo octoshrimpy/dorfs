@@ -19,41 +19,42 @@ export default class Villager extends Base {
     this.walk_speed = rand(20, 60) // 0-100
     this.collect_speed = rand(20, 60) // 0-100
 
-    this.sprite = this.ctx.env.add.sprite(opts.x || 0, opts.y || 0, "slime").setDepth(10)
+    // this.sprite = this.ctx.env.add.sprite(opts.x || 0, opts.y || 0, "slime").setDepth(10)
+    this.sprite = ctx.addSprite(opts.x, opts.y, "alives.dorfs.adult").setDepth(10)
 
-    this.ctx.env.anims.create({
-      key: "down",
-      frames: this.ctx.env.anims.generateFrameNumbers("slime", { start: 0, end: 3 }),
-      frameRate: 10,
-      repeat: -1
-    })
-
-    this.ctx.env.anims.create({
-      key: "right",
-      frames: this.ctx.env.anims.generateFrameNumbers("slime", { start: 4, end: 7 }),
-      frameRate: 10,
-      repeat: -1
-    })
-
-    this.ctx.env.anims.create({
-      key: "up",
-      frames: this.ctx.env.anims.generateFrameNumbers("slime", { start: 8, end: 11 }),
-      frameRate: 10,
-      repeat: -1
-    })
-
-    this.ctx.env.anims.create({
-      key: "left",
-      frames: this.ctx.env.anims.generateFrameNumbers("slime", { start: 12, end: 15 }),
-      frameRate: 10,
-      repeat: -1
-    })
-
-    this.ctx.env.anims.create({
-      key: "stand",
-      frames: [ { key: "slime", frame: 4 } ],
-      frameRate: 20
-    })
+    // this.ctx.env.anims.create({
+    //   key: "down",
+    //   frames: this.ctx.env.anims.generateFrameNumbers("slime", { start: 0, end: 3 }),
+    //   frameRate: 10,
+    //   repeat: -1
+    // })
+    //
+    // this.ctx.env.anims.create({
+    //   key: "right",
+    //   frames: this.ctx.env.anims.generateFrameNumbers("slime", { start: 4, end: 7 }),
+    //   frameRate: 10,
+    //   repeat: -1
+    // })
+    //
+    // this.ctx.env.anims.create({
+    //   key: "up",
+    //   frames: this.ctx.env.anims.generateFrameNumbers("slime", { start: 8, end: 11 }),
+    //   frameRate: 10,
+    //   repeat: -1
+    // })
+    //
+    // this.ctx.env.anims.create({
+    //   key: "left",
+    //   frames: this.ctx.env.anims.generateFrameNumbers("slime", { start: 12, end: 15 }),
+    //   frameRate: 10,
+    //   repeat: -1
+    // })
+    //
+    // this.ctx.env.anims.create({
+    //   key: "stand",
+    //   frames: [ { key: "slime", frame: 4 } ],
+    //   frameRate: 20
+    // })
 
     Villager.objs.push(this)
     this.changeDest()

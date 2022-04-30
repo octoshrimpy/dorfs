@@ -14,12 +14,16 @@ export default class Rock extends Base {
 
     this.resources = 100
 
-    this.sprite = ctx.env.add.sprite(opts.x, opts.y, "map", idxFromPos(2, 6)).setScale(3, 3).setDepth(1)
+    this.sprite = ctx.addSprite(opts.x, opts.y, "things.rock").setDepth(1)
 
     Rock.objs.push(this)
   }
 
   tick() {
     // Growth?
+  }
+
+  decay() {
+
   }
 }
