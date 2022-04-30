@@ -19,4 +19,8 @@ export default class Rock extends Base {
   tick() {
     // Growth?
   }
+
+  decay() {
+    
+  }
 }

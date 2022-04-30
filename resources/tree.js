@@ -19,4 +19,8 @@ export default class Tree extends Base {
   tick() {
     // Growth?
   }
+
+  growth() {
+
+  }
 }
