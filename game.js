@@ -21,18 +21,45 @@ var ctx
 var world
 
 function preload() {
+  ctx = {
+    env: this,
+    game: game,
+  }
+
   this.load.spritesheet("map", "assets/tiles/map/basictiles.png", { frameWidth: 16, frameHeight: 16 })
   this.load.spritesheet("slime", "assets/sprites/slimes/Slime_Medium_Blue.png", { frameWidth: 32, frameHeight: 32 })
-  this.load.spritesheet('hellthorn')
+  this.load.spritesheet('master', "assets/sprites/master.png", {frameWidth: 512, frameHeight: 512})
 }
 
 function create() {
   world = generate_map(this)
-  ctx = {
-    env: this,
-    game: game,
-    world: world,
+
+  ctx.world = world
+  ctx.sprites = {
+    things: {
+      rock: [0,1],
+      iron_ore: [0,0],
+      stump: [0,3],
+      chest: [21,0],
+      sign: [23,0],
+    },
+    alives: {
+      dorfs:{
+        dorf: [10,0],
+        dorf_walk: [[11,0],[12,0]],
+        dorf_child: [10,1],
+        dorf_child_walk: [[11,1],[12,1]],
+        dorf_addon_silver: [13,0],
+        dorf_addon_white: [13,1],
+        dorf_ghost: [[10,2],[11,2]],
+        dorf_ghost_haunt: [[12,2],[13,2]],
+      },
+      animals: {
+        cow: [10,4]
+      }
+    }
   }
+
   new Villager(ctx, { x: Math.random() * config.width, y: Math.random() * config.height })
   new Villager(ctx, { x: Math.random() * config.width, y: Math.random() * config.height })
   new Villager(ctx, { x: scaleX(8), y: scaleY(25) })
