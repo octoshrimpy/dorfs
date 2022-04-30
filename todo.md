@@ -23,6 +23,8 @@ Sprites needed:
 
 
 Rocco Notes
+  Items should have weights
+    Max inventory is based on weight, not count
   Villagers should have hunger / sleep
   Storage should have max inventory
   Z index based on Y
