@@ -1,4 +1,5 @@
 import Base from "./base.js"
+import { rand, randOnePerNSec } from "/helpers.js"
 
 export default class Cow extends Base {
   static objs = []
@@ -10,7 +11,7 @@ export default class Cow extends Base {
     this.destination = undefined
     this.walk_speed = rand(5, 15) // 0-100
 
-    this.anim_key = "animals.cow"
+    this.anim_key = "alives.animals.cow"
     this.sprite = ctx.addSpriteAnim(opts.x, opts.y, this.anim_key)
 
     Cow.objs.push(this)
@@ -39,7 +40,7 @@ export default class Cow extends Base {
       return
     }
 
-    this.sprite.anims.play([this.anim_key, "walk"].join("."), true)
+    // this.sprite.anims.play([this.anim_key, "walk"].join("."), true)
     this.sprite.flipX = dx < 0
     var max_speed = 2, max_speed_scale = 100
     var scaled_speed = (this.walk_speed / max_speed_scale) * max_speed
@@ -49,67 +50,9 @@ export default class Cow extends Base {
     this.sprite.y += dy * speed_scale
   }
 
-  fullInventory() {
-    return sum(Object.values(this.inventory)) >= 10
-  }
-
-  selectResource() {
-    if (this.task) {
-      if (!this.selected_resource || this.selected_resource.resources <= 0) {
-        if (this.task == "tree") {
-          this.selected_resource = sample(Tree.all())
-        } else if (this.task == "rock") {
-          this.selected_resource = sample(Rock.all())
-        }
-      }
-    }
-
-    return this.selected_resource
-  }
-
   tick() {
-    let fps = 60
-    if (!this.task) {
-      if (randOnePerNSec(3) == 0) {
-        this.changeDest()
-      }
-    } else if (!this.destination) {
-      var obj = undefined
-
-      if (this.fullInventory() || this.unloading) {
-        this.unloading = true
-        obj = Storage.all()[0]
-      } else {
-        obj = this.selectResource()
-      }
-
-      if (obj) {
-        this.destination = {}
-        this.destination.x = obj.sprite.x
-        this.destination.y = obj.sprite.y
-
-        if (Math.abs(this.sprite.x - obj.sprite.x) < 5 && Math.abs(this.sprite.y - obj.sprite.y) < 5) {
-          if (obj.constructor.name == "Storage") {
-            obj.inventory[this.task] ||= 0
-            if (randNPerSec(10) == 0) {
-              if (this.inventory[this.task] > 0) {
-                obj.inventory[this.task] += 1
-                this.inventory[this.task] -= 1
-              } else {
-                console.log(obj.inventory);
-                this.unloading = false
-              }
-            }
-          } else {
-            this.inventory[this.task] ||= 0
-
-            var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
-            if (randNPerSec(collectRatePerSec) == 0) {
-              this.inventory[this.task] += 1
-            }
-          }
-        }
-      }
+    if (randOnePerNSec(10) == 0) {
+      this.changeDest()
     }
 
     this.walkTowardsDest()
