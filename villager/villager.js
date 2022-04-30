@@ -2,7 +2,7 @@ import Base from "./base.js"
 import Tree from "/resources/tree.js"
 import Rock from "/resources/rock.js"
 import Storage from "/resources/storage.js"
-import { sum, sample } from "/helpers.js"
+import { sum, sample, rand, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
 
 export default class Villager extends Base {
   static objs = []
@@ -13,9 +13,11 @@ export default class Villager extends Base {
 
     this.destination = undefined
     this.inventory = {}
-    this.task = sample(["tree", "rock", undefined])
+    this.task = "tree"
+    // this.task = sample(["tree", "rock", undefined])
     this.unloading = false
-    this.speed = 40 // 0-100
+    this.walk_speed = rand(20, 60) // 0-100
+    this.collect_speed = rand(20, 60) // 0-100
 
     this.sprite = this.ctx.env.add.sprite(opts.x || 0, opts.y || 0, "slime").setDepth(10)
 
@@ -59,8 +61,8 @@ export default class Villager extends Base {
 
   changeDest() {
     this.destination = {
-      x: 16 + Math.floor(Math.random() * this.ctx.game.config.width - 32),
-      y: 16 + Math.floor(Math.random() * this.ctx.game.config.height - 32),
+      x: rand(32, this.ctx.game.config.width - 32),
+      y: rand(32, this.ctx.game.config.height - 32),
     }
   }
 
@@ -89,7 +91,7 @@ export default class Villager extends Base {
     }
     this.sprite.anims.play(dir, true)
     var max_speed = 2, max_speed_scale = 100
-    var scaled_speed = (this.speed / max_speed_scale) * max_speed
+    var scaled_speed = (this.walk_speed / max_speed_scale) * max_speed
     var speed_scale = scaled_speed / (Math.abs(dx) + Math.abs(dy))
 
     this.sprite.x += dx * speed_scale
@@ -97,13 +99,13 @@ export default class Villager extends Base {
   }
 
   fullInventory() {
-    return sum(Object.values(this.inventory)) >= 100
+    return sum(Object.values(this.inventory)) >= 10
   }
 
   tick() {
     let fps = 60
     if (!this.task) {
-      if (Math.floor(Math.random() * fps * 5) == 0) {
+      if (randOnePerNSec(3) == 0) {
         this.changeDest()
       }
     } else if (!this.destination) {
@@ -128,17 +130,23 @@ export default class Villager extends Base {
         if (Math.abs(this.sprite.x - obj.sprite.x) < 5 && Math.abs(this.sprite.y - obj.sprite.y) < 5) {
           if (obj.constructor.name == "Storage") {
             obj.inventory[this.task] ||= 0
-            if (this.inventory[this.task] > 0) {
-              obj.inventory[this.task] += 1
-              this.inventory[this.task] -= 1
-              console.log("unloading " + this.task, this.inventory[this.task]);
-            } else {
-              this.unloading = false
+            if (randNPerSec(10) == 0) {
+              if (this.inventory[this.task] > 0) {
+                obj.inventory[this.task] += 1
+                this.inventory[this.task] -= 1
+                console.log("unloading " + this.task, this.inventory[this.task]);
+              } else {
+                this.unloading = false
+              }
             }
           } else {
             this.inventory[this.task] ||= 0
-            this.inventory[this.task] += 1
-            console.log("collecting " + this.task, this.inventory[this.task]);
+
+            var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
+            if (randNPerSec(collectRatePerSec) == 0) {
+              this.inventory[this.task] += 1
+              console.log("collecting " + this.task, this.inventory[this.task]);
+            }
           }
         }
       }

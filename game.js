@@ -2,7 +2,7 @@ import Villager from "/villager/villager.js"
 import Tree from "/resources/tree.js"
 import Rock from "/resources/rock.js"
 import Storage from "/resources/storage.js"
-import { scaleX, scaleY, weightedList, mapTimes, byWeight, idxFromPos, sample } from "/helpers.js"
+import { rand, scaleVal, scaleX, scaleY, weightedList, mapTimes, byWeight, idxFromPos, sample } from "/helpers.js"
 
 var map_w = 51, map_h = 31
 var config = {
@@ -32,13 +32,13 @@ function create() {
     game: game,
     world: world,
   }
-  new Villager(ctx, { x: Math.random() * config.width, y: Math.random() * config.height })
-  new Villager(ctx, { x: Math.random() * config.width, y: Math.random() * config.height })
-  new Villager(ctx, { x: scaleX(8), y: scaleY(25) })
+  new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
 
-  new Tree(ctx, { x: scaleX(8), y: scaleY(25) })
-  new Rock(ctx, { x: scaleX(40), y: scaleY(22) })
-  new Storage(ctx, { x: config.width/2, y: config.height/2 })
+  new Tree(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  new Rock(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  new Storage(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
 }
 
 function update() { // ~60fps
