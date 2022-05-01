@@ -9,14 +9,29 @@ export function weightedList() {
   }).flat()
 }
 
-export function mapTimes(times, fn) {
+export function normalDist(min, max, multiplier=3) {
+  // multiplier is the multiple of how much more common the center is than the outsides
+  // # EG:
+  // # "1" multiplier is an equal distribution. No Bias.
+  // # "2" (max - min) / 2 is 2x more likely than min or max
+  // # "3" (max - min) / 2 is 3x more likely than min or max
+  //
+  let rand_total = 0
+  times(multiplier, function() {
+    rand_total += rand(min + (max - min))
+  })
+
+  return rand_total / multiplier
+}
+
+export function times(times, fn) {
   return Array(times).fill().map(function(_, idx) {
     return fn(idx)
   })
 }
 
 export function byWeight(obj, weight) {
-  return mapTimes(weight, function() { return obj })
+  return times(weight, function() { return obj })
 }
 
 export function idxFromPos(sheet_w, x, y) {

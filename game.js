@@ -3,7 +3,7 @@ import Tree from "/resources/tree.js"
 import Rock from "/resources/rock.js"
 import Cow from "/mobs/cow.js"
 import Storage from "/resources/storage.js"
-import { rand, scaleVal, scaleX, scaleY, weightedList, mapTimes, byWeight, idxFromPos, sample } from "/helpers.js"
+import { rand, scaleVal, scaleX, scaleY, weightedList, times, byWeight, idxFromPos, sample } from "/helpers.js"
 
 var map_w = 45, map_h = 23
 var config = {
@@ -31,6 +31,7 @@ function preload() {
   }
 
   // this.load.spritesheet("map", "assets/tiles/map/basictiles.png", { frameWidth: 16, frameHeight: 16 })
+  this.load.json("names", "data/names.json")
   this.load.spritesheet("slime", "assets/sprites/slimes/Slime_Medium_Blue.png", { frameWidth: 32, frameHeight: 32 })
   this.load.spritesheet("master", "assets/master.png", { frameWidth: 16, frameHeight: 16 })
 
@@ -88,7 +89,7 @@ function preload() {
     for (let [key, anims] of Object.entries(obj)) {
       if (Array.isArray(anims)) { anims = { start: anims, length: 1 } }
 
-      var frames = mapTimes(anims.length, function(t) {
+      var frames = times(anims.length, function(t) {
         return idxFromPos(32, anims.start[0] + t, anims.start[1])
       })
 
@@ -115,23 +116,27 @@ function create() {
 
   ctx.world = world
 
-  mapTimes(10, function() {
-    new Villager(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  var randCoord = function() {
+    return { x: rand(32, config.width - 32), y: rand(32, config.height - 32) }
+  }
+
+  times(10, function() {
+    new Villager(ctx, randCoord())
   })
 
-  mapTimes(3, function() {
-    new Tree(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  times(3, function() {
+    new Tree(ctx, randCoord())
   })
 
-  mapTimes(3, function() {
-    new Cow(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  times(3, function() {
+    new Cow(ctx, randCoord())
   })
 
-  mapTimes(4, function() {
-    new Rock(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  times(4, function() {
+    new Rock(ctx, randCoord())
   })
 
-  new Storage(ctx, { x: rand(32, config.width - 32), y: rand(32, config.height - 32) })
+  new Storage(ctx, randCoord())
 }
 
 function update() { // ~60fps
@@ -143,8 +148,8 @@ function generate_map(ctx) {
   let flat_grass = idxFromPos(32, 25, 0), short_grass = idxFromPos(32, 26, 0), flowers = idxFromPos(32, 27, 0), long_grass = idxFromPos(32, 28, 0)
   let weights = weightedList([flat_grass, 500], [short_grass, 100], [long_grass, 50], [flowers, 1])
 
-  let level = mapTimes(map_h, function(y) {
-    return mapTimes(map_w, function(x) {
+  let level = times(map_h, function(y) {
+    return times(map_w, function(x) {
       // if (x == 0 || x == map_w - 1 || y == 0 || y == map_h - 1) {
       //   return idxFromPos(11, 3)
       // } else {

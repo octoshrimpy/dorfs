@@ -11,19 +11,37 @@ export default class Villager extends Base {
     this.ctx = ctx
     opts = opts || {}
 
+
+    this.name = function() {
+      var name_json = ctx.env.cache.json.get("names")
+      return [sample(name_json.first), sample(name_json.last)].join(" ")
+    }()
+
     this.destination = undefined
     this.inventory = {}
-    this.task = sample(["tree", "rock", undefined])
     this.unloading = false
     this.walk_speed = rand(20, 60) // 0-100
     this.collect_speed = rand(20, 60) // 0-100
+
+    this.home = undefined
+    this.job_building = undefined
     this.selected_resource = undefined
+    this.selected_storage = undefined
+    this.profession = sample(["Lumberjack", "Miner"])
 
     this.anim_key = "alives.dorfs.adult"
     this.sprite = ctx.addSpriteAnim(opts.x, opts.y, this.anim_key).setDepth(10)
 
     Villager.objs.push(this)
-    if (!this.task) { this.changeDest() }
+    // if (!this.profession) { this.changeDest() }
+  }
+
+  resourceKlass() {
+    if (this.profession == "Lumberjack") {
+      return Tree
+    } else if (this.profession == "Miner") {
+      return Rock
+    }
   }
 
   changeDest() {
@@ -63,13 +81,9 @@ export default class Villager extends Base {
   }
 
   selectResource() {
-    if (this.task) {
+    if (this.profession) {
       if (!this.selected_resource || this.selected_resource.resources <= 0) {
-        if (this.task == "tree") {
-          this.selected_resource = sample(Tree.all())
-        } else if (this.task == "rock") {
-          this.selected_resource = sample(Rock.all())
-        }
+        this.selected_resource = this.resourceKlass().nearest(this.sprite.x, this.sprite.y)
       }
     }
 
@@ -78,7 +92,7 @@ export default class Villager extends Base {
 
   tick() {
     let fps = 60
-    if (!this.task) {
+    if (!this.profession) {
       if (randOnePerNSec(3) == 0) {
         this.changeDest()
       }
@@ -86,6 +100,7 @@ export default class Villager extends Base {
       var obj = undefined
 
       if (this.fullInventory() || this.unloading) {
+        if (this.timing) { this.timing = false; console.timeEnd([this.profession, this.name].join(": ")) }
         this.unloading = true
         obj = Storage.all()[0]
       } else {
@@ -99,22 +114,23 @@ export default class Villager extends Base {
 
         if (Math.abs(this.sprite.x - obj.sprite.x) < 5 && Math.abs(this.sprite.y - obj.sprite.y) < 5) {
           if (obj.constructor.name == "Storage") {
-            obj.inventory[this.task] ||= 0
+            obj.inventory[this.profession] ||= 0
             if (randNPerSec(10) == 0) {
-              if (this.inventory[this.task] > 0) {
-                obj.inventory[this.task] += 1
-                this.inventory[this.task] -= 1
+              if (this.inventory[this.profession] > 0) {
+                obj.inventory[this.profession] += 1
+                this.inventory[this.profession] -= 1
               } else {
                 console.log(obj.inventory);
                 this.unloading = false
               }
             }
           } else {
-            this.inventory[this.task] ||= 0
+            if (!this.timing) { this.timing = true; console.time([this.profession, this.name].join(": ")) }
+            this.inventory[this.profession] ||= 0
 
             var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
             if (randNPerSec(collectRatePerSec) == 0) {
-              this.inventory[this.task] += 1
+              this.inventory[this.profession] += 1
             }
           }
         }

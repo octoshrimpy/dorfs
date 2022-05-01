@@ -9,8 +9,8 @@ export default class Rock extends Base {
     this.ctx = ctx
     opts = opts || {}
 
-    this.min_collect_factor = 4 // per sec
-    this.max_collect_factor = 1 // per sec
+    this.min_collect_factor = 0.5 // per sec
+    this.max_collect_factor = 3 // per sec
 
     this.resources = 100
 
