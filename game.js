@@ -44,7 +44,7 @@ function preload() {
       rock: { base: { start: [0, 1], length: 2 } },
       iron_ore: { base: { start: [0, 0], length: 2 } },
       stump: { base: { start: [0, 2], length: 2 } },
-      chest: { base: { start: [21, 0], length: 2 } },
+      chest: { base: { start: [20, 0], length: 2 } },
       sign: { base: { start: [22, 0], length: 2 } },
     },
     alives: {
