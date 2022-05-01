@@ -1,5 +1,6 @@
-export default class Base {
+export default class BaseClass {
   constructor() {
+    this.sprite = ctx.addSpriteAnim(opts.x, opts.y, "placeholder").setDepth(1)
   }
 
   // Class method

@@ -1,7 +1,6 @@
-import Base from "./base.js"
-import { scaleX, scaleY, idxFromPos } from "/helpers.js"
+import BaseResource from "./baseResource.js"
 
-export default class Storage extends Base {
+export default class Storage extends BaseResource {
   static objs = []
 
   constructor(ctx, opts) {
@@ -11,12 +10,8 @@ export default class Storage extends Base {
 
     this.inventory = {}
 
-    this.sprite = ctx.addSpriteAnim(opts.x, opts.y, "things.chest").setDepth(1)
+    this.sprite = "things.chest" 
 
     Storage.objs.push(this)
-  }
-
-  tick() {
-    // Growth?
   }
 }

@@ -1,7 +1,6 @@
-import Base from "./base.js"
-import { scaleX, scaleY, idxFromPos } from "/helpers.js"
+import BaseResource from "./baseResource.js"
 
-export default class Tree extends Base {
+export default class Tree extends BaseResource {
   static objs = []
 
   constructor(ctx, opts) {
@@ -14,13 +13,9 @@ export default class Tree extends Base {
 
     this.resources = 100
 
-    this.sprite = ctx.addSpriteAnim(opts.x, opts.y, "things.stump").setDepth(1)
+    this.sprite = "things.stump"
 
     Tree.objs.push(this)
-  }
-
-  tick() {
-    // Growth?
   }
 
   growth() {

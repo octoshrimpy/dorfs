@@ -1,10 +1,10 @@
-import Base from "./base.js"
+import BaseHumanoid from "./baseHumanoid.js"
 import Tree from "/resources/tree.js"
 import Rock from "/resources/rock.js"
 import Storage from "/resources/storage.js"
 import { sum, sample, rand, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
 
-export default class Villager extends Base {
+export default class Villager extends BaseHumanoid {
   static objs = []
   constructor(ctx, opts) {
     super()
@@ -36,7 +36,7 @@ export default class Villager extends Base {
     // if (!this.profession) { this.changeDest() }
   }
 
-  resourceKlass() {
+  getProfession() {
     if (this.profession == "Lumberjack") {
       return Tree
     } else if (this.profession == "Miner") {
@@ -83,7 +83,7 @@ export default class Villager extends Base {
   selectResource() {
     if (this.profession) {
       if (!this.selected_resource || this.selected_resource.resources <= 0) {
-        this.selected_resource = this.resourceKlass().nearest(this.sprite.x, this.sprite.y)
+        this.selected_resource = this.getProfession().nearest(this.sprite.x, this.sprite.y)
       }
     }
 

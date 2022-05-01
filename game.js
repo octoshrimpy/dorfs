@@ -37,48 +37,51 @@ function preload() {
 
   //TODO: extract to its own json file. this.load.json("path.json")
   ctx.sprites = {
+    placeholder: {
+      stand: [26, 1]
+    },
     ground: {
-      grass: { base: { start: [26, 0], length: 4 } },
+      grass: { base: { start: [21, 1], length: 4 } },
     },
     things: {
-      rock: { base: { start: [0, 1], length: 2 } },
-      iron_ore: { base: { start: [0, 0], length: 2 } },
-      stump: { base: { start: [0, 2], length: 2 } },
-      chest: { base: { start: [20, 0], length: 2 } },
-      sign: { base: { start: [22, 0], length: 2 } },
+      rock: { base: { start: [1, 2], length: 2 } },
+      iron_ore: { base: { start: [1, 1], length: 2 } },
+      stump: { base: { start: [1, 3], length: 2 } },
+      chest: { base: { start: [16, 1], length: 2 } },
+      sign: { base: { start: [19, 1], length: 2 } },
     },
     alives: {
       dorfs: {
         child: {
-          stand: [10, 1],
-          walk: { start: [11, 1], length: 2 }
+          stand: [6, 2],
+          walk: { start: [7, 2], length: 2 }
         },
         adult: {
-          stand: [10, 0],
-          walk: { start: [11, 0], length: 2, speed: 5 }
+          stand: [6, 1],
+          walk: { start: [7, 1], length: 2, speed: 5 }
         },
         old: {
-          stand: [10, 0],
-          walk: { start: [11, 0], length: 2 },
+          stand: [6, 1],
+          walk: { start: [7, 1], length: 2 },
           addons:{
-            beard_silver: [13, 0]
+            beard_silver: [9, 1]
           }
         },
         senile: {
-          stand: [10, 0],
-          walk: { start: [11, 0], length: 2 },
+          stand: [6, 1],
+          walk: { start: [7, 1], length: 2 },
           addons: {
-            beard_white: [13, 1]
+            beard_white: [9, 2]
           }
         },
         ghost: {
-          idle: { start: [10, 2], length: 2 },
-          haunt: { start: [12, 2], length: 2 }
+          idle: { start: [6, 3], length: 2 },
+          haunt: { start: [8, 3], length: 2 }
         }
       },
       animals: {
         cow: {
-          stand: [10, 4]
+          stand: [6, 5]
         }
       }
     }
