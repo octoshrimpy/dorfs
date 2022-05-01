@@ -39,7 +39,7 @@ export default class Cow extends BaseMob {
       return
     }
 
-    // this.sprite.anims.play([this.anim_key, "walk"].join("."), true)
+    // this.sprite.anims.play([this.sprite, "walk"].join("."), true)
     this.sprite.flipX = dx < 0
     var max_speed = 2, max_speed_scale = 100
     var scaled_speed = (this.walk_speed / max_speed_scale) * max_speed

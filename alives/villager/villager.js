@@ -29,8 +29,7 @@ export default class Villager extends BaseHumanoid {
     this.selected_storage = undefined
     this.profession = sample(["Lumberjack", "Miner"])
 
-    this.anim_key = "alives.dorfs.adult"
-    this.sprite = ctx.addSpriteAnim(opts.x, opts.y, this.anim_key).setDepth(10)
+    this.sprite = "alives.dorfs.adult"
 
     Villager.objs.push(this)
     // if (!this.profession) { this.changeDest() }
@@ -66,7 +65,7 @@ export default class Villager extends BaseHumanoid {
       return
     }
 
-    this.sprite.anims.play([this.anim_key, "walk"].join("."), true)
+    this.sprite.anims.play([this.sprite, "walk"].join("."), true)
     this.sprite.flipX = dx < 0
     var max_speed = 2, max_speed_scale = 100
     var scaled_speed = (this.walk_speed / max_speed_scale) * max_speed
