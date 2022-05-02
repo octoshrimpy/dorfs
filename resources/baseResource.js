@@ -25,7 +25,7 @@ export default class BaseResource extends BaseClass {
     }
 
     sprite.x = alignToGrid(sprite.x, sprite.width, scaleX(1), sprite.originX)
-    sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(1), sprite.originY)=
+    sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(1), sprite.originY)
 
     return sprite
   }
