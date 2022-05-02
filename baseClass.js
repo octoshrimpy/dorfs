@@ -6,6 +6,8 @@ export default class BaseClass {
 
     this.sprite_path = sprite_path || "placeholder"
     this.sprite = this.setSprite(this.sprite_path)
+    this.sprite.depth = this.sprite.y + 64
+
   }
 
   setSprite(spriteStr) {

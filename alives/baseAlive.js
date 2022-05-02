@@ -18,6 +18,7 @@ export default class BaseAlive extends BaseClass  {
     }
   }
 
+
   moveTowardsDest(speed) { // speed is 0-100
     // https://phaser.io/news/2018/03/pathfinding-and-phaser-3
     if (!this.destination) { return }
@@ -50,5 +51,7 @@ export default class BaseAlive extends BaseClass  {
 
     this.sprite.x += dx * speed_scale
     this.sprite.y += dy * speed_scale
+
+    this.sprite.depth = this.sprite.y + 64
   }
 }
