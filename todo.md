@@ -33,6 +33,8 @@
 ===
 
 Rocco Notes
+  [ ] Collecting animations
+      [ ] Speed of collecting animation based on collect_speed
   [ ] Items should have weights
       [ ] Max inventory is based on weight, not count
   [ ] Villagers should have hunger / sleep
