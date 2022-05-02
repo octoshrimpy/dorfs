@@ -3,15 +3,12 @@ import BaseResource from "./baseResource.js"
 export default class Storage extends BaseResource {
   static objs = []
 
-  constructor(ctx, opts) {
-    this.spritePath = "things.chest"
-    
-    super(ctx, opts)
+  constructor(ctx, opts, sprite_path) {
+    super(ctx, opts, sprite_path || "things.chest")
     this.ctx = ctx
-    opts = opts || {}
+    this.opts = opts || {}
 
     this.inventory = {}
-
 
     Storage.objs.push(this)
   }

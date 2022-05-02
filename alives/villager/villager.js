@@ -5,15 +5,12 @@ import Storage from "../../resources/storage.js"
 import { sum, sample, rand, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
 
 export default class Villager extends BaseHumanoid {
-  #spritePath = "alives.dorfs.adult"
-  
   static objs = []
-  constructor(ctx, opts) {
 
-    super(ctx, opts)
+  constructor(ctx, opts, sprite_path) {
+    super(ctx, opts, sprite_path || "alives.dorfs.adult")
     this.ctx = ctx
-    opts = opts || {}
-
+    this.opts = opts || {}
 
     this.name = function() {
       var name_json = ctx.env.cache.json.get("names")
@@ -32,10 +29,7 @@ export default class Villager extends BaseHumanoid {
     this.selected_storage = undefined
     this.profession = sample(["Lumberjack", "Miner"])
 
-
     Villager.objs.push(this)
-
-    // if (!this.profession) { this.changeDest() }
   }
 
   getProfession() {
@@ -46,99 +40,81 @@ export default class Villager extends BaseHumanoid {
     }
   }
 
-  changeDest() {
-    this.destination = {
-      x: rand(32, this.ctx.game.config.width - 32),
-      y: rand(32, this.ctx.game.config.height - 32),
-    }
-  }
-
-  walkTowardsDest() {
-    // https://phaser.io/news/2018/03/pathfinding-and-phaser-3
-    if (!this.destination) { return }
-
-    var dx = this.destination.x - this.sprite.x
-    var dy = this.destination.y - this.sprite.y
-    if (Math.abs(dx) < 5) { dx = 0 }
-    if (Math.abs(dy) < 5) { dy = 0 }
-
-    if (dx == 0 && dy == 0) {
-      this.destination = undefined
-      this.sprite.anims.stop(null)
-      return
-    }
-
-    this.sprite.anims.play([this.sprite.name, "walk"].join("."), true)
-    this.sprite.flipX = dx < 0
-    var max_speed = 2, max_speed_scale = 100
-    var scaled_speed = (this.walk_speed / max_speed_scale) * max_speed
-    var speed_scale = scaled_speed / (Math.abs(dx) + Math.abs(dy))
-
-    this.sprite.x += dx * speed_scale
-    this.sprite.y += dy * speed_scale
-  }
-
   fullInventory() {
     return sum(Object.values(this.inventory)) >= 10
   }
 
-  selectResource() {
-    if (this.profession) {
-      if (!this.selected_resource || this.selected_resource.resources <= 0) {
-        this.selected_resource = this.getProfession().nearest(this.sprite.x, this.sprite.y)
+  findDestination() {
+    let dest_obj = null
+
+    if (this.fullInventory() || this.unloading) {
+      if (this.timing) { this.timing = false; console.timeEnd([this.profession, this.name].join(": ")) }
+      this.unloading = true
+      dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
+      this.selected_storage = dest_obj
+    } else {
+      if (this.selected_resource && this.selected_resource.resources <= 0) {
+        this.selected_resource = undefined
       }
+      dest_obj = this.selected_resource || this.getProfession().nearest(this.sprite.x, this.sprite.y)
+      this.selected_resource = dest_obj
     }
 
-    return this.selected_resource
+    return dest_obj
+  }
+
+  arrivedAtDest() {
+    let x_near = Math.abs(this.sprite.x - this.destination.x) < 5
+    let y_near = Math.abs(this.sprite.y - this.destination.y) < 5
+
+    return x_near && y_near
+  }
+
+  unload(obj) {
+    obj.inventory[this.profession] ||= 0
+    if (randNPerSec(10) == 0) {
+      if (this.inventory[this.profession] > 0) {
+        obj.inventory[this.profession] += 1
+        this.inventory[this.profession] -= 1
+      } else {
+        console.log(obj.inventory);
+        this.unloading = false
+      }
+    }
+  }
+
+  collect(obj) {
+    if (!this.timing) { this.timing = true; console.time([this.profession, this.name].join(": ")) }
+    this.inventory[this.profession] ||= 0
+
+    var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
+    if (randNPerSec(collectRatePerSec) == 0) {
+      this.inventory[this.profession] += 1
+    }
   }
 
   tick() {
     let fps = 60
     if (!this.profession) {
       if (randOnePerNSec(3) == 0) {
-        this.changeDest()
+        this.setRandomDest()
       }
     } else if (!this.destination) {
-      var obj = undefined
-
-      if (this.fullInventory() || this.unloading) {
-        if (this.timing) { this.timing = false; console.timeEnd([this.profession, this.name].join(": ")) }
-        this.unloading = true
-        obj = Storage.all()[0]
-      } else {
-        obj = this.selectResource()
-      }
+      var obj = this.findDestination()
 
       if (obj) {
-        this.destination = {}
-        this.destination.x = obj.sprite.x
-        this.destination.y = obj.sprite.y
+        this.destination = { x: obj.sprite.x, y: obj.sprite.y }
 
-        if (Math.abs(this.sprite.x - obj.sprite.x) < 5 && Math.abs(this.sprite.y - obj.sprite.y) < 5) {
+        if (this.arrivedAtDest()) {
           if (obj.constructor.name == "Storage") {
-            obj.inventory[this.profession] ||= 0
-            if (randNPerSec(10) == 0) {
-              if (this.inventory[this.profession] > 0) {
-                obj.inventory[this.profession] += 1
-                this.inventory[this.profession] -= 1
-              } else {
-                console.log(obj.inventory);
-                this.unloading = false
-              }
-            }
+            this.unload(obj)
           } else {
-            if (!this.timing) { this.timing = true; console.time([this.profession, this.name].join(": ")) }
-            this.inventory[this.profession] ||= 0
-
-            var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
-            if (randNPerSec(collectRatePerSec) == 0) {
-              this.inventory[this.profession] += 1
-            }
+            this.collect(obj)
           }
         }
       }
     }
 
-    this.walkTowardsDest()
+    this.moveTowardsDest()
   }
 }

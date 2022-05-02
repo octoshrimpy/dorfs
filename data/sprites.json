@@ -1,0 +1,53 @@
+{
+  "placeholder": { "stand": [26, 1] },
+  "ground": {
+    "grass": {
+      "flat": [21, 1],
+      "short": [22, 1],
+      "long": [23, 1],
+      "flowers": [24, 1]
+     }
+  },
+  "things": {
+    "rock": { "base": { "start": [1, 2], "length": 2 } },
+    "iron_ore": { "base": { "start": [1, 1], "length": 2 } },
+    "stump": { "base": { "start": [1, 3], "length": 2 } },
+    "chest": { "base": { "start": [16, 1], "length": 2 } },
+    "sign": { "base": { "start": [19, 1], "length": 2 } }
+  },
+  "alives": {
+    "dorfs": {
+      "child": {
+        "stand": [6, 2],
+        "walk": { "start": [7, 2], "length": 2 }
+      },
+      "adult": {
+        "stand": [6, 1],
+        "walk": { "start": [7, 1], "length": 2, "speed": 5 }
+      },
+      "old": {
+        "stand": [6, 1],
+        "walk": { "start": [7, 1], "length": 2 },
+        "addons": {
+          "beard_silver": [9, 1]
+        }
+      },
+      "senile": {
+        "stand": [6, 1],
+        "walk": { "start": [7, 1], "length": 2 },
+        "addons": {
+          "beard_white": [9, 2]
+        }
+      },
+      "ghost": {
+        "idle": { "start": [6, 3], "length": 2 },
+        "haunt": { "start": [8, 3], "length": 2 }
+      }
+    },
+    "animals": {
+      "cow": {
+        "stand": [6, 5]
+      }
+    }
+  }
+}

@@ -3,10 +3,9 @@ import BaseResource from "./baseResource.js"
 export default class Tree extends BaseResource {
   static objs = []
 
-  constructor(ctx, opts) {
-    this.spritePath = "things.stump"
-    
-    super(ctx, opts)
+  constructor(ctx, opts, sprite_path) {
+    super(ctx, opts, sprite_path || "things.stump")
+
     this.ctx = ctx
     opts = opts || {}
 
@@ -19,7 +18,5 @@ export default class Tree extends BaseResource {
     Tree.objs.push(this)
   }
 
-  growth() {
-
-  }
+  growth() {}
 }

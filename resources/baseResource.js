@@ -3,10 +3,10 @@ import BaseClass from "../baseClass.js"
 
 export default class BaseResource extends BaseClass {
 
-  constructor(ctx, opts) {
-    super(ctx, opts)
+  constructor(ctx, opts, sprite_path) {
+    super(ctx, opts, sprite_path)
     this.ctx = ctx
-    opts = opts || {}
+    this.opts = opts || {}
 
     // factor is num of resources per sec
     this.min_collect_factor = 10 // per sec
