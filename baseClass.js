@@ -6,6 +6,8 @@ export default class BaseClass {
 
     this.sprite_path = sprite_path || "placeholder"
     this.sprite = this.setSprite(this.sprite_path)
+
+    this.setDepth(this.sprite.y)
   }
 
   setSprite(spriteStr) {
@@ -14,6 +16,10 @@ export default class BaseClass {
     this.sprite_anims = Object.keys(sprite.anims.animationManager.anims.entries)
 
     return sprite
+  }
+
+  setDepth(depth){
+    this.depth = depth + 64;
   }
 
   spriteHasAnim(anim) {
