@@ -5,7 +5,10 @@ export default class BaseClass {
     opts = opts || {}
     this.opts = opts
 
-    this.sprite = this.setSprite.call(this, "placeholder")
+    if(!this.spritePath) {
+      this.spritePath = "placeholder"
+    }
+      this.sprite = this.setSprite.call(this, spritePath)
   }
 
   setSprite(spriteStr) {

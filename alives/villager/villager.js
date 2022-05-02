@@ -5,8 +5,11 @@ import Storage from "../../resources/storage.js"
 import { sum, sample, rand, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
 
 export default class Villager extends BaseHumanoid {
+  #spritePath = "alives.dorfs.adult"
+  
   static objs = []
   constructor(ctx, opts) {
+
     super(ctx, opts)
     this.ctx = ctx
     opts = opts || {}
@@ -29,7 +32,6 @@ export default class Villager extends BaseHumanoid {
     this.selected_storage = undefined
     this.profession = sample(["Lumberjack", "Miner"])
 
-    this.sprite = this.setSprite("alives.dorfs.adult")
 
     Villager.objs.push(this)
 
