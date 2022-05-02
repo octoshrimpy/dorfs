@@ -75,7 +75,8 @@ function setupContext(env) {
 
   ctx.addSpriteAnim = function(sprite_path, opts) {
     let obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
-    let sheet_name = opts.spritesheet || "master"
+    var first_anim = obj[Object.keys(obj)[0]]
+    let sheet_name = first_anim.sheet || "master"
     let cell_size = ctx.env.game.textures.list[sheet_name].frames[0].width
     let sheet_width = ctx.env.game.textures.list[sheet_name].source[0].width
     let sheet_cells_horz = sheet_width / cell_size
@@ -97,9 +98,8 @@ function setupContext(env) {
       })
     }
 
-    var first = obj[Object.keys(obj)[0]]
-    if (!Array.isArray(first)) { first = first.start }
-    var frame = idxFromPos(...first, sheet_cells_horz)
+    if (!Array.isArray(first_anim)) { first_anim = first_anim.start }
+    var frame = idxFromPos(...first_anim, sheet_cells_horz)
 
     return ctx.env.add.sprite(opts.x, opts.y, sheet_name, frame)
   }
