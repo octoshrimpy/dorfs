@@ -4,7 +4,7 @@ export default class Storage extends BaseResource {
   static objs = []
 
   constructor(ctx, opts) {
-    super(ctx)
+    super(ctx, opts)
     this.ctx = ctx
     opts = opts || {}
 

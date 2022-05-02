@@ -6,7 +6,7 @@ export default class BaseHumanoid extends BaseAlive {
   #inventory = []
   
   constructor(ctx, opts) {
-    super(ctx)
+    super(ctx, opts)
     this.ctx = ctx
     opts = opts || {}
   }

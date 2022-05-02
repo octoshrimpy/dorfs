@@ -4,7 +4,7 @@ import BaseClass from "../baseClass.js"
 export default class BaseResource extends BaseClass {
 
   constructor(ctx, opts) {
-    super(ctx)
+    super(ctx, opts)
     this.ctx = ctx
     opts = opts || {}
 

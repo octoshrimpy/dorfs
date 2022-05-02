@@ -7,7 +7,7 @@ import { sum, sample, rand, scaleVal, randOnePerNSec, randNPerSec } from "/helpe
 export default class Villager extends BaseHumanoid {
   static objs = []
   constructor(ctx, opts) {
-    super(ctx)
+    super(ctx, opts)
     this.ctx = ctx
     opts = opts || {}
 

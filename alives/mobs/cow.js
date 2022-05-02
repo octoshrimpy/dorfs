@@ -4,7 +4,7 @@ import { rand, randOnePerNSec } from "/helpers.js"
 export default class Cow extends BaseMob {
   static objs = []
   constructor(ctx, opts) {
-    super(ctx)
+    super(ctx, opts)
     this.ctx = ctx
     opts = opts || {}
 
