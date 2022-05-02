@@ -4,7 +4,7 @@ export default class Rock extends BaseResource {
   static objs = []
 
   constructor(ctx, opts) {
-    super()
+    super(ctx)
     this.ctx = ctx
     opts = opts || {}
 
@@ -13,7 +13,7 @@ export default class Rock extends BaseResource {
 
     this.resources = 100
 
-    this.sprite = "things.rock"
+    this.sprite = this.setSprite("things.rock")
 
     Rock.objs.push(this)
   }

@@ -1,13 +1,13 @@
 import BaseHumanoid from "./baseHumanoid.js"
-import Tree from "/resources/tree.js"
-import Rock from "/resources/rock.js"
-import Storage from "/resources/storage.js"
+import Tree from "../../resources/tree.js" //TODO fix these imports, ask game instead
+import Rock from "../../resources/rock.js"
+import Storage from "../../resources/storage.js"
 import { sum, sample, rand, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
 
 export default class Villager extends BaseHumanoid {
   static objs = []
   constructor(ctx, opts) {
-    super()
+    super(ctx)
     this.ctx = ctx
     opts = opts || {}
 
@@ -29,9 +29,10 @@ export default class Villager extends BaseHumanoid {
     this.selected_storage = undefined
     this.profession = sample(["Lumberjack", "Miner"])
 
-    this.sprite = "alives.dorfs.adult"
+    this.sprite = this.setSprite("alives.dorfs.adult")
 
     Villager.objs.push(this)
+
     // if (!this.profession) { this.changeDest() }
   }
 
@@ -65,7 +66,7 @@ export default class Villager extends BaseHumanoid {
       return
     }
 
-    this.sprite.anims.play([this.sprite, "walk"].join("."), true)
+    this.sprite.anims.play([this.sprite.name, "walk"].join("."), true)
     this.sprite.flipX = dx < 0
     var max_speed = 2, max_speed_scale = 100
     var scaled_speed = (this.walk_speed / max_speed_scale) * max_speed

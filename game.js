@@ -1,8 +1,8 @@
-import Villager from "/villager/villager.js"
-import Tree from "/resources/tree.js"
-import Rock from "/resources/rock.js"
-import Cow from "/mobs/cow.js"
-import Storage from "/resources/storage.js"
+import Villager from "./alives/villager/villager.js"
+import Tree from "./resources/tree.js"
+import Rock from "./resources/rock.js"
+import Cow from "./alives/mobs/cow.js"
+import Storage from "./resources/storage.js"
 import { rand, scaleVal, scaleX, scaleY, weightedList, times, byWeight, idxFromPos, sample } from "/helpers.js"
 
 var map_w = 45, map_h = 23
@@ -37,11 +37,14 @@ function preload() {
 
   //TODO: extract to its own json file. this.load.json("path.json")
   ctx.sprites = {
-    placeholder: {
-      stand: [26, 1]
-    },
+    placeholder: { stand: [26, 1] },
     ground: {
-      grass: { base: { start: [21, 1], length: 4 } },
+      grass: { 
+        flat: [21, 1],
+        short: [22, 1],
+        long: [23, 1],
+        flowers: [24, 1]
+       },
     },
     things: {
       rock: { base: { start: [1, 2], length: 2 } },
@@ -93,7 +96,7 @@ function preload() {
       if (Array.isArray(anims)) { anims = { start: anims, length: 1 } }
 
       var frames = times(anims.length, function(t) {
-        return idxFromPos(32, anims.start[0] + t, anims.start[1])
+        return idxFromPos(anims.start[0] + t, anims.start[1])
       })
 
       anims.start.forEach(function(anim) {
@@ -108,14 +111,14 @@ function preload() {
 
     var first = obj[Object.keys(obj)[0]]
     if (!Array.isArray(first)) { first = first.start }
-    var frame = idxFromPos(32, ...first)
+    var frame = idxFromPos(...first)
 
     return ctx.env.add.sprite(x, y, "master", frame)
   }
 }
 
 function create() {
-  world = generate_map(this)
+  world = generate_map(this, ctx.sprites)
 
   ctx.world = world
 
@@ -147,8 +150,8 @@ function update() { // ~60fps
   Cow.tick()
 }
 
-function generate_map(ctx) {
-  let flat_grass = idxFromPos(32, 25, 0), short_grass = idxFromPos(32, 26, 0), flowers = idxFromPos(32, 27, 0), long_grass = idxFromPos(32, 28, 0)
+function generate_map(ctx, sprites) {
+  let flat_grass = idxFromPos(...sprites.ground.grass.flat), short_grass = idxFromPos(...sprites.ground.grass.short), long_grass = idxFromPos(...sprites.ground.grass.long), flowers = idxFromPos(...sprites.ground.grass.flowers)
   let weights = weightedList([flat_grass, 500], [short_grass, 100], [long_grass, 50], [flowers, 1])
 
   let level = times(map_h, function(y) {

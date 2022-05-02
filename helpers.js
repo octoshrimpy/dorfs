@@ -34,7 +34,7 @@ export function byWeight(obj, weight) {
   return times(weight, function() { return obj })
 }
 
-export function idxFromPos(sheet_w, x, y) {
+export function idxFromPos(x, y, sheet_w = 32) {
   // 0 based pos
   return (y * sheet_w) + x
 }

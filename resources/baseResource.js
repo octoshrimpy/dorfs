@@ -1,8 +1,13 @@
 import { scaleVal } from "/helpers.js"
+import BaseClass from "../baseClass.js"
 
-export default class BaseResource {
+export default class BaseResource extends BaseClass {
 
-  constructor() {
+  constructor(ctx, opts) {
+    super(ctx)
+    this.ctx = ctx
+    opts = opts || {}
+
     // factor is num of resources per sec
     this.min_collect_factor = 10 // per sec
     this.max_collect_factor = 0.5 // per sec

@@ -1,9 +1,11 @@
-import BaseAlive from "../baseAlive"
+import BaseAlive from "../baseAlive.js"
 
 export default class BaseHumanoid extends BaseAlive {
   #baseHealth = 20
 
-  constructor() {
+  constructor(ctx, opts) {
+    super(ctx)
+    this.ctx = ctx
+    opts = opts || {}
   }
-
 }

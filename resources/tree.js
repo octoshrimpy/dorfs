@@ -4,7 +4,7 @@ export default class Tree extends BaseResource {
   static objs = []
 
   constructor(ctx, opts) {
-    super()
+    super(ctx)
     this.ctx = ctx
     opts = opts || {}
 
@@ -13,7 +13,7 @@ export default class Tree extends BaseResource {
 
     this.resources = 100
 
-    this.sprite = "things.stump"
+    this.sprite = this.setSprite("things.stump")
 
     Tree.objs.push(this)
   }
