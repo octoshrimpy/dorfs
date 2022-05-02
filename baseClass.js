@@ -9,7 +9,7 @@ export default class BaseClass {
   }
 
   setSprite(spriteStr) {
-    let sprite = this.ctx.addSpriteAnim(this.opts.x, this.opts.y, spriteStr).setDepth(1)
+    let sprite = this.ctx.addSpriteAnim(spriteStr, this.opts).setDepth(1)
     sprite.name = spriteStr
     this.sprite_anims = Object.keys(sprite.anims.animationManager.anims.entries)
 

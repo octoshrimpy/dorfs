@@ -16,8 +16,9 @@ export default class BaseResource extends BaseClass {
   static nearest(x1, y1) {
     return this.objs.map(function(obj) {
       let x2 = obj.sprite.x, y2 = obj.sprite.y
+      let dist = Math.abs(Math.sqrt((x2 - x1)**2 + (y2 - y1)**2))
 
-      return [Math.abs(Math.sqrt((x2 - x1)**2 + (y2 - y1)**2)), obj]
+      return [dist, obj]
     }).sort(function(a, b) {
       return b[0] - a[0]
     })[0][1]

@@ -29,6 +29,7 @@ function preload() {
   this.load.json("sprites", "data/sprites.json")
   this.load.spritesheet("slime", "assets/sprites/slimes/Slime_Medium_Blue.png", { frameWidth: 32, frameHeight: 32 })
   this.load.spritesheet("master", "assets/master.png", { frameWidth: 16, frameHeight: 16 })
+  this.load.spritesheet("big_master", "assets/master.png", { frameWidth: 32, frameHeight: 32, margin: 16 })
 }
 
 function create() {
@@ -72,19 +73,24 @@ function setupContext(env) {
     sprites: env.cache.json.get("sprites")
   }
 
-  ctx.addSpriteAnim = function(x, y, sprite_path) {
-    var obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
+  ctx.addSpriteAnim = function(sprite_path, opts) {
+    let obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
+    let sheet_name = opts.spritesheet || "master"
+    let cell_size = ctx.env.game.textures.list[sheet_name].frames[0].width
+    let sheet_width = ctx.env.game.textures.list[sheet_name].source[0].width
+    let sheet_cells_horz = sheet_width / cell_size
+
     for (let [key, anims] of Object.entries(obj)) {
       if (Array.isArray(anims)) { anims = { start: anims, length: 1 } }
 
       var frames = times(anims.length, function(t) {
-        return idxFromPos(anims.start[0] + t, anims.start[1])
+        return idxFromPos(anims.start[0] + t, anims.start[1], sheet_cells_horz)
       })
 
       anims.start.forEach(function(anim) {
         ctx.env.anims.create({
           key: sprite_path + "." + key,
-          frames: ctx.env.anims.generateFrameNumbers("master", { frames: frames }),
+          frames: ctx.env.anims.generateFrameNumbers(sheet_name, { frames: frames }),
           frameRate: anims.speed || 10,
           repeat: -1
         })
@@ -93,9 +99,9 @@ function setupContext(env) {
 
     var first = obj[Object.keys(obj)[0]]
     if (!Array.isArray(first)) { first = first.start }
-    var frame = idxFromPos(...first)
+    var frame = idxFromPos(...first, sheet_cells_horz)
 
-    return ctx.env.add.sprite(x, y, "master", frame)
+    return ctx.env.add.sprite(opts.x, opts.y, sheet_name, frame)
   }
 }
 

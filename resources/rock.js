@@ -4,6 +4,7 @@ export default class Rock extends BaseResource {
   static objs = []
 
   constructor(ctx, opts, sprite_path) {
+    opts.spritesheet = "big_master"
     super(ctx, opts, sprite_path || "things.rock")
     this.ctx = ctx
     this.opts = opts || {}
