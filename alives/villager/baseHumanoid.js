@@ -4,10 +4,10 @@ export default class BaseHumanoid extends BaseAlive {
   #baseHealth = 50
   #baseInventorySlots = 1
   #inventory = []
-  
-  constructor(ctx, opts) {
-    super(ctx, opts)
+
+  constructor(ctx, opts, sprite_path) {
+    super(ctx, opts, sprite_path)
     this.ctx = ctx
-    opts = opts || {}
+    this.opts = opts || {}
   }
 }

@@ -5,15 +5,12 @@ import Storage from "../../resources/storage.js"
 import { sum, sample, rand, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
 
 export default class Villager extends BaseHumanoid {
-  #spritePath = "alives.dorfs.adult"
-  
   static objs = []
-  constructor(ctx, opts) {
 
-    super(ctx, opts)
+  constructor(ctx, opts, sprite_path) {
+    super(ctx, opts, sprite_path || "alives.dorfs.adult")
     this.ctx = ctx
-    opts = opts || {}
-
+    this.opts = opts || {}
 
     this.name = function() {
       var name_json = ctx.env.cache.json.get("names")
@@ -32,10 +29,7 @@ export default class Villager extends BaseHumanoid {
     this.selected_storage = undefined
     this.profession = sample(["Lumberjack", "Miner"])
 
-
     Villager.objs.push(this)
-
-    // if (!this.profession) { this.changeDest() }
   }
 
   getProfession() {

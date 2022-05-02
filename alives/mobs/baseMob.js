@@ -3,9 +3,9 @@ import BaseAlive from "../baseAlive.js"
 export default class BaseHumanoid extends BaseAlive {
   #baseHealth = 20
 
-  constructor(ctx, opts) {
-    super(ctx, opts)
+  constructor(ctx, opts, sprite_path) {
+    super(ctx, opts, sprite_path)
     this.ctx = ctx
-    opts = opts || {}
+    this.opts = opts || {}
   }
 }

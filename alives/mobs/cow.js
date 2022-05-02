@@ -3,16 +3,14 @@ import { rand, randOnePerNSec } from "/helpers.js"
 
 export default class Cow extends BaseMob {
   static objs = []
-  constructor(ctx, opts) {
-    this.spritePath = "alives.animals.cow"
-    
-    super(ctx, opts)
+
+  constructor(ctx, opts, sprite_path) {
+    super(ctx, opts, "alives.animals.cow")
     this.ctx = ctx
-    opts = opts || {}
+    this.opts = opts || {}
 
     this.destination = undefined
     this.walk_speed = rand(5, 15) // 0-100
-
 
     Cow.objs.push(this)
     this.changeDest()

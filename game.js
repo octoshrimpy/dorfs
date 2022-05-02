@@ -25,99 +25,14 @@ var ctx
 var world
 
 function preload() {
-  ctx = {
-    env: this,
-    game: game,
-  }
-
-  // this.load.spritesheet("map", "assets/tiles/map/basictiles.png", { frameWidth: 16, frameHeight: 16 })
   this.load.json("names", "data/names.json")
+  this.load.json("sprites", "data/sprites.json")
   this.load.spritesheet("slime", "assets/sprites/slimes/Slime_Medium_Blue.png", { frameWidth: 32, frameHeight: 32 })
   this.load.spritesheet("master", "assets/master.png", { frameWidth: 16, frameHeight: 16 })
-
-  //TODO: extract to its own json file. this.load.json("path.json")
-  ctx.sprites = {
-    placeholder: { stand: [26, 1] },
-    ground: {
-      grass: { 
-        flat: [21, 1],
-        short: [22, 1],
-        long: [23, 1],
-        flowers: [24, 1]
-       },
-    },
-    things: {
-      rock: { base: { start: [1, 2], length: 2 } },
-      iron_ore: { base: { start: [1, 1], length: 2 } },
-      stump: { base: { start: [1, 3], length: 2 } },
-      chest: { base: { start: [16, 1], length: 2 } },
-      sign: { base: { start: [19, 1], length: 2 } },
-    },
-    alives: {
-      dorfs: {
-        child: {
-          stand: [6, 2],
-          walk: { start: [7, 2], length: 2 }
-        },
-        adult: {
-          stand: [6, 1],
-          walk: { start: [7, 1], length: 2, speed: 5 }
-        },
-        old: {
-          stand: [6, 1],
-          walk: { start: [7, 1], length: 2 },
-          addons:{
-            beard_silver: [9, 1]
-          }
-        },
-        senile: {
-          stand: [6, 1],
-          walk: { start: [7, 1], length: 2 },
-          addons: {
-            beard_white: [9, 2]
-          }
-        },
-        ghost: {
-          idle: { start: [6, 3], length: 2 },
-          haunt: { start: [8, 3], length: 2 }
-        }
-      },
-      animals: {
-        cow: {
-          stand: [6, 5]
-        }
-      }
-    }
-  }
-
-  ctx.addSpriteAnim = function(x, y, sprite_path) {
-    var obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
-    for (let [key, anims] of Object.entries(obj)) {
-      if (Array.isArray(anims)) { anims = { start: anims, length: 1 } }
-
-      var frames = times(anims.length, function(t) {
-        return idxFromPos(anims.start[0] + t, anims.start[1])
-      })
-
-      anims.start.forEach(function(anim) {
-        ctx.env.anims.create({
-          key: sprite_path + "." + key,
-          frames: ctx.env.anims.generateFrameNumbers("master", { frames: frames }),
-          frameRate: anims.speed || 10,
-          repeat: -1
-        })
-      })
-    }
-
-    var first = obj[Object.keys(obj)[0]]
-    if (!Array.isArray(first)) { first = first.start }
-    var frame = idxFromPos(...first)
-
-    return ctx.env.add.sprite(x, y, "master", frame)
-  }
 }
 
 function create() {
+  setupContext(this)
   world = generate_map(this, ctx.sprites)
 
   ctx.world = world
@@ -148,6 +63,40 @@ function create() {
 function update() { // ~60fps
   Villager.tick()
   Cow.tick()
+}
+
+function setupContext(env) {
+  ctx = {
+    env: env,
+    game: game,
+    sprites: env.cache.json.get("sprites")
+  }
+
+  ctx.addSpriteAnim = function(x, y, sprite_path) {
+    var obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
+    for (let [key, anims] of Object.entries(obj)) {
+      if (Array.isArray(anims)) { anims = { start: anims, length: 1 } }
+
+      var frames = times(anims.length, function(t) {
+        return idxFromPos(anims.start[0] + t, anims.start[1])
+      })
+
+      anims.start.forEach(function(anim) {
+        ctx.env.anims.create({
+          key: sprite_path + "." + key,
+          frames: ctx.env.anims.generateFrameNumbers("master", { frames: frames }),
+          frameRate: anims.speed || 10,
+          repeat: -1
+        })
+      })
+    }
+
+    var first = obj[Object.keys(obj)[0]]
+    if (!Array.isArray(first)) { first = first.start }
+    var frame = idxFromPos(...first)
+
+    return ctx.env.add.sprite(x, y, "master", frame)
+  }
 }
 
 function generate_map(ctx, sprites) {
