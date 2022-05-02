@@ -7,13 +7,13 @@ export default class BaseClass {
     this.sprite_path = sprite_path || "placeholder"
     this.sprite = this.setSprite(this.sprite_path)
 
-    this.setDepth(this.sprite.y)
   }
 
   setSprite(spriteStr) {
     let sprite = this.ctx.addSpriteAnim(this.opts.x, this.opts.y, spriteStr).setDepth(1)
     sprite.name = spriteStr
     this.sprite_anims = Object.keys(sprite.anims.animationManager.anims.entries)
+    this.sprite.setDepth(this.sprite.y)
 
     return sprite
   }
