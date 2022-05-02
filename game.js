@@ -29,7 +29,7 @@ function preload() {
   this.load.json("sprites", "data/sprites.json")
   this.load.spritesheet("slime", "assets/sprites/slimes/Slime_Medium_Blue.png", { frameWidth: 32, frameHeight: 32 })
   this.load.spritesheet("master", "assets/master.png", { frameWidth: 16, frameHeight: 16 })
-  this.load.spritesheet("big_master", "assets/master.png", { frameWidth: 32, frameHeight: 32, margin: 16 })
+  this.load.spritesheet("big_master", "assets/master.png", { frameWidth: 32, frameHeight: 32 })
 }
 
 function create() {

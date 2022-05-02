@@ -9,7 +9,7 @@
      }
   },
   "things": {
-    "rock": { "base": { "start": [0, 2], "length": 2 } },
+    "rock": { "base": { "start": [1, 2], "length": 2 } },
     "iron_ore": { "base": { "start": [1, 1], "length": 2 } },
     "stump": { "base": { "start": [1, 3], "length": 2 } },
     "chest": { "base": { "start": [16, 1], "length": 2 } },
