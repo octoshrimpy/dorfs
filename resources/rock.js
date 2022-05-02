@@ -1,10 +1,11 @@
 import BaseResource from "./baseResource.js"
+import { sample } from "/helpers.js"
 
 export default class Rock extends BaseResource {
   static objs = []
 
   constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "things.rock")
+    super(ctx, opts, sprite_path || sample(["things.rock", "things.rock2"]))
     this.ctx = ctx
     this.opts = opts || {}
 
