@@ -1,5 +1,5 @@
-import { scaleVal } from "/helpers.js"
 import BaseClass from "../baseClass.js"
+import { scaleVal, scaleX, scaleY } from "/helpers.js"
 
 export default class BaseResource extends BaseClass {
 
@@ -11,6 +11,23 @@ export default class BaseResource extends BaseClass {
     // factor is num of resources per sec
     this.min_collect_factor = 10 // per sec
     this.max_collect_factor = 0.5 // per sec
+  }
+
+  setSprite(sprite_str) {
+    let sprite = super.setSprite(sprite_str)
+
+    let alignToGrid = function(val, size, scale, origin_multiplier) {
+      let aligned = Math.round(val / scale) * scale
+      let variance = Math.random() - 0.5
+      let origin_offset = size * origin_multiplier
+
+      return aligned + variance - origin_offset
+    }
+
+    sprite.x = alignToGrid(sprite.x, sprite.width, scaleX(1), sprite.originX)
+    sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(1), sprite.originY)=
+
+    return sprite
   }
 
   static nearest(x1, y1) {
