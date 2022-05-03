@@ -1,9 +1,9 @@
 import BaseItem from "./base_item.js"
 
-export default class RockItem extends BaseItem {
+export default class LogItem extends BaseItem {
   constructor() {
     super()
 
-    this.weight = 10
+    this.weight = 3
   }
 }

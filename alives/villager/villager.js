@@ -23,6 +23,7 @@ export default class Villager extends BaseHumanoid {
     this.collecting = false
     this.walk_speed = normalDist(10, 70) // 0-100
     this.collect_speed = normalDist(10, 70) // 0-100
+    this.carry_capacity = normalDist(60, 120)
 
     this.home = undefined
     this.job_building = undefined
@@ -68,7 +69,7 @@ export default class Villager extends BaseHumanoid {
   }
 
   fullInventory() {
-    return sum(Object.values(this.inventory)) >= 10
+    return sum(Object.values(this.inventory).map(function(item) { return item.totalWeight() })) >= this.carry_capacity
   }
 
   findDestination() {
@@ -102,11 +103,11 @@ export default class Villager extends BaseHumanoid {
   }
 
   unload(obj) {
-    obj.inventory[this.profession] ||= 0
+    obj.inventory[this.profession] ||= new (this.getProfession().item)
     if (randNPerSec(10) == 0) {
-      if (this.inventory[this.profession] > 0) {
-        obj.inventory[this.profession] += 1
-        this.inventory[this.profession] -= 1
+      if (this.inventory[this.profession].count > 0) {
+        obj.inventory[this.profession].count += 1
+        this.inventory[this.profession].count -= 1
       } else {
         console.log(obj.inventory);
         this.unloading = false
@@ -120,11 +121,11 @@ export default class Villager extends BaseHumanoid {
       this.showTool()
     }
     if (!this.timing) { this.timing = true; console.time([this.profession, this.name].join(": ")) }
-    this.inventory[this.profession] ||= 0
+    this.inventory[this.profession] ||= new (this.getProfession().item)
 
     var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
     if (randNPerSec(collectRatePerSec) == 0) {
-      this.inventory[this.profession] += 1
+      this.inventory[this.profession].count += 1
     }
   }
 

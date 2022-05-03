@@ -1,7 +1,9 @@
 import BaseResource from "./base_resource.js"
+import LogItem from "../items/log_item.js"
 
 export default class Tree extends BaseResource {
   static objs = []
+  static item = LogItem
 
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path || "things.stump")

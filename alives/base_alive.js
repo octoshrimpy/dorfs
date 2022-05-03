@@ -1,4 +1,4 @@
-import BaseClass from "../base_class_js"
+import BaseClass from "../base_class.js"
 import { rand, scaleVal } from "/helpers.js"
 
 export default class BaseAlive extends BaseClass  {
