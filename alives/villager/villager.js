@@ -32,7 +32,6 @@ export default class Villager extends BaseHumanoid {
     this.tool_sprite = undefined
 
     Villager.objs.push(this)
-    this.showTool()
   }
 
   getToolName() {
