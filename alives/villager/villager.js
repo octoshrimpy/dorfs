@@ -17,9 +17,6 @@ export default class Villager extends BaseHumanoid {
       return [sample(name_json.first), sample(name_json.last)].join(" ")
     }()
 
-    let self = this
-    this.sprite.setInteractive().on("pointerdown", function() { self.clicked() })
-
     this.destination = undefined
     this.inventory = {}
     this.unloading = false
