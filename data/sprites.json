@@ -16,6 +16,10 @@
     "chest": { "base": { "start": [16, 1], "length": 2 } },
     "sign": { "base": { "start": [19, 1], "length": 2 } }
   },
+  "tools": {
+    "pick": { "base": { "start": [11, 1], "length": 2 } },
+    "axe": { "base": { "start": [11, 5], "length": 2 } }
+  },
   "alives": {
     "dorfs": {
       "child": {

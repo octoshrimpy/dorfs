@@ -10,8 +10,7 @@ export default class BaseClass {
   }
 
   setSprite(sprite_str) {
-    console.log(this.opts);
-    let sprite = this.ctx.addSpriteAnim(sprite_str, this.opts)
+    let sprite = this.ctx.addSpriteWithAnim(sprite_str, this.opts)
     sprite.name = sprite_str
     this.sprite_anims = Object.keys(sprite.anims.animationManager.anims.entries)
 

@@ -20,6 +20,7 @@ export default class Villager extends BaseHumanoid {
     this.destination = undefined
     this.inventory = {}
     this.unloading = false
+    this.collecting = false
     this.walk_speed = rand(20, 60) // 0-100
     this.collect_speed = rand(20, 60) // 0-100
 
@@ -28,8 +29,33 @@ export default class Villager extends BaseHumanoid {
     this.selected_resource = undefined
     this.selected_storage = undefined
     this.profession = sample(["Lumberjack", "Miner"])
+    this.tool_sprite = undefined
 
     Villager.objs.push(this)
+    this.showTool()
+  }
+
+  getToolName() {
+    if (this.profession == "Lumberjack") {
+      return "tools.axe"
+    } else if (this.profession == "Miner") {
+      return "tools.pick"
+    }
+  }
+
+  showTool() {
+    if (this.tool_sprite) { return }
+
+    let tool_path = this.getToolName()
+    this.tool_sprite = this.ctx.addSpriteWithAnim(tool_path, { x: this.sprite.x, y: this.sprite.y })
+    this.tool_sprite.depth = this.sprite.depth + 1
+    this.tool_sprite.flipX = this.sprite.flipX
+    this.tool_sprite.anims.play([tool_path, "base"].join("."), true)
+  }
+
+  hideTool() {
+    this.tool_sprite?.destroy(true)
+    this.tool_sprite = undefined
   }
 
   getProfession() {
@@ -49,6 +75,10 @@ export default class Villager extends BaseHumanoid {
 
     if (this.fullInventory() || this.unloading) {
       if (this.timing) { this.timing = false; console.timeEnd([this.profession, this.name].join(": ")) }
+      if (this.collecting) {
+        this.collecting = false
+        this.hideTool()
+      }
       this.unloading = true
       dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
       this.selected_storage = dest_obj
@@ -84,6 +114,10 @@ export default class Villager extends BaseHumanoid {
   }
 
   collect(obj) {
+    if (!this.collecting) {
+      this.collecting = true
+      this.showTool()
+    }
     if (!this.timing) { this.timing = true; console.time([this.profession, this.name].join(": ")) }
     this.inventory[this.profession] ||= 0
 

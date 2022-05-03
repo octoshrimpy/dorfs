@@ -73,7 +73,7 @@ function setupContext(env) {
     sprites: env.cache.json.get("sprites")
   }
 
-  ctx.addSpriteAnim = function(sprite_path, opts) {
+  ctx.addSpriteWithAnim = function(sprite_path, opts) {
     let obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
     var first_anim = obj[Object.keys(obj)[0]]
     let sheet_name = first_anim.sheet || "master"
