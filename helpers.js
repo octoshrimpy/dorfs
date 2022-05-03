@@ -9,19 +9,14 @@ export function weightedList() {
   }).flat()
 }
 
-export function normalDist(min, max, multiplier=3) {
-  // multiplier is the multiple of how much more common the center is than the outsides
-  // # EG:
-  // # "1" multiplier is an equal distribution. No Bias.
-  // # "2" (max - min) / 2 is 2x more likely than min or max
-  // # "3" (max - min) / 2 is 3x more likely than min or max
-  //
-  let rand_total = 0
-  times(multiplier, function() {
-    rand_total += rand(min + (max - min))
-  })
+// multiplier is the multiple of how much more common the center is than the outsides
+export function normalDist(min, max, multiplier=3, bias=null) {
+  bias = bias || ((max - min) / 2)
+  let weighted_values = times(multiplier, function() { return rand(min, max) })
+  let norm = weighted_values.sort(function(a, b) { return Math.abs(a - bias) - Math.abs(b - bias) })[0]
+  let mix = rand()
 
-  return rand_total / multiplier
+  return Math.round((norm * (1 - mix)) + (bias * mix))
 }
 
 export function times(times, fn) {
@@ -44,10 +39,11 @@ export function sum(arr) {
 }
 
 export function sample(arr) {
-  return arr[Math.floor(Math.random() * arr.length)]
+  return arr[Math.floor(rand() * arr.length)]
 }
 
 export function rand(min, max) {
+  if (!min) { return Math.random() }
   if (!max) {
     max = min
     min = 0
@@ -55,7 +51,7 @@ export function rand(min, max) {
     max += 1
   }
 
-  return Math.floor(Math.random() * (max - min) + min)
+  return Math.floor(rand() * (max - min) + min)
 }
 
 export function randOnePerNSec(n) {

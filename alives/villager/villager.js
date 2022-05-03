@@ -2,7 +2,7 @@ import BaseHumanoid from "./baseHumanoid.js"
 import Tree from "../../resources/tree.js" //TODO fix these imports, ask game instead
 import Rock from "../../resources/rock.js"
 import Storage from "../../resources/storage.js"
-import { sum, sample, rand, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
+import { sum, sample, normalDist, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
 
 export default class Villager extends BaseHumanoid {
   static objs = []
@@ -16,13 +16,13 @@ export default class Villager extends BaseHumanoid {
       var name_json = ctx.env.cache.json.get("names")
       return [sample(name_json.first), sample(name_json.last)].join(" ")
     }()
-
+    // normalDist(min, max, multiplier=3, bias=null)
     this.destination = undefined
     this.inventory = {}
     this.unloading = false
     this.collecting = false
-    this.walk_speed = rand(20, 60) // 0-100
-    this.collect_speed = rand(20, 60) // 0-100
+    this.walk_speed = normalDist(10, 70) // 0-100
+    this.collect_speed = normalDist(10, 70) // 0-100
 
     this.home = undefined
     this.job_building = undefined
