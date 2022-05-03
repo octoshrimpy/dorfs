@@ -43,13 +43,15 @@ export default class Villager extends BaseHumanoid {
   }
 
   showTool() {
-    if (this.tool_sprite) { return }
+    if (this.tool_sprite) { return } // Don't add another sprite if one exists already
 
     let tool_path = this.getToolName()
     this.tool_sprite = this.ctx.addSpriteWithAnim(tool_path, { x: this.sprite.x, y: this.sprite.y })
     this.tool_sprite.depth = this.sprite.depth + 1
     this.tool_sprite.flipX = this.sprite.flipX
     this.tool_sprite.anims.play([tool_path, "base"].join("."), true)
+    var sprite_fps = scaleVal(this.collect_speed, 0, 100, 0, 20)
+    this.tool_sprite.anims.msPerFrame = 1000 / sprite_fps
   }
 
   hideTool() {
