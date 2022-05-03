@@ -24,6 +24,8 @@ export default class Villager extends BaseHumanoid {
     this.walk_speed = normalDist(10, 70) // 0-100
     this.collect_speed = normalDist(10, 70) // 0-100
     this.carry_capacity = normalDist(60, 120)
+    this.selected = false
+    this.highlight = undefined
 
     this.home = undefined
     this.job_building = undefined
@@ -36,6 +38,12 @@ export default class Villager extends BaseHumanoid {
   }
 
   clicked() {
+    Villager.all().forEach(function(v) {
+      v.selected = false
+      v.highlight?.destroy(true)
+      v.highlight = undefined
+    })
+    this.select()
     console.log(this);
     console.log({
       Name: this.name,
@@ -46,6 +54,14 @@ export default class Villager extends BaseHumanoid {
       Location: Math.round(this.sprite.x) + ", " + Math.round(this.sprite.y),
       Destination: this.destination?.x + ", " + this.destination?.y,
     });
+  }
+
+  select() {
+    this.selected = true
+    if (this.highlight) { return }
+    this.highlight = this.ctx.addSpriteWithAnim("tools.highlight", { x: this.sprite.x, y: this.sprite.y })
+    this.highlight.depth = this.sprite.depth - 1
+    this.highlight.flipX = this.sprite.flipX
   }
 
   getToolName() {

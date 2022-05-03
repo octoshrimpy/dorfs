@@ -41,16 +41,16 @@ Rocco Notes
       [ ] Also have invisible stats for how quickly dorf gains stats (gains mining skill quicker than farming, for example)
       [ ] Dorfs can have sterility (or successful breeding stat/chance?)
       [ ] Inbreeding increases sterility and stats are biased slightly lower
-  [ ] Collecting animations
-      [ ] Speed of collecting animation based on collect_speed
-  [ ] Items should have weights
-      [ ] Max inventory is based on weight, not count
+  [√] Collecting animations
+      [√] Speed of collecting animation based on collect_speed
+  [√] Items should have weights
+      [√] Max inventory is based on weight, not count
   [ ] Villagers should have hunger / sleep
   [ ] Storage should have max inventory
-  [ ] Z index based on Y
+  [√] Z index based on Y
   [√] Names
   [ ] Click to select villager
-      [ ] Show profession, name, speed, collection, house, destination, job site, gender
+      [√] Show profession, name, speed, collection, house, destination, job site, gender
   [ ] GUI - show resources, selected villager, etc
   [ ] Resource: Wheat
   [ ] Profession: Builder

@@ -18,7 +18,8 @@
   },
   "tools": {
     "pick": { "base": { "start": [11, 1], "length": 2 } },
-    "axe": { "base": { "start": [11, 5], "length": 2 } }
+    "axe": { "base": { "start": [11, 5], "length": 2 } },
+    "highlight": { "base": { "start": [6, 4], "length": 2 } }
   },
   "alives": {
     "dorfs": {
