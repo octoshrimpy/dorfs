@@ -17,6 +17,9 @@ export default class Villager extends BaseHumanoid {
       return [sample(name_json.first), sample(name_json.last)].join(" ")
     }()
 
+    let self = this
+    this.sprite.setInteractive().on("pointerdown", function() { self.clicked() })
+
     this.destination = undefined
     this.inventory = {}
     this.unloading = false
@@ -33,6 +36,19 @@ export default class Villager extends BaseHumanoid {
     this.tool_sprite = undefined
 
     Villager.objs.push(this)
+  }
+
+  clicked() {
+    console.log(this);
+    console.log({
+      Name: this.name,
+      Job: this.profession,
+      Walk: this.walk_speed,
+      Collect: this.collect_speed,
+      Capacity: this.carry_capacity,
+      Location: Math.round(this.sprite.x) + ", " + Math.round(this.sprite.y),
+      Destination: this.destination?.x + ", " + this.destination?.y,
+    });
   }
 
   getToolName() {
@@ -76,7 +92,6 @@ export default class Villager extends BaseHumanoid {
     let dest_obj = null
 
     if (this.fullInventory() || this.unloading) {
-      if (this.timing) { this.timing = false; console.timeEnd([this.profession, this.name].join(": ")) }
       if (this.collecting) {
         this.collecting = false
         this.hideTool()
@@ -109,7 +124,6 @@ export default class Villager extends BaseHumanoid {
         obj.inventory[this.profession].count += 1
         this.inventory[this.profession].count -= 1
       } else {
-        console.log(obj.inventory);
         this.unloading = false
       }
     }
@@ -120,7 +134,6 @@ export default class Villager extends BaseHumanoid {
       this.collecting = true
       this.showTool()
     }
-    if (!this.timing) { this.timing = true; console.time([this.profession, this.name].join(": ")) }
     this.inventory[this.profession] ||= new (this.getProfession().item)
 
     var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)

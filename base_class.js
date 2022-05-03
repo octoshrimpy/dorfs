@@ -13,8 +13,14 @@ export default class BaseClass {
     let sprite = this.ctx.addSpriteWithAnim(sprite_str, this.opts)
     sprite.name = sprite_str
     this.sprite_anims = Object.keys(sprite.anims.animationManager.anims.entries)
+    var self = this
+    sprite.setInteractive().on("pointerdown", function() { self.clicked() })
 
     return sprite
+  }
+
+  clicked() {
+    console.log(this)
   }
 
   spriteHasAnim(anim) {
