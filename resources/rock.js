@@ -1,4 +1,4 @@
-import BaseResource from "./baseResource.js"
+import BaseResource from "./base_resource.js"
 import { sample } from "/helpers.js"
 
 export default class Rock extends BaseResource {

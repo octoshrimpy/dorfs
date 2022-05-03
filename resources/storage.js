@@ -1,4 +1,4 @@
-import BaseResource from "./baseResource.js"
+import BaseResource from "./base_resource.js"
 
 export default class Storage extends BaseResource {
   static objs = []

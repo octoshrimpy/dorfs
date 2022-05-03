@@ -1,4 +1,4 @@
-import BaseAlive from "../baseAlive.js"
+import BaseAlive from "../base_alive.js"
 
 export default class BaseHumanoid extends BaseAlive {
   #baseHealth = 50

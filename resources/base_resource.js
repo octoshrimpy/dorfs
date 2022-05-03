@@ -1,4 +1,4 @@
-import BaseClass from "../baseClass.js"
+import BaseClass from "../base_class.js"
 import { scaleVal, scaleX, scaleY } from "/helpers.js"
 
 export default class BaseResource extends BaseClass {

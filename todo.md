@@ -33,7 +33,7 @@
 ===
 
 Rocco Notes
-  [ ] Stats should use standard deviation
+  [√] Stats should use standard deviation
       [ ] Breeding should retain stats of parents- standard deviation with a bias as the average of the parents.
   [ ] Have stats for each collection type (mine, tree, farm) that raises as you do the task (and lowers the longer you're away from the task)
       [ ] Stats effect collection speed

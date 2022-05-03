@@ -1,4 +1,4 @@
-import BaseHumanoid from "./baseHumanoid.js"
+import BaseHumanoid from "./base_humanoid.js"
 import Tree from "../../resources/tree.js" //TODO fix these imports, ask game instead
 import Rock from "../../resources/rock.js"
 import Storage from "../../resources/storage.js"
@@ -16,7 +16,7 @@ export default class Villager extends BaseHumanoid {
       var name_json = ctx.env.cache.json.get("names")
       return [sample(name_json.first), sample(name_json.last)].join(" ")
     }()
-    // normalDist(min, max, multiplier=3, bias=null)
+
     this.destination = undefined
     this.inventory = {}
     this.unloading = false
