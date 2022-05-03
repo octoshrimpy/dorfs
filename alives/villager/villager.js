@@ -2,7 +2,7 @@ import BaseHumanoid from "./baseHumanoid.js"
 import Tree from "../../resources/tree.js" //TODO fix these imports, ask game instead
 import Rock from "../../resources/rock.js"
 import Storage from "../../resources/storage.js"
-import { sum, sample, rand, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
+import { sum, sample, normalDist, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
 
 export default class Villager extends BaseHumanoid {
   static objs = []
@@ -16,20 +16,47 @@ export default class Villager extends BaseHumanoid {
       var name_json = ctx.env.cache.json.get("names")
       return [sample(name_json.first), sample(name_json.last)].join(" ")
     }()
-
+    // normalDist(min, max, multiplier=3, bias=null)
     this.destination = undefined
     this.inventory = {}
     this.unloading = false
-    this.walk_speed = rand(20, 60) // 0-100
-    this.collect_speed = rand(20, 60) // 0-100
+    this.collecting = false
+    this.walk_speed = normalDist(10, 70) // 0-100
+    this.collect_speed = normalDist(10, 70) // 0-100
 
     this.home = undefined
     this.job_building = undefined
     this.selected_resource = undefined
     this.selected_storage = undefined
     this.profession = sample(["Lumberjack", "Miner"])
+    this.tool_sprite = undefined
 
     Villager.objs.push(this)
+  }
+
+  getToolName() {
+    if (this.profession == "Lumberjack") {
+      return "tools.axe"
+    } else if (this.profession == "Miner") {
+      return "tools.pick"
+    }
+  }
+
+  showTool() {
+    if (this.tool_sprite) { return } // Don't add another sprite if one exists already
+
+    let tool_path = this.getToolName()
+    this.tool_sprite = this.ctx.addSpriteWithAnim(tool_path, { x: this.sprite.x, y: this.sprite.y })
+    this.tool_sprite.depth = this.sprite.depth + 1
+    this.tool_sprite.flipX = this.sprite.flipX
+    this.tool_sprite.anims.play([tool_path, "base"].join("."), true)
+    var sprite_fps = scaleVal(this.collect_speed, 0, 100, 0, 20)
+    this.tool_sprite.anims.msPerFrame = 1000 / sprite_fps
+  }
+
+  hideTool() {
+    this.tool_sprite?.destroy(true)
+    this.tool_sprite = undefined
   }
 
   getProfession() {
@@ -49,6 +76,10 @@ export default class Villager extends BaseHumanoid {
 
     if (this.fullInventory() || this.unloading) {
       if (this.timing) { this.timing = false; console.timeEnd([this.profession, this.name].join(": ")) }
+      if (this.collecting) {
+        this.collecting = false
+        this.hideTool()
+      }
       this.unloading = true
       dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
       this.selected_storage = dest_obj
@@ -84,6 +115,10 @@ export default class Villager extends BaseHumanoid {
   }
 
   collect(obj) {
+    if (!this.collecting) {
+      this.collecting = true
+      this.showTool()
+    }
     if (!this.timing) { this.timing = true; console.time([this.profession, this.name].join(": ")) }
     this.inventory[this.profession] ||= 0
 
