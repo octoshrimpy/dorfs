@@ -1,8 +1,10 @@
-import BaseResource from "./baseResource.js"
+import BaseResource from "./base_resource.js"
+import RockItem from "../items/rock_item.js"
 import { sample } from "/helpers.js"
 
 export default class Rock extends BaseResource {
   static objs = []
+  static item = RockItem
 
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path || sample(["things.rock", "things.rock2"]))

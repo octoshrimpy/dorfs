@@ -1,4 +1,4 @@
-import BaseMob from "./baseMob.js"
+import BaseMob from "./base_mob.js"
 import { rand, randOnePerNSec } from "/helpers.js"
 
 export default class Cow extends BaseMob {
