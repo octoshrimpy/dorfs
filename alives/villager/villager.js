@@ -1,6 +1,7 @@
 import BaseHumanoid from "./base_humanoid.js"
 import Tree from "../../resources/tree.js" //TODO fix these imports, ask game instead
 import Rock from "../../resources/rock.js"
+import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
 import { sum, sample, normalDist, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
 
@@ -89,14 +90,23 @@ export default class Villager extends BaseHumanoid {
     }
   }
 
+  prepInventoryForProfession() {
+    let prof = this.getProfession()
+    this.inventory[prof.item.name] ||= prof.newItem()
+  }
+
   fullInventory() {
-    return sum(Object.values(this.inventory).map(function(item) { return item.totalWeight() })) >= this.carry_capacity
+    let inventory_weights = Object.values(this.inventory).map(function(item) {
+      return item.totalWeight()
+    })
+
+    return sum(inventory_weights) >= this.carry_capacity
   }
 
   findDestination() {
     let dest_obj = null
 
-    if (this.fullInventory() || this.unloading) {
+    if (this.unloading || this.fullInventory()) {
       if (this.collecting) {
         this.hideTool()
         this.collecting = false
@@ -124,11 +134,14 @@ export default class Villager extends BaseHumanoid {
   }
 
   unload(obj) {
-    obj.inventory[this.profession] ||= new (this.getProfession().item)
     if (randNPerSec(10) == 0) {
-      if (this.inventory[this.profession].count > 0) {
-        obj.inventory[this.profession].count += 1
-        this.inventory[this.profession].count -= 1
+      let [item_name, item] = Object.entries(this.inventory).find(function([name, item_ref]) {
+        return item_ref.count > 0
+      }) || []
+      if (item_name && this.inventory[item_name].count > 0) {
+        obj.inventory[item_name] ||= new Item(item.opts)
+        obj.inventory[item_name].count += 1
+        this.inventory[item_name].count -= 1
       } else {
         this.unloading = false
       }
@@ -149,13 +162,13 @@ export default class Villager extends BaseHumanoid {
       this.showTool()
     }
 
-    this.inventory[this.profession] ||= new (this.getProfession().item)
+    this.prepInventoryForProfession()
 
     var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
     if (randNPerSec(collectRatePerSec) == 0) {
       if (obj.resources > 0) {
+        this.inventory[obj.item.name].count += 1
         obj.collect()
-        this.inventory[this.profession].count += 1
       }
     }
   }
@@ -183,8 +196,14 @@ export default class Villager extends BaseHumanoid {
           }
         }
       } else {
-        if (!this.bored) { this.bored = true; console.log(this.name + " (" + this.profession + ") is bored..."); }
-        if (randOnePerNSec(5) == 0) { this.setRandomDest() }
+        if (!this.bored) {
+          this.bored = true
+          console.log(this.name + " (" + this.profession + ") is bored...")
+        }
+        if (randOnePerNSec(5) == 0) {
+          this.setRandomDest()
+          this.profession = sample(["Lumberjack", "Miner"])
+        }
       }
     }
 

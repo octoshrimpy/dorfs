@@ -1,8 +1,10 @@
 # MVP
 
 Art Needs:
-  Each piece of Dorf separate and white-scaled. So pure white, but make the shadows grey.
-  Beard/hair, skin, pants, shirt each as separate full white sprites.
+  [ ] Each piece of Dorf separate and white-scaled. So pure white, but make the shadows grey.
+  [ ] Beard/hair, skin, pants, shirt each as separate full white sprites.
+  [ ] Different sprite sheets for trees / 2x3 sprites
+  [ ] Maybe have a sprite variation of carrying a sack/backpack when inventory is full?
 
 * add 3 kinds of land
     * infinite resource pool
@@ -57,6 +59,9 @@ Bugs:
 
 <!-- setTint(0xff0000) -->
 Rocco Notes
+  [ ] Remove *Item classes, instead have a base item class that's defined in the resource
+  [ ] Remove self from objs when resource runs out
+  [ ] Trees should "spread" - grow more trees nearby - still have random spawn, but more likely to grow near each other
   [ ] Show floating text (placeholder UI) for currently selected stats- should live update
   [ ] Layered sprites for colors
       https://www.emanueleferonato.com/2021/01/28/mix-and-merge-more-sprites-into-one-single-game-object-in-your-html5-games-thanks-to-phaser-rendertexture-game-object/

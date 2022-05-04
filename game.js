@@ -13,6 +13,10 @@ var config = {
   scale: {
     zoom: 1.5,
   },
+  fps: {
+    target: 500,
+    forceSetTimeOut: true
+  },
   scene: {
     preload: preload,
     create: create,
@@ -65,8 +69,8 @@ function update() { // ~60fps
   Villager.tick()
   Cow.tick()
 
-  if (randOnePerNSec(60) == 0) { new Rock(ctx, randCoord()) }
-  if (randOnePerNSec(30) == 0) { new Tree(ctx, randCoord()) }
+  if (randOnePerNSec(80) == 0) { new Rock(ctx, randCoord()) }
+  if (randOnePerNSec(25) == 0) { new Tree(ctx, randCoord()) }
 }
 
 function setupContext(env) {

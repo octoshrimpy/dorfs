@@ -1,10 +1,13 @@
 import BaseResource from "./base_resource.js"
-import RockItem from "../items/rock_item.js"
+import Item from "../items/item.js"
 import { sample, normalDist } from "/helpers.js"
 
 export default class Rock extends BaseResource {
   static objs = []
-  static item = RockItem
+  static item = {
+    name: "stone",
+    weight: 10
+  }
 
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path || sample(["things.rock", "things.rock2"]))

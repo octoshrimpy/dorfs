@@ -1,9 +1,13 @@
 import BaseResource from "./base_resource.js"
-import LogItem from "../items/log_item.js"
+import Item from "../items/item.js"
+import { rand } from "/helpers.js"
 
 export default class Tree extends BaseResource {
   static objs = []
-  static item = LogItem
+  static item = {
+    name: "wood",
+    weight: 3
+  }
 
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path || "things.tree")

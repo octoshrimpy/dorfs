@@ -1,7 +1,27 @@
 import BaseClass from "../base_class.js"
+import Item from "../items/item.js"
 import { scaleVal, scaleX, scaleY } from "/helpers.js"
 
 export default class BaseResource extends BaseClass {
+  static nearest(x1, y1) {
+    let with_resources = this.objs.filter(function(obj) { return obj.resources > 0 })
+    let with_dist = with_resources.map(function(obj) {
+      let x2 = obj.sprite.x, y2 = obj.sprite.y
+      let dist = Math.abs(Math.sqrt((x2 - x1)**2 + (y2 - y1)**2))
+
+      return [dist, obj]
+    })
+    let sorted = with_dist.sort(function(a, b) {
+      return a[0] - b[0]
+    })
+    if (sorted.length == 0) { return }
+
+    return sorted[0][1]
+  }
+
+  static newItem() {
+    return new Item(this.item)
+  }
 
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path)
@@ -12,6 +32,7 @@ export default class BaseResource extends BaseClass {
     this.min_collect_factor = 10 // per sec
     this.max_collect_factor = 0.5 // per sec
     this.resources = 100
+    this.item = this.constructor.item
   }
 
   collect() {
@@ -19,6 +40,7 @@ export default class BaseResource extends BaseClass {
     if (this.resources <= 0) {
       this.sprite?.destroy(true)
       this.sprite = undefined
+      // Also remove self from objs
     }
   }
 
@@ -37,21 +59,5 @@ export default class BaseResource extends BaseClass {
     sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(1), sprite.originY)
 
     return sprite
-  }
-
-  static nearest(x1, y1) {
-    let with_resources = this.objs.filter(function(obj) { return obj.resources > 0 })
-    let with_dist = with_resources.map(function(obj) {
-      let x2 = obj.sprite.x, y2 = obj.sprite.y
-      let dist = Math.abs(Math.sqrt((x2 - x1)**2 + (y2 - y1)**2))
-
-      return [dist, obj]
-    })
-    let sorted = with_dist.sort(function(a, b) {
-      return a[0] - b[0]
-    })
-    if (sorted.length == 0) { return }
-
-    return sorted[0][1]
   }
 }

@@ -2,8 +2,9 @@ export default class BaseItem {
   constructor(opts) {
     this.opts = opts || {}
 
-    this.weight = 0
-    this.count = 0
+    this.name = opts.name || "item"
+    this.weight = opts.weight || 1
+    this.count = opts.count || 0
   }
 
   totalWeight() {
