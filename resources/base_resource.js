@@ -11,6 +11,15 @@ export default class BaseResource extends BaseClass {
     // factor is num of resources per sec
     this.min_collect_factor = 10 // per sec
     this.max_collect_factor = 0.5 // per sec
+    this.resources = 100
+  }
+
+  collect() {
+    this.resources -= 1
+    if (this.resources <= 0) {
+      this.sprite?.destroy(true)
+      this.sprite = undefined
+    }
   }
 
   setSprite(sprite_str) {
@@ -31,13 +40,18 @@ export default class BaseResource extends BaseClass {
   }
 
   static nearest(x1, y1) {
-    return this.objs.map(function(obj) {
+    let with_resources = this.objs.filter(function(obj) { return obj.resources > 0 })
+    let with_dist = with_resources.map(function(obj) {
       let x2 = obj.sprite.x, y2 = obj.sprite.y
       let dist = Math.abs(Math.sqrt((x2 - x1)**2 + (y2 - y1)**2))
 
       return [dist, obj]
-    }).sort(function(a, b) {
+    })
+    let sorted = with_dist.sort(function(a, b) {
       return a[0] - b[0]
-    })[0][1]
+    })
+    if (sorted.length == 0) { return }
+
+    return sorted[0][1]
   }
 }

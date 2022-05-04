@@ -1,5 +1,9 @@
 # MVP
 
+Art Needs:
+  Each piece of Dorf separate and white-scaled. So pure white, but make the shadows grey.
+  Beard/hair, skin, pants, shirt each as separate full white sprites.
+
 * add 3 kinds of land
     * infinite resource pool
         * will auto-add to inventory (later might drop on ground for sweeping)
@@ -28,11 +32,35 @@
     * money acquired by selling to random wandering traders
     * forge money with gold
 
-
+Colors:
+#140c1c
+#442434
+#30346d
+#4e4a4e
+#854c30
+#346524
+#d04648
+#757161
+#597dce
+#d27d2c
+#8595a1
+#6daa2c
+#d2aa99
+#6dc2ca
+#dad45e
+#deeed6
 
 ===
 
+Bugs:
+
+
+<!-- setTint(0xff0000) -->
 Rocco Notes
+  [ ] Layered sprites for colors
+      https://www.emanueleferonato.com/2021/01/28/mix-and-merge-more-sprites-into-one-single-game-object-in-your-html5-games-thanks-to-phaser-rendertexture-game-object/
+  [ ] Wander speed and destination speed should be different
+      [ ] Maybe wander speed is randomized every change in direction?
   [√] Stats should use standard deviation
       [ ] Breeding should retain stats of parents- standard deviation with a bias as the average of the parents.
   [ ] Have stats for each collection type (mine, tree, farm) that raises as you do the task (and lowers the longer you're away from the task)

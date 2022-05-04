@@ -1,9 +1,9 @@
 import BaseAlive from "../base_alive.js"
 
 export default class BaseHumanoid extends BaseAlive {
-  #baseHealth = 50
-  #baseInventorySlots = 1
-  #inventory = []
+  // #baseHealth = 50
+  // #baseInventorySlots = 1
+  // #inventory = []
 
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path)

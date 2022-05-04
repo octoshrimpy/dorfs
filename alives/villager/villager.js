@@ -21,11 +21,12 @@ export default class Villager extends BaseHumanoid {
     this.inventory = {}
     this.unloading = false
     this.collecting = false
-    this.walk_speed = normalDist(10, 70) // 0-100
-    this.collect_speed = normalDist(10, 70) // 0-100
-    this.carry_capacity = normalDist(60, 120)
+    this.walk_speed = opts.walk_speed || normalDist(10, 70, 4) // 0-100
+    this.collect_speed = opts.collect_speed || normalDist(10, 70, 4) // 0-100
+    this.carry_capacity = opts.carry_capacity || normalDist(60, 120, 4)
     this.selected = false
     this.highlight = undefined
+    this.bored = true
 
     this.home = undefined
     this.job_building = undefined
@@ -44,16 +45,7 @@ export default class Villager extends BaseHumanoid {
       v.highlight = undefined
     })
     this.select()
-    console.log(this);
-    console.log({
-      Name: this.name,
-      Job: this.profession,
-      Walk: this.walk_speed,
-      Collect: this.collect_speed,
-      Capacity: this.carry_capacity,
-      Location: Math.round(this.sprite.x) + ", " + Math.round(this.sprite.y),
-      Destination: this.destination?.x + ", " + this.destination?.y,
-    });
+    console.log(this)
   }
 
   select() {
@@ -106,8 +98,8 @@ export default class Villager extends BaseHumanoid {
 
     if (this.fullInventory() || this.unloading) {
       if (this.collecting) {
-        this.collecting = false
         this.hideTool()
+        this.collecting = false
       }
       this.unloading = true
       dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
@@ -119,6 +111,7 @@ export default class Villager extends BaseHumanoid {
       dest_obj = this.selected_resource || this.getProfession().nearest(this.sprite.x, this.sprite.y)
       this.selected_resource = dest_obj
     }
+    if (!dest_obj) { return }
 
     return dest_obj
   }
@@ -143,25 +136,39 @@ export default class Villager extends BaseHumanoid {
   }
 
   collect(obj) {
+    if (obj.resources <= 0) {
+      this.collecting = false
+      this.hideTool()
+      this.clearDest()
+      this.findDestination()
+      return
+    }
+
     if (!this.collecting) {
       this.collecting = true
       this.showTool()
     }
+
     this.inventory[this.profession] ||= new (this.getProfession().item)
 
     var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
     if (randNPerSec(collectRatePerSec) == 0) {
-      this.inventory[this.profession].count += 1
+      if (obj.resources > 0) {
+        obj.collect()
+        this.inventory[this.profession].count += 1
+      }
     }
   }
 
   tick() {
-    let fps = 60
-    if (!this.profession) {
-      if (randOnePerNSec(3) == 0) {
-        this.setRandomDest()
-      }
-    } else if (!this.destination) {
+    if (this.selected_resource && this.selected_resource.resources <= 0) {
+      this.collecting = false
+      this.selected_resource = undefined
+      this.hideTool()
+      this.clearDest()
+    }
+
+    if (!this.destination) {
       var obj = this.findDestination()
 
       if (obj) {
@@ -174,6 +181,8 @@ export default class Villager extends BaseHumanoid {
             this.collect(obj)
           }
         }
+      } else {
+        if (randOnePerNSec(5) == 0) { this.setRandomDest() }
       }
     }
 

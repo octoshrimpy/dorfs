@@ -3,7 +3,7 @@ import Tree from "./resources/tree.js"
 import Rock from "./resources/rock.js"
 import Cow from "./alives/mobs/cow.js"
 import Storage from "./resources/storage.js"
-import { rand, scaleVal, scaleX, scaleY, weightedList, times, byWeight, idxFromPos, sample } from "/helpers.js"
+import { rand, randOnePerNSec, scaleVal, scaleX, scaleY, weightedList, times, byWeight, idxFromPos, sample } from "/helpers.js"
 
 var map_w = 45, map_h = 23
 var config = {
@@ -20,9 +20,7 @@ var config = {
   }
 }
 
-var game = new Phaser.Game(config)
-var ctx
-var world
+let ctx, world, game = new Phaser.Game(config)
 
 function preload() {
   this.load.json("names", "data/names.json")
@@ -32,16 +30,17 @@ function preload() {
   this.load.spritesheet("big_master", "assets/big_master.png", { frameWidth: 32, frameHeight: 32 })
 }
 
+function randCoord() {
+  return { x: rand(32, config.width - 32), y: rand(32, config.height - 32) }
+}
+
 function create() {
   setupContext(this)
   world = generate_map(this, ctx.sprites)
 
   ctx.world = world
 
-  var randCoord = function() {
-    return { x: rand(32, config.width - 32), y: rand(32, config.height - 32) }
-  }
-
+  // new Villager(ctx, {...randCoord(), walk_speed: 70 })
   times(10, function() {
     new Villager(ctx, randCoord())
   })
@@ -64,6 +63,9 @@ function create() {
 function update() { // ~60fps
   Villager.tick()
   Cow.tick()
+
+  if (randOnePerNSec(100) == 0) { new Rock(ctx, randCoord()) }
+  if (randOnePerNSec(60) == 0) { new Tree(ctx, randCoord()) }
 }
 
 function setupContext(env) {
