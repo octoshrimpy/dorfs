@@ -26,7 +26,7 @@ export default class Villager extends BaseHumanoid {
     this.carry_capacity = opts.carry_capacity || normalDist(60, 120, 4)
     this.selected = false
     this.highlight = undefined
-    this.bored = true
+    this.bored = false
 
     this.home = undefined
     this.job_building = undefined
@@ -172,6 +172,7 @@ export default class Villager extends BaseHumanoid {
       var obj = this.findDestination()
 
       if (obj) {
+        if (this.bored) { this.bored = false; console.log(this.name + " (" + this.profession + ") found something to do!"); }
         this.destination = { x: obj.sprite.x, y: obj.sprite.y }
 
         if (this.arrivedAtDest()) {
@@ -182,6 +183,7 @@ export default class Villager extends BaseHumanoid {
           }
         }
       } else {
+        if (!this.bored) { this.bored = true; console.log(this.name + " (" + this.profession + ") is bored..."); }
         if (randOnePerNSec(5) == 0) { this.setRandomDest() }
       }
     }

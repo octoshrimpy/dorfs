@@ -6,7 +6,7 @@ export default class Tree extends BaseResource {
   static item = LogItem
 
   constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "things.stump")
+    super(ctx, opts, sprite_path || "things.tree")
 
     this.ctx = ctx
     opts = opts || {}
@@ -14,7 +14,7 @@ export default class Tree extends BaseResource {
     this.min_collect_factor = 1 // per sec
     this.max_collect_factor = 4 // per sec
 
-    this.resources = 100
+    this.resources = rand(50, 100)
 
     Tree.objs.push(this)
   }

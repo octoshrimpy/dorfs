@@ -28,6 +28,7 @@ function preload() {
   this.load.spritesheet("slime", "assets/sprites/slimes/Slime_Medium_Blue.png", { frameWidth: 32, frameHeight: 32 })
   this.load.spritesheet("master", "assets/master.png", { frameWidth: 16, frameHeight: 16 })
   this.load.spritesheet("big_master", "assets/big_master.png", { frameWidth: 32, frameHeight: 32 })
+  this.load.spritesheet("big_master2x3", "assets/bigmaster2x3.png", { frameWidth: 32, frameHeight: 48 })
 }
 
 function randCoord() {
@@ -64,8 +65,8 @@ function update() { // ~60fps
   Villager.tick()
   Cow.tick()
 
-  if (randOnePerNSec(100) == 0) { new Rock(ctx, randCoord()) }
-  if (randOnePerNSec(60) == 0) { new Tree(ctx, randCoord()) }
+  if (randOnePerNSec(60) == 0) { new Rock(ctx, randCoord()) }
+  if (randOnePerNSec(30) == 0) { new Tree(ctx, randCoord()) }
 }
 
 function setupContext(env) {

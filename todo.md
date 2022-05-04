@@ -57,6 +57,7 @@ Bugs:
 
 <!-- setTint(0xff0000) -->
 Rocco Notes
+  [ ] Show floating text (placeholder UI) for currently selected stats- should live update
   [ ] Layered sprites for colors
       https://www.emanueleferonato.com/2021/01/28/mix-and-merge-more-sprites-into-one-single-game-object-in-your-html5-games-thanks-to-phaser-rendertexture-game-object/
   [ ] Wander speed and destination speed should be different

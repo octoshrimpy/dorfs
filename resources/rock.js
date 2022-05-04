@@ -1,6 +1,6 @@
 import BaseResource from "./base_resource.js"
 import RockItem from "../items/rock_item.js"
-import { sample } from "/helpers.js"
+import { sample, normalDist } from "/helpers.js"
 
 export default class Rock extends BaseResource {
   static objs = []
@@ -14,7 +14,7 @@ export default class Rock extends BaseResource {
     this.min_collect_factor = 0.5 // per sec
     this.max_collect_factor = 3 // per sec
 
-    this.resources = 100
+    this.resources = normalDist(25, 200)
 
     Rock.objs.push(this)
   }
