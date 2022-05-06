@@ -1,6 +1,7 @@
 # MVP
 
 Art Needs:
+  [ ] Tents/Houses/Sleepies
   [ ] Each piece of Dorf separate and white-scaled. So pure white, but make the shadows grey.
   [ ] Beard/hair, skin, pants, shirt each as separate full white sprites.
   [ ] Different sprite sheets for trees / 2x3 sprites
@@ -35,22 +36,22 @@ Art Needs:
     * forge money with gold
 
 Colors:
-#140c1c
+#140C1C
 #442434
-#30346d
-#4e4a4e
-#854c30
+#30346D
+#4E4A4E
+#854C30
 #346524
-#d04648
+#D04648
 #757161
-#597dce
-#d27d2c
-#8595a1
-#6daa2c
-#d2aa99
-#6dc2ca
-#dad45e
-#deeed6
+#597DCE
+#D27D2C
+#8595A1
+#6DAA2C
+#D2AA99
+#6DC2CA
+#DAD45E
+#DEEED6
 
 ===
 
@@ -59,10 +60,17 @@ Bugs:
 
 <!-- setTint(0xff0000) -->
 Rocco Notes
-  [ ] Remove *Item classes, instead have a base item class that's defined in the resource
-  [ ] Remove self from objs when resource runs out
+  [√] Remove *Item classes, instead have a base item class that's defined in the resource
+  [ ] FOV
+      [ ] Don't know if your resource is gone until it's in FOV
+      [ ] If resource is missing- still walk to goal spot, then begin "wander" looking for the next resource. Show a [?] while looking- villager will automatically start collecting the next found resource unless player intervenes and tells villager to go elsewhere.
+      [ ] Only avoid obstacles in FOV
+          [ ] If direct path is blocked, iterate outwards until a clear path in FOV is found. Maintain that dir until a FOV towards coord is clear, then follow that vector
+  [√] Remove self from objs when resource runs out
   [ ] Trees should "spread" - grow more trees nearby - still have random spawn, but more likely to grow near each other
+  [ ] Trees/Rocks should regrow naturally VERY slowly- however, mine/forest patches can be placed which gives increased growth in that area
   [ ] Show floating text (placeholder UI) for currently selected stats- should live update
+  [ ] Should be able to click outside of an object to "unselect"
   [ ] Layered sprites for colors
       https://www.emanueleferonato.com/2021/01/28/mix-and-merge-more-sprites-into-one-single-game-object-in-your-html5-games-thanks-to-phaser-rendertexture-game-object/
   [ ] Wander speed and destination speed should be different
@@ -75,6 +83,7 @@ Rocco Notes
       [ ] Also have invisible stats for how quickly dorf gains stats (gains mining skill quicker than farming, for example)
       [ ] Dorfs can have sterility (or successful breeding stat/chance?)
       [ ] Inbreeding increases sterility and stats are biased slightly lower
+          * Flatter deviation (in addition to reduced bias), so more likely to hit extremes
   [√] Collecting animations
       [√] Speed of collecting animation based on collect_speed
   [√] Items should have weights
@@ -88,9 +97,9 @@ Rocco Notes
   [ ] GUI - show resources, selected villager, etc
   [ ] Resource: Wheat
   [ ] Profession: Builder
-      [ ] house
-      [ ] bakery
-      [ ] smith
+      [ ] House
+      [ ] Bakery
+      [ ] Smith
   [ ] House
       [ ] Limited tenants
       [ ] Allows rest

@@ -40,13 +40,33 @@ export default class Villager extends BaseHumanoid {
   }
 
   clicked() {
+    super.clicked()
     Villager.all().forEach(function(v) {
       v.selected = false
       v.highlight?.destroy(true)
       v.highlight = undefined
     })
     this.select()
-    console.log(this)
+  }
+
+  inspect() {
+    return [
+      this.name,
+      this.bored ? "Wandering..." : this.profession,
+      ...Object.entries(this.inventory).map(function([name, item]) {
+        return name + ": " + item.count + " (" + item.totalWeight() + " lbs)"
+      }),
+      // "Destination: " + JSON.stringify(this.destination),
+      "Walk Speed: " + this.walk_speed,
+      "Collect Speed: " + this.collect_speed,
+      "Carry Capacity: " + this.carry_capacity,
+      // "Unloading: " + this.unloading,
+      // "Collecting: " + this.collecting,
+      // "Home: " + this.home,
+      // "Job Building: " + this.job_building,
+      // "Selected Resource: " + this.selected_resource,
+      // "Selected Storage: " + this.selected_storage,
+    ]
   }
 
   select() {
@@ -185,7 +205,7 @@ export default class Villager extends BaseHumanoid {
       var obj = this.findDestination()
 
       if (obj) {
-        if (this.bored) { this.bored = false; console.log(this.name + " (" + this.profession + ") found something to do!"); }
+        if (this.bored) { this.bored = false }
         this.destination = { x: obj.sprite.x, y: obj.sprite.y }
 
         if (this.arrivedAtDest()) {
@@ -196,10 +216,7 @@ export default class Villager extends BaseHumanoid {
           }
         }
       } else {
-        if (!this.bored) {
-          this.bored = true
-          console.log(this.name + " (" + this.profession + ") is bored...")
-        }
+        if (!this.bored) { this.bored = true }
         if (randOnePerNSec(5) == 0) {
           this.setRandomDest()
           this.profession = sample(["Lumberjack", "Miner"])

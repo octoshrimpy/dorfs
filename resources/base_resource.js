@@ -23,24 +23,47 @@ export default class BaseResource extends BaseClass {
     return new Item(this.item)
   }
 
+  static clearRemoved() {
+    this.objs = this.objs.filter(function(obj) {
+      return !!obj.sprite
+    })
+    this.global_objs = this.global_objs.filter(function(obj) {
+      return !!obj.sprite
+    })
+  }
+
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path)
     this.ctx = ctx
     this.opts = opts || {}
+
+    this.x = this.opts.x
+    this.y = this.opts.y
 
     // factor is num of resources per sec
     this.min_collect_factor = 10 // per sec
     this.max_collect_factor = 0.5 // per sec
     this.resources = 100
     this.item = this.constructor.item
+    this.constructor.objs.push(this)
+  }
+
+  inspect() {
+    return [
+      this.constructor.name,
+      "Resources: " + this.resources
+    ]
+  }
+
+  remove() {
+    this.clearSprite()
+    this.constructor.clearRemoved()
   }
 
   collect() {
     this.resources -= 1
     if (this.resources <= 0) {
-      this.sprite?.destroy(true)
-      this.sprite = undefined
-      // Also remove self from objs
+      this.remove()
     }
   }
 
@@ -59,5 +82,10 @@ export default class BaseResource extends BaseClass {
     sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(1), sprite.originY)
 
     return sprite
+  }
+
+  clearSprite() {
+    this.sprite?.destroy(true)
+    this.sprite = undefined
   }
 }

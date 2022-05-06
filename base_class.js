@@ -1,4 +1,5 @@
 export default class BaseClass {
+  static global_objs = []
 
   constructor(ctx, opts, sprite_path) {
     this.ctx = ctx
@@ -7,6 +8,7 @@ export default class BaseClass {
     this.sprite_path = sprite_path || "placeholder"
     this.sprite = this.setSprite(this.sprite_path)
     this.sprite.depth = this.sprite.y
+    this.constructor.global_objs.push(this)
   }
 
   setSprite(sprite_str) {
@@ -20,7 +22,12 @@ export default class BaseClass {
   }
 
   clicked() {
+    this.ctx.selected = this
     console.log(this)
+  }
+
+  inspect() {
+    return this.constructor.name
   }
 
   spriteHasAnim(anim) {

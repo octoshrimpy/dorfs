@@ -18,8 +18,6 @@ export default class Rock extends BaseResource {
     this.max_collect_factor = 3 // per sec
 
     this.resources = normalDist(25, 200)
-
-    Rock.objs.push(this)
   }
 
   decay() {}

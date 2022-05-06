@@ -9,7 +9,14 @@ export default class Storage extends BaseResource {
     this.opts = opts || {}
 
     this.inventory = {}
+  }
 
-    Storage.objs.push(this)
+  inspect() {
+    return [
+      "Storage",
+      ...Object.entries(this.inventory).map(function([name, item]) {
+        return name + ": " + item.count + " (" + item.totalWeight() + " lbs)"
+      })
+    ]
   }
 }

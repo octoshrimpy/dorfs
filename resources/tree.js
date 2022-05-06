@@ -19,8 +19,6 @@ export default class Tree extends BaseResource {
     this.max_collect_factor = 4 // per sec
 
     this.resources = rand(50, 100)
-
-    Tree.objs.push(this)
   }
 
   growth() {}
