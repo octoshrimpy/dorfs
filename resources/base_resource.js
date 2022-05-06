@@ -37,12 +37,22 @@ export default class BaseResource extends BaseClass {
     this.ctx = ctx
     this.opts = opts || {}
 
+    this.x = this.opts.x
+    this.y = this.opts.y
+
     // factor is num of resources per sec
     this.min_collect_factor = 10 // per sec
     this.max_collect_factor = 0.5 // per sec
     this.resources = 100
     this.item = this.constructor.item
     this.constructor.objs.push(this)
+  }
+
+  inspect() {
+    return [
+      this.constructor.name,
+      "Resources: " + this.resources
+    ]
   }
 
   remove() {

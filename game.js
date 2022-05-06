@@ -3,6 +3,7 @@ import Tree from "./resources/tree.js"
 import Rock from "./resources/rock.js"
 import Cow from "./alives/mobs/cow.js"
 import Storage from "./resources/storage.js"
+import FloatingText from "./support/floating_text.js"
 import { rand, randOnePerNSec, scaleVal, scaleX, scaleY, weightedList, times, byWeight, idxFromPos, sample } from "/helpers.js"
 
 var map_w = 45, map_h = 23
@@ -72,13 +73,16 @@ function update() { // ~60fps
 
   if (randOnePerNSec(80) == 0) { new Rock(ctx, randCoord()) }
   if (randOnePerNSec(25) == 0) { new Tree(ctx, randCoord()) }
+
+  ctx.overlay.setText(ctx.selected?.inspect())
 }
 
 function setupContext(env) {
   ctx = {
     env: env,
     game: game,
-    sprites: env.cache.json.get("sprites")
+    sprites: env.cache.json.get("sprites"),
+    overlay: new FloatingText(env)
   }
 
   ctx.addSpriteWithAnim = function(sprite_path, opts) {

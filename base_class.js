@@ -22,7 +22,12 @@ export default class BaseClass {
   }
 
   clicked() {
+    this.ctx.selected = this
     console.log(this)
+  }
+
+  inspect() {
+    return this.constructor.name
   }
 
   spriteHasAnim(anim) {
