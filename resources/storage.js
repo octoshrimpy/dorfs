@@ -9,7 +9,5 @@ export default class Storage extends BaseResource {
     this.opts = opts || {}
 
     this.inventory = {}
-
-    Storage.objs.push(this)
   }
 }

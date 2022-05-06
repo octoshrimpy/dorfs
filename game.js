@@ -62,7 +62,8 @@ function create() {
     new Rock(ctx, randCoord())
   })
 
-  new Storage(ctx, randCoord())
+  // new Storage(ctx, randCoord())
+  new Storage(ctx, { x: config.width/2, y: config.height/2 })
 }
 
 function update() { // ~60fps
