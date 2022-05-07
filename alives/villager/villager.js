@@ -39,16 +39,6 @@ export default class Villager extends BaseHumanoid {
     Villager.objs.push(this)
   }
 
-  clicked() {
-    super.clicked()
-    Villager.all().forEach(function(v) {
-      v.selected = false
-      v.highlight?.destroy(true)
-      v.highlight = undefined
-    })
-    this.select()
-  }
-
   inspect() {
     return [
       this.name,
@@ -69,14 +59,6 @@ export default class Villager extends BaseHumanoid {
     ]
   }
 
-  select() {
-    this.selected = true
-    if (this.highlight) { return }
-    this.highlight = this.ctx.addSpriteWithAnim("tools.highlight", { x: this.sprite.x, y: this.sprite.y })
-    this.highlight.depth = this.sprite.depth - 1
-    this.highlight.flipX = this.sprite.flipX
-  }
-
   getToolName() {
     if (this.profession == "Lumberjack") {
       return "tools.axe"
@@ -86,20 +68,20 @@ export default class Villager extends BaseHumanoid {
   }
 
   showTool() {
-    if (this.tool_sprite) { return } // Don't add another sprite if one exists already
-
     let tool_path = this.getToolName()
     this.tool_sprite = this.ctx.addSpriteWithAnim(tool_path, { x: this.sprite.x, y: this.sprite.y })
-    this.tool_sprite.depth = this.sprite.depth + 1
-    this.tool_sprite.flipX = this.sprite.flipX
     this.tool_sprite.anims.play([tool_path, "base"].join("."), true)
     var sprite_fps = scaleVal(this.collect_speed, 0, 100, 0, 20)
     this.tool_sprite.anims.msPerFrame = 1000 / sprite_fps
   }
 
-  hideTool() {
-    this.tool_sprite?.destroy(true)
-    this.tool_sprite = undefined
+  showHighlight() {
+    this.highlight = this.ctx.addSpriteWithAnim("tools.highlight", { x: this.sprite.x, y: this.sprite.y })
+  }
+
+  hideSprite(sprite) {
+    this[sprite]?.destroy(true)
+    this[sprite] = undefined
   }
 
   getProfession() {
@@ -127,10 +109,7 @@ export default class Villager extends BaseHumanoid {
     let dest_obj = null
 
     if (this.unloading || this.fullInventory()) {
-      if (this.collecting) {
-        this.hideTool()
-        this.collecting = false
-      }
+      this.collecting = false
       this.unloading = true
       dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
       this.selected_storage = dest_obj
@@ -171,16 +150,12 @@ export default class Villager extends BaseHumanoid {
   collect(obj) {
     if (obj.resources <= 0) {
       this.collecting = false
-      this.hideTool()
       this.clearDest()
       this.findDestination()
       return
     }
 
-    if (!this.collecting) {
-      this.collecting = true
-      this.showTool()
-    }
+    this.collecting = true
 
     this.prepInventoryForProfession()
 
@@ -197,7 +172,6 @@ export default class Villager extends BaseHumanoid {
     if (this.selected_resource && this.selected_resource.resources <= 0) {
       this.collecting = false
       this.selected_resource = undefined
-      this.hideTool()
       this.clearDest()
     }
 
@@ -225,5 +199,23 @@ export default class Villager extends BaseHumanoid {
     }
 
     this.moveTowardsDest()
+    this.draw()
+  }
+
+  followSprite(sprite, depth_offset=1) {
+    sprite.x = this.sprite.x
+    sprite.y = this.sprite.y
+    sprite.flipX = this.sprite.flipX
+    sprite.depth = this.sprite.depth + depth_offset
+  }
+
+  draw() {
+    if (this.collecting && !this.tool_sprite) { this.showTool() }
+    if (!this.collecting && this.tool_sprite) { this.hideSprite("tool_sprite") }
+    if (this.tool_sprite) { this.followSprite(this.tool_sprite) }
+
+    if (this.selected && !this.highlight) { this.showHighlight() }
+    if (!this.selected && this.highlight) { this.hideSprite("highlight") }
+    if (this.highlight) { this.followSprite(this.highlight, -1) }
   }
 }

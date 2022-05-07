@@ -1,3 +1,4 @@
+import BaseClass from "./base_class.js"
 import Villager from "./alives/villager/villager.js"
 import Tree from "./resources/tree.js"
 import Rock from "./resources/rock.js"
@@ -68,8 +69,7 @@ function create() {
 }
 
 function update() { // ~60fps
-  Villager.tick()
-  Cow.tick()
+  BaseClass.tick()
 
   if (randOnePerNSec(80) == 0) { new Rock(ctx, randCoord()) }
   if (randOnePerNSec(25) == 0) { new Tree(ctx, randCoord()) }

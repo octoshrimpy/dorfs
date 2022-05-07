@@ -22,7 +22,10 @@ export default class BaseClass {
   }
 
   clicked() {
+    if (this.ctx.selected) { this.ctx.selected.selected = false } // Unselect the previous selected
+
     this.ctx.selected = this
+    this.selected = true
     console.log(this)
   }
 
@@ -43,9 +46,13 @@ export default class BaseClass {
     this.sprite.anims.stop(null)
   }
 
+  tick() {
+    // No op - should be overridden in child methods
+  }
+
   // Class method
   static tick() {
-    this.objs.forEach(function(obj) {
+    this.global_objs.forEach(function(obj) {
       obj.tick()
     })
   }

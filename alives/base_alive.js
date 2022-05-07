@@ -54,18 +54,5 @@ export default class BaseAlive extends BaseClass  {
     this.sprite.x += dx * speed_scale
     this.sprite.y += dy * speed_scale
     this.sprite.depth = this.sprite.y
-
-    if (this.tool_sprite) {
-      this.tool_sprite.x = this.sprite.x
-      this.tool_sprite.y = this.sprite.y
-      this.tool_sprite.flipX = this.sprite.flipX
-      this.tool_sprite.depth = this.sprite.depth + 1
-    }
-    if (this.highlight) {
-      this.highlight.x = this.sprite.x
-      this.highlight.y = this.sprite.y
-      this.highlight.flipX = this.sprite.flipX
-      this.highlight.depth = this.sprite.depth - 1
-    }
   }
 }
