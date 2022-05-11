@@ -1,7 +1,7 @@
 # MVP
 
 Art Needs:
-  [ ] Tents/Houses/Sleepies
+  [x] Tents/Houses/Sleepies
   [ ] Each piece of Dorf separate and white-scaled. So pure white, but make the shadows grey.
   [ ] Beard/hair, skin, pants, shirt each as separate full white sprites.
   [ ] Different sprite sheets for trees / 2x3 sprites

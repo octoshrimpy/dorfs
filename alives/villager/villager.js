@@ -218,4 +218,26 @@ export default class Villager extends BaseHumanoid {
     if (!this.selected && this.highlight) { this.hideSprite("highlight") }
     if (this.highlight) { this.followSprite(this.highlight, -1) }
   }
+
+  getRandomDorfSprite(){
+    let list_wear           = ["blue_dark", "blue", "green_dark", "green"]
+    let list_skin           = ["fair", "light", "dark"]
+    let list_hair_color     = ["brown", "black", "ashen", "copper", "blonde", "redhead"]
+    let list_hair_color_old = ["silver", "white"]
+    let list_beard_style    = ["full", "managed", "handlebar", "pedostache", "clean"]
+    let list_hair_style     = ["bowl", "bald", "part", "mohawk", "zucc", "monk", "shag", "clean"]
+
+    let wear_pants  = this._getRandFrom(list_wear)
+    let wear_shirt  = this._getRandFrom(list_wear)
+    let skin  = this._getRandFrom(list_skin)
+    let hairs = this._getRandFrom(list_hair_color)
+    let beard = this._getRandFrom(list_beard_style)
+    let hair  = this._getRandFrom(list_hair_style)
+
+    return {wear_pants, wear_shirt, skin, hairs, beard, hair}
+  }
+
+  _getRandFrom(array) {
+    return array[Math.floor(Math.random() * array.length)]
+  }
 }
