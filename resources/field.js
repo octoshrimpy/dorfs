@@ -14,8 +14,8 @@ export default class Field extends BaseResource {
     this.ctx = ctx
     this.opts = opts || {}
 
-    this.min_collect_factor = 0.1 // per sec
-    this.max_collect_factor = 2 // per sec
+    this.min_collect_factor = 1 // per sec
+    this.max_collect_factor = 5 // per sec
 
     this.growth_speed = 30
     this.growth_state = normalDist(1, 4, 5)
@@ -42,7 +42,7 @@ export default class Field extends BaseResource {
   }
 
   tick() {
-    if (this.growth_state < this.max_growth_state && randOnePerNSec(10) == 0) {
+    if (this.growth_state < this.max_growth_state && randOnePerNSec(30)) {
       this.growth_state += 1
       this.setSpriteByStage()
 

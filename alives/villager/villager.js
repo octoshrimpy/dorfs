@@ -147,7 +147,7 @@ export default class Villager extends BaseHumanoid {
   }
 
   unload(obj) {
-    if (randNPerSec(10) == 0) {
+    if (randNPerSec(10)) {
       let [item_name, item] = Object.entries(this.inventory).find(function([name, item_ref]) {
         return item_ref.count > 0
       }) || []
@@ -206,7 +206,7 @@ export default class Villager extends BaseHumanoid {
         }
       } else {
         if (!this.bored) { this.bored = true }
-        if (randOnePerNSec(5) == 0) {
+        if (randNPerSec(10)) {
           this.setRandomDest()
           this.profession = sample(["Lumberjack", "Miner", "Farmer"])
         }

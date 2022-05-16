@@ -7,7 +7,6 @@ export default class BaseClass {
 
     this.sprite_path = sprite_path || "placeholder"
     this.sprite = this.setSprite(this.sprite_path)
-    this.sprite.depth = this.sprite.y
     this.constructor.global_objs.push(this)
   }
 
@@ -17,6 +16,7 @@ export default class BaseClass {
     this.sprite_anims = Object.keys(sprite.anims.animationManager.anims.entries)
     var self = this
     sprite.setInteractive().on("pointerdown", function() { self.clicked() })
+    sprite.depth = sprite.y
 
     return sprite
   }

@@ -6,7 +6,7 @@ import Field from "./resources/field.js"
 import Cow from "./alives/mobs/cow.js"
 import Storage from "./resources/storage.js"
 import FloatingText from "./support/floating_text.js"
-import { rand, randOnePerNSec, scaleVal, scaleX, scaleY, weightedList, times, byWeight, idxFromPos, sample } from "/helpers.js"
+import { rand, normalDist, randOnePerNSec, scaleVal, scaleX, scaleY, weightedList, times, idxFromPos, sample } from "/helpers.js"
 
 var map_w = 45, map_h = 23
 var config = {
@@ -66,19 +66,26 @@ function create() {
     new Rock(ctx, randCoord())
   })
 
-  times(4, function() {
-    new Field(ctx, randCoord())
+  times(normalDist(1, 5), function() {
+    var horz = normalDist(1, 10, 3, 3) // min, max, mult, bias
+    var vert = normalDist(1, 10, 3, 3)
+    var start = randCoord()
+
+    times(horz, function(x_idx) {
+      times(vert, function(y_idx) {
+        new Field(ctx, { x: start.x + (x_idx * scaleX(1)), y: start.y + (y_idx * scaleY(0.5))})
+      })
+    })
   })
 
-  // new Storage(ctx, randCoord())
   new Storage(ctx, { x: config.width/2, y: config.height/2 })
 }
 
 function update() { // ~60fps
   BaseClass.tick()
 
-  if (randOnePerNSec(80) == 0) { new Rock(ctx, randCoord()) }
-  if (randOnePerNSec(25) == 0) { new Tree(ctx, randCoord()) }
+  if (randOnePerNSec(80)) { new Rock(ctx, randCoord()) }
+  if (randOnePerNSec(80)) { new Tree(ctx, randCoord()) }
 
   ctx.overlay.setText(ctx.selected?.inspect())
 }
