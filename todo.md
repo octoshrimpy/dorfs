@@ -60,6 +60,10 @@ Bugs:
 
 <!-- setTint(0xff0000) -->
 Rocco Notes
+  Wheat should grow in patches. Grows over time, can only be harvested once full, the falls back to initial state where it must grow over time.
+  Bakers take wheat, craft to bread, and put bread in storage.
+  Dorfs get hungry, take bread from storage, and consume it.
+
   [√] Remove *Item classes, instead have a base item class that's defined in the resource
   [ ] FOV
       [ ] Don't know if your resource is gone until it's in FOV
@@ -69,30 +73,30 @@ Rocco Notes
   [√] Remove self from objs when resource runs out
   [ ] Trees should "spread" - grow more trees nearby - still have random spawn, but more likely to grow near each other
   [ ] Trees/Rocks should regrow naturally VERY slowly- however, mine/forest patches can be placed which gives increased growth in that area
-  [ ] Show floating text (placeholder UI) for currently selected stats- should live update
-  [ ] Should be able to click outside of an object to "unselect"
-  [ ] Layered sprites for colors
+  [√] Show floating text (placeholder UI) for currently selected stats- should live update
+      [ ] Should be able to click outside of an object to "unselect"
+  [ ] v2? Layered sprites for colors
       https://www.emanueleferonato.com/2021/01/28/mix-and-merge-more-sprites-into-one-single-game-object-in-your-html5-games-thanks-to-phaser-rendertexture-game-object/
   [ ] Wander speed and destination speed should be different
       [ ] Maybe wander speed is randomized every change in direction?
   [√] Stats should use standard deviation
-      [ ] Breeding should retain stats of parents- standard deviation with a bias as the average of the parents.
+      [ ] v2? Breeding should retain stats of parents- standard deviation with a bias as the average of the parents.
   [ ] Have stats for each collection type (mine, tree, farm) that raises as you do the task (and lowers the longer you're away from the task)
       [ ] Stats effect collection speed
       [ ] Can also have stats such as strength which allows carrying more weight
       [ ] Also have invisible stats for how quickly dorf gains stats (gains mining skill quicker than farming, for example)
       [ ] Dorfs can have sterility (or successful breeding stat/chance?)
-      [ ] Inbreeding increases sterility and stats are biased slightly lower
+          [ ] Inbreeding increases sterility and stats are biased slightly lower
           * Flatter deviation (in addition to reduced bias), so more likely to hit extremes
   [√] Collecting animations
       [√] Speed of collecting animation based on collect_speed
   [√] Items should have weights
       [√] Max inventory is based on weight, not count
   [ ] Villagers should have hunger / sleep
-  [ ] Storage should have max inventory
+  [√] Storage should have max inventory
   [√] Z index based on Y
   [√] Names
-  [ ] Click to select villager
+  [√] Click to select villager
       [√] Show profession, name, speed, collection, house, destination, job site, gender
   [ ] GUI - show resources, selected villager, etc
   [ ] Resource: Wheat

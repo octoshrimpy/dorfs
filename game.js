@@ -2,6 +2,7 @@ import BaseClass from "./base_class.js"
 import Villager from "./alives/villager/villager.js"
 import Tree from "./resources/tree.js"
 import Rock from "./resources/rock.js"
+import Field from "./resources/field.js"
 import Cow from "./alives/mobs/cow.js"
 import Storage from "./resources/storage.js"
 import FloatingText from "./support/floating_text.js"
@@ -35,6 +36,7 @@ function preload() {
   this.load.spritesheet("master", "assets/master.png", { frameWidth: 16, frameHeight: 16 })
   this.load.spritesheet("big_master", "assets/big_master.png", { frameWidth: 32, frameHeight: 32 })
   this.load.spritesheet("big_master2x3", "assets/bigmaster2x3.png", { frameWidth: 32, frameHeight: 48 })
+  // Add some custom function to take the hard width of sprites, which are always 1x1 ratio and then centers the origin
 }
 
 function randCoord() {
@@ -62,6 +64,10 @@ function create() {
 
   times(4, function() {
     new Rock(ctx, randCoord())
+  })
+
+  times(4, function() {
+    new Field(ctx, randCoord())
   })
 
   // new Storage(ctx, randCoord())
@@ -100,14 +106,16 @@ function setupContext(env) {
         return idxFromPos(anims.start[0] + t, anims.start[1], sheet_cells_horz)
       })
 
-      anims.start.forEach(function(anim) {
-        ctx.env.anims.create({
-          key: sprite_path + "." + key,
-          frames: ctx.env.anims.generateFrameNumbers(sheet_name, { frames: frames }),
-          frameRate: anims.speed || 10,
-          repeat: -1
+      if (anims.length > 1) {
+        anims.start.forEach(function(anim) {
+          ctx.env.anims.create({
+            key: sprite_path + "." + key,
+            frames: ctx.env.anims.generateFrameNumbers(sheet_name, { frames: frames }),
+            frameRate: anims.speed || 10,
+            repeat: -1
+          })
         })
-      })
+      }
     }
 
     if (!Array.isArray(first_anim)) { first_anim = first_anim.start }

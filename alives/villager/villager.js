@@ -1,6 +1,7 @@
 import BaseHumanoid from "./base_humanoid.js"
 import Tree from "../../resources/tree.js" //TODO fix these imports, ask game instead
 import Rock from "../../resources/rock.js"
+import Field from "../../resources/field.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
 import { sum, sample, normalDist, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
@@ -33,7 +34,7 @@ export default class Villager extends BaseHumanoid {
     this.job_building = undefined
     this.selected_resource = undefined
     this.selected_storage = undefined
-    this.profession = sample(["Lumberjack", "Miner"])
+    this.profession = undefined
     this.tool_sprite = undefined
 
     Villager.objs.push(this)
@@ -64,6 +65,8 @@ export default class Villager extends BaseHumanoid {
       return "tools.axe"
     } else if (this.profession == "Miner") {
       return "tools.pick"
+    } else if (this.profession == "Farmer") {
+      return "tools.scythe"
     }
   }
 
@@ -89,12 +92,16 @@ export default class Villager extends BaseHumanoid {
       return Tree
     } else if (this.profession == "Miner") {
       return Rock
+    } else if (this.profession == "Farmer") {
+      return Field
     }
   }
 
   prepInventoryForProfession() {
     let prof = this.getProfession()
-    this.inventory[prof.item.name] ||= prof.newItem()
+    if (prof) {
+      this.inventory[prof.item.name] ||= prof.newItem()
+    }
   }
 
   fullInventory() {
@@ -117,7 +124,7 @@ export default class Villager extends BaseHumanoid {
       if (this.selected_resource && this.selected_resource.resources <= 0) {
         this.selected_resource = undefined
       }
-      dest_obj = this.selected_resource || this.getProfession().nearest(this.sprite.x, this.sprite.y)
+      dest_obj = this.selected_resource || this.getProfession()?.nearest(this.sprite.x, this.sprite.y)
       this.selected_resource = dest_obj
     }
     if (!dest_obj) { return }
@@ -193,7 +200,7 @@ export default class Villager extends BaseHumanoid {
         if (!this.bored) { this.bored = true }
         if (randOnePerNSec(5) == 0) {
           this.setRandomDest()
-          this.profession = sample(["Lumberjack", "Miner"])
+          this.profession = sample(["Lumberjack", "Miner", "Farmer"])
         }
       }
     }
