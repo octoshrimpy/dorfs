@@ -34,7 +34,8 @@ export default class Villager extends BaseHumanoid {
     this.job_building = undefined
     this.selected_resource = undefined
     this.selected_storage = undefined
-    this.profession = undefined
+    // this.profession = undefined
+    this.profession = sample(["Lumberjack", "Miner", "Farmer"])
     this.tool_sprite = undefined
 
     Villager.objs.push(this)
@@ -43,7 +44,8 @@ export default class Villager extends BaseHumanoid {
   inspect() {
     return [
       this.name,
-      this.bored ? "Wandering..." : this.profession,
+      "Profession: " + this.profession,
+      this.bored ? "Wandering..." : (this.collecting ? "Collecting" : "Unloading"),
       ...Object.entries(this.inventory).map(function([name, item]) {
         return name + ": " + item.count + " (" + item.totalWeight() + " lbs)"
       }),
@@ -124,15 +126,16 @@ export default class Villager extends BaseHumanoid {
       if (this.selected_resource && this.selected_resource.resources <= 0) {
         this.selected_resource = undefined
       }
-      if (this.selected_resource?.collector && this.selected_resource.collector != this) {
+      if (this.selected_resource?.collector != this) {
         this.selected_resource = undefined
       }
       dest_obj = this.selected_resource || this.getProfession()?.nearest(this.sprite.x, this.sprite.y)
       this.selected_resource = dest_obj
+      if (this.selected_resource) {
+        this.selected_resource.collector = this
+      }
     }
-    if (!dest_obj) { return }
 
-    this.selected_resource.collector = this
     return dest_obj
   }
 
@@ -162,6 +165,7 @@ export default class Villager extends BaseHumanoid {
     if (obj.resources <= 0) {
       this.collecting = false
       this.clearDest()
+      this.unloading = true
       this.findDestination()
       return
     }
