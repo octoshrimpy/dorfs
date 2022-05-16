@@ -124,11 +124,15 @@ export default class Villager extends BaseHumanoid {
       if (this.selected_resource && this.selected_resource.resources <= 0) {
         this.selected_resource = undefined
       }
+      if (this.selected_resource?.collector && this.selected_resource.collector != this) {
+        this.selected_resource = undefined
+      }
       dest_obj = this.selected_resource || this.getProfession()?.nearest(this.sprite.x, this.sprite.y)
       this.selected_resource = dest_obj
     }
     if (!dest_obj) { return }
 
+    this.selected_resource.collector = this
     return dest_obj
   }
 
