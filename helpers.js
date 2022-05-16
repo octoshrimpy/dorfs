@@ -53,7 +53,7 @@ export function sample(arr) {
 // If one arg is given, returns an integer between 0,arg inclusive
 // If two args are given, returns an integer between min,max inclusive
 export function rand(min, max) {
-  if (!min) { return Math.random() }
+  if (!min && !max) { return Math.random() }
   if (!max) {
     max = min
     min = 0

@@ -6,6 +6,18 @@ Art Needs:
   [ ] Beard/hair, skin, pants, shirt each as separate full white sprites.
   [ ] Different sprite sheets for trees / 2x3 sprites
   [ ] Maybe have a sprite variation of carrying a sack/backpack when inventory is full?
+  [ ] GUI
+      [ ] Overall (Resources, villager count, babies, villagers per profession...)
+      [ ] Game Time (Year? Season?)
+      [ ] Selected (Show stats of clicked dorf, resources for block, storage for item, etc...)
+      [ ] Craft Menu
+  [ ] Sprite-specific professions
+      [ ] Lumberjack
+      [ ] Miner
+      [ ] Farmer
+      [ ] Builder
+      [ ] Baker
+      [ ] Smith
 
 * add 3 kinds of land
     * infinite resource pool
@@ -60,10 +72,10 @@ Bugs:
 
 <!-- setTint(0xff0000) -->
 Rocco Notes
-  Wheat should grow in patches. Grows over time, can only be harvested once full, the falls back to initial state where it must grow over time.
-  Bakers take wheat, craft to bread, and put bread in storage.
-  Dorfs get hungry, take bread from storage, and consume it.
-
+  [√] Wheat should grow in patches. Grows over time, can only be harvested once full, the falls back to initial state where it must grow over time.
+  [ ] Bakers take wheat, craft to bread, and put bread in storage.
+  [ ] Dorfs get hungry, take bread from storage, and consume it.
+  [ ] Stuff shouldn't spawn on top of each other
   [√] Remove *Item classes, instead have a base item class that's defined in the resource
   [ ] FOV
       [ ] Don't know if your resource is gone until it's in FOV
@@ -72,7 +84,6 @@ Rocco Notes
           [ ] If direct path is blocked, iterate outwards until a clear path in FOV is found. Maintain that dir until a FOV towards coord is clear, then follow that vector
   [√] Remove self from objs when resource runs out
   [ ] Trees should "spread" - grow more trees nearby - still have random spawn, but more likely to grow near each other
-  [ ] Trees/Rocks should regrow naturally VERY slowly- however, mine/forest patches can be placed which gives increased growth in that area
   [√] Show floating text (placeholder UI) for currently selected stats- should live update
       [ ] Should be able to click outside of an object to "unselect"
   [ ] v2? Layered sprites for colors
@@ -93,13 +104,13 @@ Rocco Notes
   [√] Items should have weights
       [√] Max inventory is based on weight, not count
   [ ] Villagers should have hunger / sleep
-  [√] Storage should have max inventory
+  [ ] Storage should have max inventory
   [√] Z index based on Y
   [√] Names
   [√] Click to select villager
       [√] Show profession, name, speed, collection, house, destination, job site, gender
-  [ ] GUI - show resources, selected villager, etc
-  [ ] Resource: Wheat
+  [√] GUI - show resources, selected villager, etc
+  [√] Resource: Wheat
   [ ] Profession: Builder
       [ ] House
       [ ] Bakery

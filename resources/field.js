@@ -57,6 +57,7 @@ export default class Field extends BaseResource {
     if (this.resources <= 0) {
       this.growth_state = 1
       this.setSpriteByStage()
+      this.collector = undefined
     }
   }
 }

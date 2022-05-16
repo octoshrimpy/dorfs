@@ -175,7 +175,7 @@ export default class Villager extends BaseHumanoid {
     this.prepInventoryForProfession()
 
     var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
-    if (randNPerSec(collectRatePerSec) == 0) {
+    if (randNPerSec(collectRatePerSec)) {
       if (obj.resources > 0) {
         this.inventory[obj.item.name].count += 1
         obj.collect()
