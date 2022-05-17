@@ -9,6 +9,7 @@ export default class BaseAlive extends BaseClass  {
     super(ctx, opts, sprite_path)
     this.ctx = ctx
     opts = opts || {}
+    this.constructor.objs.push(this)
   }
 
   setRandomDest() {

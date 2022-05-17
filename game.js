@@ -4,6 +4,7 @@ import Tree from "./resources/tree.js"
 import Rock from "./resources/rock.js"
 import Field from "./resources/field.js"
 import Cow from "./alives/mobs/cow.js"
+import Chicken from "./alives/mobs/chicken.js"
 import Storage from "./resources/storage.js"
 import FloatingText from "./support/floating_text.js"
 import { rand, normalDist, randOnePerNSec, scaleVal, scaleX, scaleY, weightedList, times, idxFromPos, sample } from "/helpers.js"
@@ -62,6 +63,10 @@ function create() {
     new Cow(ctx, randCoord())
   })
 
+  times(5, function() {
+    new Chicken(ctx, randCoord())
+  })
+
   times(4, function() {
     new Rock(ctx, randCoord())
   })
@@ -100,6 +105,7 @@ function setupContext(env) {
 
   ctx.addSpriteWithAnim = function(sprite_path, opts) {
     let obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
+    if (!obj) { return ctx.addSpriteWithAnim("placeholder", opts) }
     var first_anim = obj[Object.keys(obj)[0]]
     let sheet_name = first_anim.sheet || "master"
     let cell_size = ctx.env.game.textures.list[sheet_name].frames[0].width

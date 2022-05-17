@@ -1,4 +1,5 @@
 import BaseAlive from "../base_alive.js"
+import { randOnePerNSec } from "/helpers.js"
 
 export default class BaseHumanoid extends BaseAlive {
   // #baseHealth = 20
@@ -7,5 +8,13 @@ export default class BaseHumanoid extends BaseAlive {
     super(ctx, opts, sprite_path)
     this.ctx = ctx
     this.opts = opts || {}
+  }
+
+  tick() {
+    if (randOnePerNSec(this.wander_scale || 10)) {
+      this.setRandomDest()
+    }
+
+    this.moveTowardsDest()
   }
 }

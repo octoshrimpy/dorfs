@@ -57,9 +57,10 @@
       }
     },
     "animals": {
-      "cow": {
-        "stand": [6, 5]
-      }
+      "cow": { "stand": [6, 5] },
+      "chicken1": { "stand": [6, 7] },
+      "chicken2": { "stand": [7, 7] },
+      "chicken3": { "stand": [8, 7] }
     }
   }
 }
