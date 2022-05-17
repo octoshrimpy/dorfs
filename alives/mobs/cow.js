@@ -17,7 +17,7 @@ export default class Cow extends BaseMob {
   }
 
   tick() {
-    if (randOnePerNSec(10) == 0) {
+    if (randOnePerNSec(10)) {
       this.setRandomDest()
     }
 

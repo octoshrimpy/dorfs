@@ -4,7 +4,9 @@ import { scaleVal, scaleX, scaleY } from "/helpers.js"
 
 export default class BaseResource extends BaseClass {
   static nearest(x1, y1) {
-    let with_resources = this.objs.filter(function(obj) { return obj.resources > 0 })
+    let with_resources = this.objs.filter(function(obj) {
+      return obj.resources > 0 && obj.collector == undefined
+    })
     let with_dist = with_resources.map(function(obj) {
       let x2 = obj.sprite.x, y2 = obj.sprite.y
       let dist = Math.abs(Math.sqrt((x2 - x1)**2 + (y2 - y1)**2))
@@ -39,6 +41,8 @@ export default class BaseResource extends BaseClass {
 
     this.x = this.opts.x
     this.y = this.opts.y
+
+    this.collector = undefined
 
     // factor is num of resources per sec
     this.min_collect_factor = 10 // per sec
@@ -79,7 +83,7 @@ export default class BaseResource extends BaseClass {
     }
 
     sprite.x = alignToGrid(sprite.x, sprite.width, scaleX(1), sprite.originX)
-    sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(1), sprite.originY)
+    sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(0.5), sprite.originY)
 
     return sprite
   }

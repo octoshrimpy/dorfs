@@ -1,6 +1,7 @@
 import BaseHumanoid from "./base_humanoid.js"
 import Tree from "../../resources/tree.js" //TODO fix these imports, ask game instead
 import Rock from "../../resources/rock.js"
+import Field from "../../resources/field.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
 import { sum, sample, normalDist, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
@@ -33,7 +34,8 @@ export default class Villager extends BaseHumanoid {
     this.job_building = undefined
     this.selected_resource = undefined
     this.selected_storage = undefined
-    this.profession = sample(["Lumberjack", "Miner"])
+    // this.profession = undefined
+    this.profession = sample(["Lumberjack", "Miner", "Farmer"])
     this.tool_sprite = undefined
 
     Villager.objs.push(this)
@@ -42,7 +44,8 @@ export default class Villager extends BaseHumanoid {
   inspect() {
     return [
       this.name,
-      this.bored ? "Wandering..." : this.profession,
+      "Profession: " + this.profession,
+      this.bored ? "Wandering..." : (this.collecting ? "Collecting" : "Unloading"),
       ...Object.entries(this.inventory).map(function([name, item]) {
         return name + ": " + item.count + " (" + item.totalWeight() + " lbs)"
       }),
@@ -64,6 +67,8 @@ export default class Villager extends BaseHumanoid {
       return "tools.axe"
     } else if (this.profession == "Miner") {
       return "tools.pick"
+    } else if (this.profession == "Farmer") {
+      return "tools.scythe"
     }
   }
 
@@ -89,12 +94,16 @@ export default class Villager extends BaseHumanoid {
       return Tree
     } else if (this.profession == "Miner") {
       return Rock
+    } else if (this.profession == "Farmer") {
+      return Field
     }
   }
 
   prepInventoryForProfession() {
     let prof = this.getProfession()
-    this.inventory[prof.item.name] ||= prof.newItem()
+    if (prof) {
+      this.inventory[prof.item.name] ||= prof.newItem()
+    }
   }
 
   fullInventory() {
@@ -117,10 +126,15 @@ export default class Villager extends BaseHumanoid {
       if (this.selected_resource && this.selected_resource.resources <= 0) {
         this.selected_resource = undefined
       }
-      dest_obj = this.selected_resource || this.getProfession().nearest(this.sprite.x, this.sprite.y)
+      if (this.selected_resource?.collector != this) {
+        this.selected_resource = undefined
+      }
+      dest_obj = this.selected_resource || this.getProfession()?.nearest(this.sprite.x, this.sprite.y)
       this.selected_resource = dest_obj
+      if (this.selected_resource) {
+        this.selected_resource.collector = this
+      }
     }
-    if (!dest_obj) { return }
 
     return dest_obj
   }
@@ -133,7 +147,7 @@ export default class Villager extends BaseHumanoid {
   }
 
   unload(obj) {
-    if (randNPerSec(10) == 0) {
+    if (randNPerSec(10)) {
       let [item_name, item] = Object.entries(this.inventory).find(function([name, item_ref]) {
         return item_ref.count > 0
       }) || []
@@ -151,6 +165,7 @@ export default class Villager extends BaseHumanoid {
     if (obj.resources <= 0) {
       this.collecting = false
       this.clearDest()
+      this.unloading = true
       this.findDestination()
       return
     }
@@ -160,7 +175,7 @@ export default class Villager extends BaseHumanoid {
     this.prepInventoryForProfession()
 
     var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
-    if (randNPerSec(collectRatePerSec) == 0) {
+    if (randNPerSec(collectRatePerSec)) {
       if (obj.resources > 0) {
         this.inventory[obj.item.name].count += 1
         obj.collect()
@@ -191,9 +206,9 @@ export default class Villager extends BaseHumanoid {
         }
       } else {
         if (!this.bored) { this.bored = true }
-        if (randOnePerNSec(5) == 0) {
+        if (randNPerSec(10)) {
           this.setRandomDest()
-          this.profession = sample(["Lumberjack", "Miner"])
+          this.profession = sample(["Lumberjack", "Miner", "Farmer"])
         }
       }
     }

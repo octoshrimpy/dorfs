@@ -2,10 +2,11 @@ import BaseClass from "./base_class.js"
 import Villager from "./alives/villager/villager.js"
 import Tree from "./resources/tree.js"
 import Rock from "./resources/rock.js"
+import Field from "./resources/field.js"
 import Cow from "./alives/mobs/cow.js"
 import Storage from "./resources/storage.js"
 import FloatingText from "./support/floating_text.js"
-import { rand, randOnePerNSec, scaleVal, scaleX, scaleY, weightedList, times, byWeight, idxFromPos, sample } from "/helpers.js"
+import { rand, normalDist, randOnePerNSec, scaleVal, scaleX, scaleY, weightedList, times, idxFromPos, sample } from "/helpers.js"
 
 var map_w = 45, map_h = 23
 var config = {
@@ -35,6 +36,7 @@ function preload() {
   this.load.spritesheet("master", "assets/master.png", { frameWidth: 16, frameHeight: 16 })
   this.load.spritesheet("big_master", "assets/big_master.png", { frameWidth: 32, frameHeight: 32 })
   this.load.spritesheet("big_master2x3", "assets/bigmaster2x3.png", { frameWidth: 32, frameHeight: 48 })
+  // Add some custom function to take the hard width of sprites, which are always 1x1 ratio and then centers the origin
 }
 
 function randCoord() {
@@ -64,15 +66,26 @@ function create() {
     new Rock(ctx, randCoord())
   })
 
-  // new Storage(ctx, randCoord())
+  times(normalDist(1, 5), function() {
+    var horz = normalDist(1, 10, 3, 3) // min, max, mult, bias
+    var vert = normalDist(1, 10, 3, 3)
+    var start = randCoord()
+
+    times(horz, function(x_idx) {
+      times(vert, function(y_idx) {
+        new Field(ctx, { x: start.x + (x_idx * scaleX(1)), y: start.y + (y_idx * scaleY(0.5))})
+      })
+    })
+  })
+
   new Storage(ctx, { x: config.width/2, y: config.height/2 })
 }
 
 function update() { // ~60fps
   BaseClass.tick()
 
-  if (randOnePerNSec(80) == 0) { new Rock(ctx, randCoord()) }
-  if (randOnePerNSec(25) == 0) { new Tree(ctx, randCoord()) }
+  if (randOnePerNSec(80)) { new Rock(ctx, randCoord()) }
+  if (randOnePerNSec(80)) { new Tree(ctx, randCoord()) }
 
   ctx.overlay.setText(ctx.selected?.inspect())
 }
@@ -100,14 +113,16 @@ function setupContext(env) {
         return idxFromPos(anims.start[0] + t, anims.start[1], sheet_cells_horz)
       })
 
-      anims.start.forEach(function(anim) {
-        ctx.env.anims.create({
-          key: sprite_path + "." + key,
-          frames: ctx.env.anims.generateFrameNumbers(sheet_name, { frames: frames }),
-          frameRate: anims.speed || 10,
-          repeat: -1
+      if (anims.length > 1) {
+        anims.start.forEach(function(anim) {
+          ctx.env.anims.create({
+            key: sprite_path + "." + key,
+            frames: ctx.env.anims.generateFrameNumbers(sheet_name, { frames: frames }),
+            frameRate: anims.speed || 10,
+            repeat: -1
+          })
         })
-      })
+      }
     }
 
     if (!Array.isArray(first_anim)) { first_anim = first_anim.start }
