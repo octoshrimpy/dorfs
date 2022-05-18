@@ -1,11 +1,11 @@
 import BaseMob from "./base_mob.js"
-import { rand } from "/helpers.js"
+import { rand, weightedSample } from "/helpers.js"
 
 export default class Cow extends BaseMob {
   static objs = []
 
   constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, "alives.animals.cow")
+    super(ctx, opts, "alives.animals.cow" + weightedSample(["1", 2], ["2", 1], ["3", 2]))
     this.ctx = ctx
     this.opts = opts || {}
 

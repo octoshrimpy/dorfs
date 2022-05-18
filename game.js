@@ -59,11 +59,11 @@ function create() {
     new Tree(ctx, randCoord())
   })
 
-  times(3, function() {
+  times(5, function() {
     new Cow(ctx, randCoord())
   })
 
-  times(5, function() {
+  times(10, function() {
     new Chicken(ctx, randCoord())
   })
 
