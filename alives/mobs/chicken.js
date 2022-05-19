@@ -12,6 +12,6 @@ export default class Chicken extends BaseMob {
     this.destination = undefined
     this.walk_speed = rand(5, 15) // 0-100
 
-    this.setRandomDest()
+    this.wander()
   }
 }

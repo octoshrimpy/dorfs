@@ -13,6 +13,6 @@ export default class Cow extends BaseMob {
     this.walk_speed = rand(2, 8)
     this.wander_scale = 10 // Move every 10 sec
 
-    this.setRandomDest()
+    this.wander()
   }
 }

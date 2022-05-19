@@ -16,6 +16,16 @@ export function weightedSample() {
   return sample(weightedList(...Array.from(arguments)))
 }
 
+export function sort(arr) {
+  return arr.sort(function(a, b) {
+    return a - b
+  })
+}
+
+export function constrain(val, min, max) {
+  return sort([val, min, max])[1]
+}
+
 // Returns an integer between min and max, inclusive.
 // Follows a bell curve- center numbers are `multiplier` times more likely to appear than outsides
 // If provided, `bias` will act as the top of the bell curve

@@ -225,7 +225,7 @@ export default class Villager extends BaseHumanoid {
       } else {
         if (!this.bored) { this.bored = true }
         if (randNPerSec(10)) {
-          this.setRandomDest()
+          this.wander()
           this.takeRandomProfession()
         }
       }

@@ -14,6 +14,7 @@ var config = {
   type: Phaser.AUTO,
   width: scaleX(map_w),
   height: scaleY(map_h),
+  pixelArt: true,
   scale: {
     zoom: 1.5,
   },
@@ -63,7 +64,7 @@ function create() {
     new Cow(ctx, randCoord())
   })
 
-  times(10, function() {
+  times(1000, function() {
     new Chicken(ctx, randCoord())
   })
 

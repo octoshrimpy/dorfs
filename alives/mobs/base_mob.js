@@ -12,7 +12,7 @@ export default class BaseHumanoid extends BaseAlive {
 
   tick() {
     if (randOnePerNSec(this.wander_scale || 10)) {
-      this.setRandomDest()
+      this.wander()
     }
 
     this.moveTowardsDest()
