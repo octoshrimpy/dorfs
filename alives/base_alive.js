@@ -54,6 +54,6 @@ export default class BaseAlive extends BaseClass  {
 
     this.sprite.x += dx * speed_scale
     this.sprite.y += dy * speed_scale
-    this.sprite.depth = this.sprite.y + 5
+    this.sprite.depth = this.sprite.y
   }
 }

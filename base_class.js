@@ -24,8 +24,8 @@ export default class BaseClass {
     this.sprite_anims = Object.keys(new_sprite.anims.animationManager.anims.entries)
     var self = this
     new_sprite.setInteractive().on("pointerdown", function() { self.clicked() })
-    new_sprite.depth = new_sprite.y
     this.sprite = new_sprite
+    this.depth = this.sprite.y
 
     return new_sprite
   }

@@ -82,9 +82,9 @@ export default class BaseResource extends BaseClass {
 
       return aligned + variance - origin_offset
     }
-
     sprite.x = alignToGrid(sprite.x, sprite.width, scaleX(1), sprite.originX)
     sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(0.5), sprite.originY)
+    sprite.depth = sprite.y
 
     return sprite
   }
