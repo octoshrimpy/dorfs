@@ -84,7 +84,13 @@ export default class BaseResource extends BaseClass {
     }
     sprite.x = alignToGrid(sprite.x, sprite.width, scaleX(1), sprite.originX)
     sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(0.5), sprite.originY)
-    sprite.depth = sprite.y
+    // Depth should be the "base" of the sprite.
+    // Take the "y" (center point of sprite) and add half of the sprite height to align to the base.
+    // Add half of a scaleY (1 cell) so that the depth aligns with the center point of the bottom cell.
+    sprite.depth = sprite.y + sprite.height/2 - scaleY(0.5)
+
+    // var circle = this.ctx.env.add.circle(this.sprite.x, this.sprite.depth, 2, 0xFF0000)
+    // circle.depth = sprite.depth
 
     return sprite
   }
