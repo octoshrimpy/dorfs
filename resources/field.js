@@ -10,15 +10,18 @@ export default class Field extends BaseResource {
   }
 
   constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "things.wheat1")
+    super(ctx, opts, sprite_path || "things.wheats.a.1")
     this.ctx = ctx
     this.opts = opts || {}
+
+    this.sprite_version = sample(["a", "b", "c"])
+    this.growth_state = normalDist(1, 4, 5)
+    this.setSpriteByStage()
 
     this.min_collect_factor = 1 // per sec
     this.max_collect_factor = 5 // per sec
 
     this.growth_speed = 30
-    this.growth_state = normalDist(1, 4, 5)
     this.max_growth_state = 4
 
     this.resources = 0
@@ -33,7 +36,7 @@ export default class Field extends BaseResource {
   }
 
   growthStageSprite() {
-    return "things.wheat" + this.growth_state
+    return ["things.wheats", this.sprite_version, this.growth_state].join(".")
   }
 
   setSpriteByStage() {

@@ -5,7 +5,7 @@ export default class Cow extends BaseMob {
   static objs = []
 
   constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, "alives.animals.cow" + weightedSample(["1", 2], ["2", 1], ["3", 2]))
+    super(ctx, opts, "alives.animals.cows." + weightedSample(["light", 2], ["white", 1], ["brown", 2]))
     this.ctx = ctx
     this.opts = opts || {}
 
