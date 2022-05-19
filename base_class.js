@@ -5,20 +5,29 @@ export default class BaseClass {
     this.ctx = ctx
     this.opts = opts || {}
 
-    this.sprite_path = sprite_path || "placeholder"
-    this.sprite = this.setSprite(this.sprite_path)
+    this.setSprite(sprite_path)
     this.constructor.global_objs.push(this)
   }
 
   setSprite(sprite_str) {
-    let sprite = this.ctx.addSpriteWithAnim(sprite_str, this.opts)
-    sprite.name = sprite_str
-    this.sprite_anims = Object.keys(sprite.anims.animationManager.anims.entries)
+    sprite_str = sprite_str || "placeholder"
+    this.sprite_path = sprite_str
+    var old_sprite = this.sprite
+    var sprite_opts = this.opts
+    if (old_sprite) {
+      sprite_opts.x = old_sprite.x
+      sprite_opts.y = old_sprite.y
+      old_sprite.destroy(true)
+    }
+    let new_sprite = this.ctx.addSpriteWithAnim(sprite_str, sprite_opts)
+    new_sprite.name = sprite_str
+    this.sprite_anims = Object.keys(new_sprite.anims.animationManager.anims.entries)
     var self = this
-    sprite.setInteractive().on("pointerdown", function() { self.clicked() })
-    sprite.depth = sprite.y
+    new_sprite.setInteractive().on("pointerdown", function() { self.clicked() })
+    new_sprite.depth = new_sprite.y
+    this.sprite = new_sprite
 
-    return sprite
+    return new_sprite
   }
 
   clicked() {
@@ -31,6 +40,11 @@ export default class BaseClass {
 
   inspect() {
     return this.constructor.name
+  }
+
+  clearSprite() {
+    this.sprite?.destroy(true)
+    this.sprite = undefined
   }
 
   spriteHasAnim(anim) {

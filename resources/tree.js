@@ -10,7 +10,7 @@ export default class Tree extends BaseResource {
   }
 
   constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "things.tree")
+    super(ctx, opts, sprite_path || "things.trees.oak") 
 
     this.ctx = ctx
     opts = opts || {}

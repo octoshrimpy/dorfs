@@ -5,7 +5,7 @@ export default class Chicken extends BaseMob {
   static objs = []
 
   constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, "alives.animals.chicken" + weightedSample(["1", 5], ["2", 3], ["3", 1]))
+    super(ctx, opts, "alives.animals.chickens." + weightedSample(["white", 5], ["brown", 3], ["black", 1]))
     this.ctx = ctx
     this.opts = opts || {}
 

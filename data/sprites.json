@@ -9,17 +9,37 @@
      }
   },
   "things": {
-    "rock": { "base": { "start": [1, 1], "sheet": "big_master" } },
-    "rock2": { "base": { "start": [2, 1], "sheet": "big_master" } },
-    "wheat1": { "base": { "start": [1, 13] } },
-    "wheat2": { "base": { "start": [2, 13] } },
-    "wheat3": { "base": { "start": [3, 13] } },
-    "wheat4": { "base": { "start": [4, 13] } },
-    "iron_ore": { "base": { "start": [1, 1] } },
-    "tree": { "base": { "start": [1, 1], "sheet": "big_master2x3" } },
-    "stump": { "base": { "start": [1, 3] } },
-    "chest": { "base": { "start": [16, 1] } },
-    "sign": { "base": { "start": [19, 1] } }
+    "rocks": {
+      "pointyup": { "base": { "start": [1, 1], "sheet": "big_master" } },
+      "pointyside": { "base": { "start": [2, 1], "sheet": "big_master" } }
+    },
+    "trees": {
+      "oak": { "base": { "start": [1, 1], "sheet": "big_master2x3" } }
+    },
+    "wheats": {
+      "a": {
+        "1": { "base": { "start": [1, 13] } },
+        "2": { "base": { "start": [2, 13] } },
+        "3": { "base": { "start": [3, 13] } },
+        "4": { "base": { "start": [4, 13] } }
+      },
+      "b": {
+        "1": { "base": { "start": [1, 14] } },
+        "2": { "base": { "start": [2, 14] } },
+        "3": { "base": { "start": [3, 14] } },
+        "4": { "base": { "start": [4, 14] } }
+      },
+      "c": {
+        "1": { "base": { "start": [1, 15] } },
+        "2": { "base": { "start": [2, 15] } },
+        "3": { "base": { "start": [3, 15] } },
+        "4": { "base": { "start": [4, 15] } }
+      }
+    },
+    "--unused-- iron_ore": { "base": { "start": [1, 1] } },
+    "--unused-- stump": { "base": { "start": [1, 3] } },
+    "--unused-- chest": { "base": { "start": [16, 1] } },
+    "--unused-- sign": { "base": { "start": [19, 1] } }
   },
   "tools": {
     "pick": { "base": { "start": [11, 1], "length": 2 } },
@@ -33,34 +53,43 @@
         "stand": [6, 2],
         "walk": { "start": [7, 2], "length": 2 }
       },
-      "adult": {
-        "stand": [6, 1],
-        "walk": { "start": [7, 1], "length": 2, "speed": 5 }
+      "farmer": { "stand": [8, 26] },
+      "miner": { "stand": [9, 26] },
+      "builder": { "stand": [10, 26] },
+      "--unused-- adult": {
+        "--unused-- stand": [6, 1],
+        "--unused-- walk": { "start": [7, 1], "length": 2, "speed": 5 }
       },
-      "old": {
-        "stand": [6, 1],
-        "walk": { "start": [7, 1], "length": 2 },
-        "addons": {
-          "beard_silver": [9, 1]
+      "--unused-- old": {
+        "--unused-- stand": [6, 1],
+        "--unused-- walk": { "start": [7, 1], "length": 2 },
+        "--unused-- addons": {
+          "--unused-- beard_silver": [9, 1]
         }
       },
-      "senile": {
-        "stand": [6, 1],
-        "walk": { "start": [7, 1], "length": 2 },
-        "addons": {
-          "beard_white": [9, 2]
+      "--unused-- senile": {
+        "--unused-- stand": [6, 1],
+        "--unused-- walk": { "start": [7, 1], "length": 2 },
+        "--unused-- addons": {
+          "--unused-- beard_white": [9, 2]
         }
       },
-      "ghost": {
-        "idle": { "start": [6, 3], "length": 2 },
-        "haunt": { "start": [8, 3], "length": 2 }
+      "--unused-- ghost": {
+        "--unused-- idle": { "start": [6, 3], "length": 2 },
+        "--unused-- haunt": { "start": [8, 3], "length": 2 }
       }
     },
     "animals": {
-      "cow": { "stand": [6, 5] },
-      "chicken1": { "stand": [6, 7] },
-      "chicken2": { "stand": [7, 7] },
-      "chicken3": { "stand": [8, 7] }
+      "cows": {
+        "light": { "stand": [6, 5] },
+        "white": { "stand": [7, 5] },
+        "brown": { "stand": [8, 5] }
+      },
+      "chickens": {
+        "white": { "stand": [6, 7] },
+        "brown": { "stand": [7, 7] },
+        "black": { "stand": [8, 7] }
+      }
     }
   }
 }

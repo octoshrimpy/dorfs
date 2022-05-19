@@ -75,9 +75,10 @@ export default class BaseResource extends BaseClass {
     let sprite = super.setSprite(sprite_str)
 
     let alignToGrid = function(val, size, scale, origin_multiplier) {
+      let origin_offset = size * origin_multiplier
+      val += origin_offset
       let aligned = Math.round(val / scale) * scale
       let variance = Math.random() - 0.5
-      let origin_offset = size * origin_multiplier
 
       return aligned + variance - origin_offset
     }
@@ -86,10 +87,5 @@ export default class BaseResource extends BaseClass {
     sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(0.5), sprite.originY)
 
     return sprite
-  }
-
-  clearSprite() {
-    this.sprite?.destroy(true)
-    this.sprite = undefined
   }
 }
