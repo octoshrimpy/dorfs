@@ -51,11 +51,11 @@ function create() {
   ctx.world = world
 
   // new Villager(ctx, {...randCoord(), walk_speed: 70 })
-  times(10, function() {
+  times(4, function() {
     new Villager(ctx, randCoord())
   })
 
-  times(3, function() {
+  times(30, function() {
     new Tree(ctx, randCoord())
   })
 
@@ -63,7 +63,7 @@ function create() {
     new Cow(ctx, randCoord())
   })
 
-  times(5, function() {
+  times(55, function() {
     new Chicken(ctx, randCoord())
   })
 

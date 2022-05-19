@@ -11,13 +11,13 @@ Art Needs:
       [ ] Game Time (Year? Season?)
       [ ] Selected (Show stats of clicked dorf, resources for block, storage for item, etc...)
       [ ] Craft Menu
-  [ ] Sprite-specific professions
-      [ ] Lumberjack
-      [ ] Miner
-      [ ] Farmer
-      [ ] Builder
-      [ ] Baker
-      [ ] Smith
+  [x] Sprite-specific professions
+      [x] Lumberjack
+      [x] Miner
+      [x] Farmer
+      [x] Builder
+      [x] Baker
+      [x] Smith
 
 * add 3 kinds of land
     * infinite resource pool
