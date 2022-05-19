@@ -33,6 +33,9 @@
         "stand": [6, 2],
         "walk": { "start": [7, 2], "length": 2 }
       },
+      "farmer": { "stand": [8, 26] },
+      "miner": { "stand": [9, 26] },
+      "builder": { "stand": [10, 26] },
       "adult": {
         "stand": [6, 1],
         "walk": { "start": [7, 1], "length": 2, "speed": 5 }

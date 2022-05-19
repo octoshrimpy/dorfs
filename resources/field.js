@@ -37,8 +37,7 @@ export default class Field extends BaseResource {
   }
 
   setSpriteByStage() {
-    this.sprite?.destroy(true)
-    this.sprite = this.setSprite(this.growthStageSprite())
+    this.setSprite(this.growthStageSprite())
   }
 
   tick() {

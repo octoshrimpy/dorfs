@@ -34,18 +34,16 @@ export default class Villager extends BaseHumanoid {
     this.job_building = undefined
     this.selected_resource = undefined
     this.selected_storage = undefined
-    // this.profession = undefined
-    this.profession = sample(["Lumberjack", "Miner", "Farmer"])
+    this.profession = undefined
+    this.takeRandomProfession()
     this.tool_sprite = undefined
-
-    Villager.objs.push(this)
   }
 
   inspect() {
     return [
       this.name,
       "Profession: " + this.profession,
-      this.bored ? "Wandering..." : (this.collecting ? "Collecting" : "Unloading"),
+      this.bored ? "Wandering..." : (this.collecting ? "Collecting" : (this.unloading ? "Unloading" : "Traveling")),
       ...Object.entries(this.inventory).map(function([name, item]) {
         return name + ": " + item.count + " (" + item.totalWeight() + " lbs)"
       }),
@@ -53,8 +51,6 @@ export default class Villager extends BaseHumanoid {
       "Walk Speed: " + this.walk_speed,
       "Collect Speed: " + this.collect_speed,
       "Carry Capacity: " + this.carry_capacity,
-      // "Unloading: " + this.unloading,
-      // "Collecting: " + this.collecting,
       // "Home: " + this.home,
       // "Job Building: " + this.job_building,
       // "Selected Resource: " + this.selected_resource,
@@ -87,6 +83,22 @@ export default class Villager extends BaseHumanoid {
   hideSprite(sprite) {
     this[sprite]?.destroy(true)
     this[sprite] = undefined
+  }
+
+  takeRandomProfession() {
+    var old_profession = this.profession
+    this.profession = sample(["Lumberjack", "Miner", "Farmer"])
+    if (this.profession != old_profession) {
+      if (this.profession == "Lumberjack") {
+        this.setSprite("alives.dorfs.builder")
+      } else if (this.profession == "Miner") {
+        this.setSprite("alives.dorfs.miner")
+      } else if (this.profession == "Farmer") {
+        this.setSprite("alives.dorfs.farmer")
+      } else {
+        this.setSprite("alives.dorfs.adult")
+      }
+    }
   }
 
   getProfession() {
@@ -208,7 +220,7 @@ export default class Villager extends BaseHumanoid {
         if (!this.bored) { this.bored = true }
         if (randNPerSec(10)) {
           this.setRandomDest()
-          this.profession = sample(["Lumberjack", "Miner", "Farmer"])
+          this.takeRandomProfession()
         }
       }
     }
