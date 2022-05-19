@@ -65,6 +65,10 @@ export default class Villager extends BaseHumanoid {
       return "tools.pick"
     } else if (this.profession == "Farmer") {
       return "tools.scythe"
+    } else if (this.profession == "Smith") {
+      return "tools.hammer"
+    } else if (this.profession == "Builder") {
+      return "tools.hammer"
     }
   }
 
@@ -87,14 +91,16 @@ export default class Villager extends BaseHumanoid {
 
   takeRandomProfession() {
     var old_profession = this.profession
-    this.profession = sample(["Lumberjack", "Miner", "Farmer"])
+    this.profession = sample(["Lumberjack", "Miner", "Farmer","Builder"])
     if (this.profession != old_profession) {
       if (this.profession == "Lumberjack") {
-        this.setSprite("alives.dorfs.builder")
+        this.setSprite("alives.dorfs.lumberjack")
       } else if (this.profession == "Miner") {
         this.setSprite("alives.dorfs.miner")
       } else if (this.profession == "Farmer") {
         this.setSprite("alives.dorfs.farmer")
+      } else if (this.profession == "Builder") {
+        this.setSprite("alives.dorfs.builder")
       } else {
         this.setSprite("alives.dorfs.adult")
       }

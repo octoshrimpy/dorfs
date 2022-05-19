@@ -51,7 +51,7 @@ function create() {
   ctx.world = world
 
   // new Villager(ctx, {...randCoord(), walk_speed: 70 })
-  times(4, function() {
+  times(10, function() {
     new Villager(ctx, randCoord())
   })
 
