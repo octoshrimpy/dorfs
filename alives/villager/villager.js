@@ -213,7 +213,7 @@ export default class Villager extends BaseHumanoid {
 
       if (obj) {
         if (this.bored) { this.bored = false }
-        this.destination = { x: obj.sprite.x, y: obj.sprite.y }
+        this.destination = { x: obj.access_origin.x, y: obj.access_origin.y }
 
         if (this.arrivedAtDest()) {
           if (obj.constructor.name == "Storage") {

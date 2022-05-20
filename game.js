@@ -68,7 +68,7 @@ function create() {
     new Cow(ctx, randCoord())
   })
 
-  times(1000, function() {
+  times(10, function() {
     new Chicken(ctx, randCoord())
   })
 

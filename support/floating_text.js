@@ -6,7 +6,7 @@ export default class FloatingText {
     this.opts = opts || {}
 
     this.x = this.opts.x || 0
-    this.x = this.opts.y || 0
+    this.y = this.opts.y || 0
     this.constructor.objs.push(this)
     this.text = this.opts.text
     this.text_obj = this.ctx.add.text(16, 16, this.opts.text, { fontFamily: "DorfScratch" }).setDepth(10000)
