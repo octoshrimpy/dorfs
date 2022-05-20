@@ -84,14 +84,15 @@
     },
     "animals": {
       "cows": {
-        "light": { "stand": [6, 5] },
-        "white": { "stand": [7, 5] },
-        "brown": { "stand": [8, 5] }
+        "light": { "stand": [6, 5], "grazing": [6, 6] },
+        "white": { "stand": [7, 5], "grazing": [7, 6] },
+        "brown": { "stand": [8, 5], "grazing": [8, 6] }
       },
       "chickens": {
-        "white": { "stand": [6, 7] },
-        "brown": { "stand": [7, 7] },
-        "black": { "stand": [8, 7] }
+        "white": { "stand": [6, 7], "grazing" : [6, 8] },
+        "brown": { "stand": [7, 7], "grazing" : [7, 8] },
+        "black": { "stand": [8, 7], "grazing" : [8, 8] },
+        "baby" : { "stand": [9, 7], "grazing" : [9, 8] }
       }
     }
   }
