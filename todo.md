@@ -20,7 +20,7 @@
       - [ ] professions
       - [ ] seasons
       - [x] tiny inventory item icons
-        - [x] stone
+        - [ ] stone
         - [x] wood
         - [x] wheat
         - [x] meat
