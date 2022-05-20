@@ -14,11 +14,6 @@ var config = {
   type: Phaser.AUTO,
   width: scaleX(map_w),
   height: scaleY(map_h),
-  // pixelArt: true,
-  render: {
-    // pixelArt: true,
-    antialias: false,
-  },
   scale: {
     zoom: 1.5,
   },
@@ -42,6 +37,8 @@ function preload() {
   this.load.spritesheet("master", "assets/master.png", { frameWidth: 16, frameHeight: 16 })
   this.load.spritesheet("big_master", "assets/big_master.png", { frameWidth: 32, frameHeight: 32 })
   this.load.spritesheet("big_master2x3", "assets/bigmaster2x3.png", { frameWidth: 32, frameHeight: 48 })
+
+  this.load.bitmapFont('dorfscratch', 'assets/fonts/dorfscratch-Regular.png', 'assets/fonts/dorfscratch-Regular.fnt');
   // Add some custom function to take the hard width of sprites, which are always 1x1 ratio and then centers the origin
 }
 

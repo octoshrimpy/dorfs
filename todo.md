@@ -2,6 +2,7 @@
 
 ## Art Needs:
 
+- [ ] fix building signs, remove pink from doors
 - [x] Tents/Houses/Sleepies
 - [ ] Each piece of Dorf separate and white-scaled. So pure white, but make the shadows grey
   - @think not necessary with sprite recoloring
@@ -19,8 +20,8 @@
       - [ ] adult
       - [ ] professions
       - [ ] seasons
-      - [x] tiny inventory item icons
-        - [x] stone
+      - [ ] tiny inventory item icons
+        - [ ] stone
         - [x] wood
         - [x] wheat
         - [x] meat
