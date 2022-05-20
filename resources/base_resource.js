@@ -25,15 +25,6 @@ export default class BaseResource extends BaseClass {
     return new Item(this.item)
   }
 
-  static clearRemoved() {
-    this.objs = this.objs.filter(function(obj) {
-      return !!obj.sprite
-    })
-    this.global_objs = this.global_objs.filter(function(obj) {
-      return !!obj.sprite
-    })
-  }
-
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path)
     this.ctx = ctx
@@ -57,11 +48,6 @@ export default class BaseResource extends BaseClass {
       this.constructor.name,
       "Resources: " + this.resources
     ]
-  }
-
-  remove() {
-    this.clearSprite()
-    this.constructor.clearRemoved()
   }
 
   collect() {

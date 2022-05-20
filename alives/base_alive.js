@@ -13,6 +13,7 @@ export default class BaseAlive extends BaseClass  {
   }
 
   wander() {
+    if (!this.sprite) { return }
     let self = this
     let constrainWorldX = function(val) {
       return constrain(val, scaleX(1), self.ctx.game.config.width - scaleX(1))
@@ -40,7 +41,7 @@ export default class BaseAlive extends BaseClass  {
   moveTowardsDest(speed) { // speed is 0-100
     speed = speed || this.speed || this.walk_speed
     // https://phaser.io/news/2018/03/pathfinding-and-phaser-3
-    if (!this.destination) { return }
+    if (!this.destination || !this.sprite) { return }
 
     var dx = this.destination.x - this.sprite.x
     var dy = this.destination.y - this.sprite.y

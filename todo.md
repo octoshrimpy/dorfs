@@ -24,7 +24,7 @@
         - [x] wood
         - [x] wheat
         - [x] meat
-        - [x] milk 
+        - [x] milk
         - [x] honey
         - [x] bread
 
@@ -93,8 +93,8 @@
   - [ ] Should be able to click outside of an object to "unselect"
 - [ ] v2? Layered sprites for colors
       https://www.emanueleferonato.com/2021/01/28/mix-and-merge-more-sprites-into-one-single-game-object-in-your-html5-games-thanks-to-phaser-rendertexture-game-object/
-- [ ] Wander speed and destination speed should be different
-  - [ ] Maybe wander speed is randomized every change in direction?
+- [x] Wander speed and destination speed should be different
+  - [x] Maybe wander speed is randomized every change in direction?
 - [x] Stats should use standard deviation
   - [ ] v2? Breeding should retain stats of parents- standard deviation with a bias as the average of the parents.
 - [ ] Have stats for each collection type (mine, tree, farm) that raises as you do the task (and lowers the longer you're away from the task)

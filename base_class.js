@@ -1,6 +1,15 @@
 export default class BaseClass {
   static global_objs = []
 
+  static clearRemoved() {
+    this.objs = this.objs.filter(function(obj) {
+      return !!obj.sprite
+    })
+    this.global_objs = this.global_objs.filter(function(obj) {
+      return !!obj.sprite
+    })
+  }
+
   constructor(ctx, opts, sprite_path) {
     this.ctx = ctx
     this.opts = opts || {}
@@ -28,6 +37,11 @@ export default class BaseClass {
     this.depth = this.sprite.y
 
     return new_sprite
+  }
+
+  remove() {
+    this.clearSprite()
+    this.constructor.clearRemoved()
   }
 
   clicked() {

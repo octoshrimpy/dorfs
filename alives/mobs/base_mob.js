@@ -11,7 +11,7 @@ export default class BaseHumanoid extends BaseAlive {
   }
 
   tick() {
-    if (randOnePerNSec(this.wander_scale || 10)) {
+    if (!this.scared && randOnePerNSec(this.wander_scale || 10)) {
       this.wander()
     }
 
