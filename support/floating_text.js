@@ -5,11 +5,16 @@ export default class FloatingText {
     this.ctx = ctx
     this.opts = opts || {}
 
-    this.x = this.opts.x || 0
-    this.x = this.opts.y || 0
+    this.x = this.opts.x || 16
+    this.y = this.opts.y || 16
     this.constructor.objs.push(this)
     this.text = this.opts.text
-    this.text_obj = this.ctx.add.text(16, 16, this.opts.text, { fontFamily: "DorfScratch" }).setDepth(10000)
+    // this is for regular font
+    // this.text_obj = this.ctx.add.text(this.x, this.y, this.opts.text, { fontFamily: "DorfScratch" }).setDepth(10000)
+    
+    // this is for bitmap font
+    this.text_obj = this.ctx.add.bitmapText(this.x, this.y, 'dorfscratch', this.opts.text).setDepth(10000)
+    //text_obj.setScale() // 1 is default, 2 is twice the size
   }
 
   setText(new_text) {
