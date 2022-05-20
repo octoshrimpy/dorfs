@@ -14,10 +14,9 @@ var config = {
   type: Phaser.AUTO,
   width: scaleX(map_w),
   height: scaleY(map_h),
-  crisp: true,
   render: {
-    pixelArt: true,
-    antialias: false,
+    // pixelArt: true,
+    // antialias: false,
   },
   scale: {
     zoom: 1.5,
