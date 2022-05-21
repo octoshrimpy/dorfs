@@ -2,6 +2,8 @@
 
 ## Art Needs:
 
+- [ ] :octoshrimpy Create larger (4x5?) font
+- [ ] :octoshrimpy Export font as 16x instead of 32x
 - [ ] fix building signs, remove pink from doors
 - [x] Tents/Houses/Sleepies
 - [ ] Each piece of Dorf separate and white-scaled. So pure white, but make the shadows grey

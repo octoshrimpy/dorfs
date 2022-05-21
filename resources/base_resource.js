@@ -59,6 +59,10 @@ export default class BaseResource extends BaseClass {
 
   setSprite(sprite_str) {
     let sprite = super.setSprite(sprite_str)
+    let self = this
+    sprite.setInteractive().on("pointerdown", function(pointer) {
+      if (pointer.rightButtonDown()) { self.remove() }
+    })
 
     let alignToGrid = function(val, size, scale, origin_multiplier) {
       let origin_offset = size * origin_multiplier

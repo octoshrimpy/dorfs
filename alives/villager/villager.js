@@ -89,22 +89,30 @@ export default class Villager extends BaseHumanoid {
     this[sprite] = undefined
   }
 
-  takeRandomProfession() {
+  takeProfession(new_profession) {
     var old_profession = this.profession
-    this.profession = sample(["Lumberjack", "Miner", "Farmer","Builder"])
-    if (this.profession != old_profession) {
-      if (this.profession == "Lumberjack") {
+    this.profession = new_profession
+    if (new_profession != old_profession) {
+      if (new_profession == "Lumberjack") {
         this.setSprite("alives.dorfs.lumberjack")
-      } else if (this.profession == "Miner") {
+      } else if (new_profession == "Miner") {
         this.setSprite("alives.dorfs.miner")
-      } else if (this.profession == "Farmer") {
+      } else if (new_profession == "Farmer") {
         this.setSprite("alives.dorfs.farmer")
-      } else if (this.profession == "Builder") {
+      } else if (new_profession == "Builder") {
         this.setSprite("alives.dorfs.builder")
+      } else if (new_profession == "Baker") {
+        this.setSprite("alives.dorfs.baker")
+      } else if (new_profession == "Smith") {
+        this.setSprite("alives.dorfs.smith")
       } else {
         this.setSprite("alives.dorfs.adult")
       }
     }
+  }
+
+  takeRandomProfession() {
+    this.takeProfession(sample(["Lumberjack", "Miner", "Farmer", "Builder"]))
   }
 
   getProfession() {
@@ -114,6 +122,8 @@ export default class Villager extends BaseHumanoid {
       return Rock
     } else if (this.profession == "Farmer") {
       return Field
+    } else if (this.profession == "Baker") {
+      // return Field
     }
   }
 
@@ -144,7 +154,7 @@ export default class Villager extends BaseHumanoid {
       if (this.selected_resource && this.selected_resource.resources <= 0) {
         this.selected_resource = undefined
       }
-      if (this.selected_resource?.collector != this) {
+      if (this.selected_resource?.collector != this || this.selected_resource.removed) {
         this.selected_resource = undefined
       }
       dest_obj = this.selected_resource || this.getProfession()?.nearest(this.sprite.x, this.sprite.y)

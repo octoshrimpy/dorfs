@@ -6,6 +6,7 @@ import Field from "./resources/field.js"
 import Cow from "./alives/mobs/cow.js"
 import Chicken from "./alives/mobs/chicken.js"
 import Storage from "./resources/storage.js"
+import Bakery from "./buildings/bakery.js"
 import FloatingText from "./support/floating_text.js"
 import { rand, normalDist, randOnePerNSec, scaleVal, scaleX, scaleY, weightedList, times, idxFromPos, sample } from "/helpers.js"
 
@@ -40,6 +41,8 @@ function preload() {
 
   this.load.bitmapFont('dorfscratch', 'assets/fonts/dorfscratch-Regular.png', 'assets/fonts/dorfscratch-Regular.fnt');
   // Add some custom function to take the hard width of sprites, which are always 1x1 ratio and then centers the origin
+
+  this.input.mouse.disableContextMenu()
 }
 
 function randCoord() {
@@ -85,7 +88,9 @@ function create() {
     })
   })
 
-  new Storage(ctx, { x: config.width/2, y: config.height/2 })
+  let midpoint = { x: config.width/2, y: config.height/2 }
+  new Storage(ctx, { x: midpoint.x, y: midpoint.y })
+  new Bakery(ctx, { x: midpoint.x, y: 32 })
 }
 
 function update() { // ~60fps
@@ -106,7 +111,10 @@ function setupContext(env) {
   }
 
   ctx.addSpriteWithAnim = function(sprite_path, opts) {
-    let obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
+    let obj
+    try {
+      obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
+    } catch(e) {}
     if (!obj) { return ctx.addSpriteWithAnim("placeholder", opts) }
     var first_anim = obj[Object.keys(obj)[0]]
     let sheet_name = first_anim.sheet || "master"

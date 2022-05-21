@@ -40,6 +40,7 @@ export default class BaseClass {
   }
 
   remove() {
+    this.removed = true
     this.clearSprite()
     this.constructor.clearRemoved()
   }
