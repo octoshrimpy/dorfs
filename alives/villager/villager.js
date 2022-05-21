@@ -1,7 +1,5 @@
 import BaseHumanoid from "./base_humanoid.js"
-import Tree from "../../resources/tree.js" //TODO fix these imports, ask game instead
-import Rock from "../../resources/rock.js"
-import Field from "../../resources/field.js"
+import BaseJob from "../../jobs/base_job.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
 import { sum, sample, normalDist, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
@@ -58,22 +56,10 @@ export default class Villager extends BaseHumanoid {
     ]
   }
 
-  getToolName() {
-    if (this.profession == "Lumberjack") {
-      return "tools.axe"
-    } else if (this.profession == "Miner") {
-      return "tools.pick"
-    } else if (this.profession == "Farmer") {
-      return "tools.scythe"
-    } else if (this.profession == "Smith") {
-      return "tools.hammer"
-    } else if (this.profession == "Builder") {
-      return "tools.hammer"
-    }
-  }
-
   showTool() {
-    let tool_path = this.getToolName()
+    let tool_path = this.profession?.tool
+    if (!tool_path) { return }
+
     this.tool_sprite = this.ctx.addSpriteWithAnim(tool_path, { x: this.sprite.x, y: this.sprite.y })
     this.tool_sprite.anims.play([tool_path, "base"].join("."), true)
     var sprite_fps = scaleVal(this.collect_speed, 0, 100, 0, 20)
@@ -92,46 +78,24 @@ export default class Villager extends BaseHumanoid {
   takeProfession(new_profession) {
     var old_profession = this.profession
     this.profession = new_profession
+
     if (new_profession != old_profession) {
-      if (new_profession == "Lumberjack") {
-        this.setSprite("alives.dorfs.lumberjack")
-      } else if (new_profession == "Miner") {
-        this.setSprite("alives.dorfs.miner")
-      } else if (new_profession == "Farmer") {
-        this.setSprite("alives.dorfs.farmer")
-      } else if (new_profession == "Builder") {
-        this.setSprite("alives.dorfs.builder")
-      } else if (new_profession == "Baker") {
-        this.setSprite("alives.dorfs.baker")
-      } else if (new_profession == "Smith") {
-        this.setSprite("alives.dorfs.smith")
-      } else {
-        this.setSprite("alives.dorfs.adult")
-      }
+      this.setSprite(this.profession?.sprite)
+    }
+    if (!this.profession) {
+      this.setSprite("alives.dorfs.adult")
     }
   }
 
   takeRandomProfession() {
-    this.takeProfession(sample(["Lumberjack", "Miner", "Farmer", "Builder"]))
-  }
-
-  getProfession() {
-    if (this.profession == "Lumberjack") {
-      return Tree
-    } else if (this.profession == "Miner") {
-      return Rock
-    } else if (this.profession == "Farmer") {
-      return Field
-    } else if (this.profession == "Baker") {
-      // return Field
-    }
+    this.takeProfession(BaseJob.randProf())
   }
 
   prepInventoryForProfession() {
-    let prof = this.getProfession()
-    if (prof) {
-      this.inventory[prof.item.name] ||= prof.newItem()
-    }
+    let site = this.profession?.workSite()
+    if (!site) { return }
+
+    this.inventory[site.item.name] ||= site.newItem()
   }
 
   fullInventory() {
@@ -157,21 +121,15 @@ export default class Villager extends BaseHumanoid {
       if (this.selected_resource?.collector != this || this.selected_resource.removed) {
         this.selected_resource = undefined
       }
-      dest_obj = this.selected_resource || this.getProfession()?.nearest(this.sprite.x, this.sprite.y)
+      dest_obj = this.selected_resource || this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)
       this.selected_resource = dest_obj
+
       if (this.selected_resource) {
         this.selected_resource.collector = this
       }
     }
 
     return dest_obj
-  }
-
-  arrivedAtDest() {
-    let x_near = Math.abs(this.sprite.x - this.destination.x) < 5
-    let y_near = Math.abs(this.sprite.y - this.destination.y) < 5
-
-    return x_near && y_near
   }
 
   unload(obj) {

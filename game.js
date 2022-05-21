@@ -1,14 +1,38 @@
-import BaseClass from "./base_class.js"
-import Villager from "./alives/villager/villager.js"
-import Tree from "./resources/tree.js"
-import Rock from "./resources/rock.js"
-import Field from "./resources/field.js"
-import Cow from "./alives/mobs/cow.js"
-import Chicken from "./alives/mobs/chicken.js"
-import Storage from "./resources/storage.js"
-import Bakery from "./buildings/bakery.js"
+import BaseClass    from "./base_class.js"
+import Villager     from "./alives/villager/villager.js"
+
+import Baker        from "./jobs/baker.js"
+import Builder      from "./jobs/builder.js"
+import Farmer       from "./jobs/farmer.js"
+import Lumberjack   from "./jobs/lumberjack.js"
+import Miner        from "./jobs/miner.js"
+import Smith        from "./jobs/smith.js"
+
+import Tree         from "./resources/tree.js"
+import Rock         from "./resources/rock.js"
+import Field        from "./resources/field.js"
+
+import Cow          from "./alives/mobs/cow.js"
+import Chicken      from "./alives/mobs/chicken.js"
+
+import Storage      from "./resources/storage.js"
+
+import Bakery       from "./buildings/bakery.js"
+
 import FloatingText from "./support/floating_text.js"
-import { rand, normalDist, randOnePerNSec, scaleVal, scaleX, scaleY, weightedList, times, idxFromPos, sample } from "/helpers.js"
+
+import {
+  rand,
+  normalDist,
+  randOnePerNSec,
+  scaleVal,
+  scaleX,
+  scaleY,
+  weightedList,
+  times,
+  idxFromPos,
+  sample
+} from "/helpers.js"
 
 var map_w = 45, map_h = 23
 var config = {

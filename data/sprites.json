@@ -56,16 +56,13 @@
         "stand": [6, 2],
         "walk": { "start": [7, 2], "length": 2 }
       },
+      "adult":      { "stand": [6, 1],  "walk": { "start": [7, 1],  "length": 2 } },
       "farmer":     { "stand": [3, 26], "walk": { "start": [4, 26], "length": 2 } },
       "smith":      { "stand": [3, 21], "walk": { "start": [4, 21], "length": 2 } },
       "lumberjack": { "stand": [3, 23], "walk": { "start": [4, 23], "length": 2 } },
       "baker":      { "stand": [3, 22], "walk": { "start": [4, 22], "length": 2 } },
       "miner":      { "stand": [3, 25], "walk": { "start": [4, 25], "length": 2 } },
       "builder":    { "stand": [3, 24], "walk": { "start": [4, 24], "length": 2 } },
-      "--unused-- adult": {
-        "--unused-- stand": [6, 1],
-        "--unused-- walk": { "start": [7, 1], "length": 2, "speed": 5 }
-      },
       "--unused-- old": {
         "--unused-- stand": [6, 1],
         "--unused-- walk": { "start": [7, 1], "length": 2 },

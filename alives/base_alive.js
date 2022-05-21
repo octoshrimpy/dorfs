@@ -29,6 +29,13 @@ export default class BaseAlive extends BaseClass  {
     }
   }
 
+  arrivedAtDest() {
+    let x_near = Math.abs(this.sprite.x - this.destination.x) < 5
+    let y_near = Math.abs(this.sprite.y - this.destination.y) < 5
+
+    return x_near && y_near
+  }
+
   clearDest() {
     this.destination = undefined
     if (this.spriteHasAnim("stand")) {
