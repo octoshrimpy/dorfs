@@ -1,4 +1,4 @@
-import BaseClass    from "./base_class.js"
+import BaseObject    from "./base_object.js"
 import Villager     from "./alives/villager/villager.js"
 
 import Baker        from "./jobs/baker.js"
@@ -118,7 +118,7 @@ function create() {
 }
 
 function update() { // ~60fps
-  BaseClass.tick()
+  BaseObject.tick()
 
   if (randOnePerNSec(80)) { new Rock(ctx, randCoord()) }
   if (randOnePerNSec(80)) { new Tree(ctx, randCoord()) }

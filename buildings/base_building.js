@@ -1,7 +1,7 @@
-import BaseClass from "../base_class.js"
+import BaseObject from "../base_object.js"
 import { scaleX, scaleY } from "/helpers.js"
 
-export default class BaseBuilding extends BaseClass {
+export default class BaseBuilding extends BaseObject {
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path)
     this.ctx = ctx

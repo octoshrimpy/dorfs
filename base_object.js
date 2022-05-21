@@ -1,4 +1,4 @@
-export default class BaseClass {
+export default class BaseObject {
   static global_objs = []
 
   static clearRemoved() {
