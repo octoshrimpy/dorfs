@@ -5,6 +5,7 @@ import { scaleVal, scaleX, scaleY } from "/helpers.js"
 export default class BaseResource extends BaseObject {
   static nearest(x1, y1) {
     let with_resources = this.objs.filter(function(obj) {
+      // collector should be an array and allow multiple collectors from one resource
       return obj.resources > 0 && obj.collector == undefined
     })
     let with_dist = with_resources.map(function(obj) {

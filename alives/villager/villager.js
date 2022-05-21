@@ -40,7 +40,7 @@ export default class Villager extends BaseHumanoid {
   inspect() {
     return [
       this.name,
-      "Profession: " + this.profession,
+      "Profession: " + this.profession.name,
       this.bored ? "Wandering..." : (this.collecting ? "Collecting" : (this.unloading ? "Unloading" : "Traveling")),
       ...Object.entries(this.inventory).map(function([name, item]) {
         return name + ": " + item.count + " (" + item.totalWeight() + " lbs)"
@@ -98,12 +98,14 @@ export default class Villager extends BaseHumanoid {
     this.inventory[site.item.name] ||= site.newItem()
   }
 
-  fullInventory() {
-    let inventory_weights = Object.values(this.inventory).map(function(item) {
+  inventoryWeight() {
+    return sum(Object.values(this.inventory).map(function(item) {
       return item.totalWeight()
-    })
+    }))
+  }
 
-    return sum(inventory_weights) >= this.carry_capacity
+  fullInventory() {
+    return this.inventoryWeight() >= this.carry_capacity
   }
 
   findDestination() {
@@ -115,17 +117,17 @@ export default class Villager extends BaseHumanoid {
       dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
       this.selected_storage = dest_obj
     } else {
-      if (this.selected_resource && this.selected_resource.resources <= 0) {
-        this.selected_resource = undefined
-      }
       if (this.selected_resource?.collector != this || this.selected_resource.removed) {
-        this.selected_resource = undefined
+        this.clearSelectedResource()
       }
       dest_obj = this.selected_resource || this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)
       this.selected_resource = dest_obj
 
       if (this.selected_resource) {
         this.selected_resource.collector = this
+      } else if (this.inventoryWeight() > 0) {
+        this.unloading = true
+        return this.findDestination()
       }
     }
 
@@ -169,10 +171,17 @@ export default class Villager extends BaseHumanoid {
     }
   }
 
+  clearSelectedResource() {
+    if (this.selected_resource && this.selected_resource.collector == this) {
+      this.selected_resource.collector = undefined
+    }
+    this.selected_resource = undefined
+  }
+
   tick() {
     if (this.selected_resource && this.selected_resource.resources <= 0) {
       this.collecting = false
-      this.selected_resource = undefined
+      this.clearSelectedResource()
       this.clearDest()
     }
 
