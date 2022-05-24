@@ -1,4 +1,4 @@
-export default class BaseClass {
+export default class BaseObject {
   static global_objs = []
 
   static clearRemoved() {
@@ -34,7 +34,7 @@ export default class BaseClass {
     var self = this
     new_sprite.setInteractive().on("pointerdown", function() { self.clicked() })
     this.sprite = new_sprite
-    this.depth = this.sprite.y
+    this.depth = this.sprite.y + this.sprite.height/2
 
     return new_sprite
   }

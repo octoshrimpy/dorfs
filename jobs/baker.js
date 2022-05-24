@@ -1,5 +1,5 @@
 import BaseJob from "./base_job.js"
-// import Field from "../../resources/field.js"
+import Bakery from "../../buildings/bakery.js"
 
 export default class Baker extends BaseJob {
   static push = BaseJob.jobs.push(this)
@@ -7,6 +7,6 @@ export default class Baker extends BaseJob {
   // static tool = "tools.scythe"
 
   static workSite() {
-    // return Field
+    return Bakery
   }
 }

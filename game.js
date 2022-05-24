@@ -1,4 +1,4 @@
-import BaseClass    from "./base_class.js"
+import BaseObject    from "./base_object.js"
 import Villager     from "./alives/villager/villager.js"
 
 import Baker        from "./jobs/baker.js"
@@ -84,8 +84,12 @@ function create() {
     new Villager(ctx, randCoord())
   })
 
-  times(30, function() {
+  times(2, function() {
     new Tree(ctx, randCoord())
+  })
+
+  times(2, function() {
+    new Rock(ctx, randCoord())
   })
 
   times(5, function() {
@@ -94,10 +98,6 @@ function create() {
 
   times(100, function() {
     new Chicken(ctx, randCoord())
-  })
-
-  times(4, function() {
-    new Rock(ctx, randCoord())
   })
 
   times(normalDist(1, 5), function() {
@@ -113,12 +113,14 @@ function create() {
   })
 
   let midpoint = { x: config.width/2, y: config.height/2 }
-  new Storage(ctx, { x: midpoint.x, y: midpoint.y })
+  let storage = new Storage(ctx, { x: midpoint.x, y: midpoint.y })
+  // storage.inventory.wheat = Field.newItem()
+  // storage.inventory.wheat.count = 100
   new Bakery(ctx, { x: midpoint.x, y: 32 })
 }
 
 function update() { // ~60fps
-  BaseClass.tick()
+  BaseObject.tick()
 
   if (randOnePerNSec(80)) { new Rock(ctx, randCoord()) }
   if (randOnePerNSec(80)) { new Tree(ctx, randCoord()) }

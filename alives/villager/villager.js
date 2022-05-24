@@ -1,4 +1,6 @@
 import BaseHumanoid from "./base_humanoid.js"
+import Corpse from "./corpse.js"
+import Ghost from "./ghost.js"
 import BaseJob from "../../jobs/base_job.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
@@ -27,6 +29,10 @@ export default class Villager extends BaseHumanoid {
     this.selected = false
     this.highlight = undefined
     this.bored = false
+    this.fullness = normalDist(50, 100, 5, 90)
+    this.status = undefined // working, bored, starving, tired, etc
+    // Certain statuses should take priority, and use the status to short-circuit other activities
+    // For example, immediately stop working and go find food when starving
 
     this.home = undefined
     this.job_building = undefined
@@ -40,15 +46,18 @@ export default class Villager extends BaseHumanoid {
   inspect() {
     return [
       this.name,
-      "Profession: " + this.profession,
+      "Profession: " + this.profession.name,
       this.bored ? "Wandering..." : (this.collecting ? "Collecting" : (this.unloading ? "Unloading" : "Traveling")),
-      ...Object.entries(this.inventory).map(function([name, item]) {
+      ...Object.entries(this.inventory).filter(function([name, item]) {
+        return item.count > 0
+      }).map(function([name, item]) {
         return name + ": " + item.count + " (" + item.totalWeight() + " lbs)"
       }),
       // "Destination: " + JSON.stringify(this.destination),
       "Walk Speed: " + this.walk_speed,
       "Collect Speed: " + this.collect_speed,
       "Carry Capacity: " + this.carry_capacity,
+      "Fullness: " + this.fullness,
       // "Home: " + this.home,
       // "Job Building: " + this.job_building,
       // "Selected Resource: " + this.selected_resource,
@@ -98,38 +107,74 @@ export default class Villager extends BaseHumanoid {
     this.inventory[site.item.name] ||= site.newItem()
   }
 
-  fullInventory() {
-    let inventory_weights = Object.values(this.inventory).map(function(item) {
+  inventoryWeight() {
+    return sum(Object.values(this.inventory).map(function(item) {
       return item.totalWeight()
-    })
+    }))
+  }
 
-    return sum(inventory_weights) >= this.carry_capacity
+  fullInventory() {
+    return this.inventoryWeight() >= this.carry_capacity
+  }
+
+  shouldUnload() {
+    return this.unloading || this.fullInventory()
+  }
+
+  shouldFindFood() {
+    if (this.unloading || this.collecting || this.fullness > 50) { return false }
+
+    var storage = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
+    this.selected_storage = storage
+    return storage.inventory.bread?.count > 0
   }
 
   findDestination() {
     let dest_obj = null
 
-    if (this.unloading || this.fullInventory()) {
+    if (this.shouldFindFood()) {
+      dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
+    } else if (this.shouldUnload()) {
       this.collecting = false
       this.unloading = true
       dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
       this.selected_storage = dest_obj
     } else {
-      if (this.selected_resource && this.selected_resource.resources <= 0) {
-        this.selected_resource = undefined
-      }
       if (this.selected_resource?.collector != this || this.selected_resource.removed) {
-        this.selected_resource = undefined
+        this.clearSelectedResource()
       }
       dest_obj = this.selected_resource || this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)
       this.selected_resource = dest_obj
 
       if (this.selected_resource) {
         this.selected_resource.collector = this
+      } else if (this.inventoryWeight() > 0) {
+        this.unloading = true
+        return this.findDestination()
       }
     }
 
     return dest_obj
+  }
+
+  die(cause) {
+    this.status = "dead"
+    this.cause_of_death = cause
+    console.log(this.name + " has died of " + cause);
+    new Corpse(this)
+    new Ghost(this)
+
+    this.hideSprite("tool_sprite")
+    this.hideSprite("highlight")
+
+    this.remove()
+  }
+
+  eatFrom(obj) {
+    if (randOnePerNSec(5) && obj.inventory.bread?.count > 0) {
+      obj.inventory.bread.count -= 1
+      this.fullness += 10
+    }
   }
 
   unload(obj) {
@@ -156,6 +201,8 @@ export default class Villager extends BaseHumanoid {
       return
     }
 
+    if (randOnePerNSec(30)) { this.fullness -= 1 }
+
     this.collecting = true
 
     this.prepInventoryForProfession()
@@ -169,10 +216,21 @@ export default class Villager extends BaseHumanoid {
     }
   }
 
+  clearSelectedResource() {
+    if (this.selected_resource && this.selected_resource.collector == this) {
+      this.selected_resource.collector = undefined
+    }
+    this.selected_resource = undefined
+  }
+
   tick() {
+    if (this.status == "dead") { return } // Stops next tick from coming back to life
+    if (this.fullness <= 0) { return this.die("starvation") }
+    if (randOnePerNSec(100)) { this.fullness -= 1 }
+
     if (this.selected_resource && this.selected_resource.resources <= 0) {
       this.collecting = false
-      this.selected_resource = undefined
+      this.clearSelectedResource()
       this.clearDest()
     }
 
@@ -185,7 +243,11 @@ export default class Villager extends BaseHumanoid {
 
         if (this.arrivedAtDest()) {
           if (obj.constructor.name == "Storage") {
-            this.unload(obj)
+            if (this.inventoryWeight() == 0 && this.fullness < 90 && this.selected_storage.inventory.bread?.count > 0) {
+              this.eatFrom(obj)
+            } else {
+              this.unload(obj)
+            }
           } else {
             this.collect(obj)
           }

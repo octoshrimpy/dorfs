@@ -1,5 +1,4 @@
 import BaseResource from "./base_resource.js"
-import Item from "../items/item.js"
 import { rand } from "/helpers.js"
 
 export default class Tree extends BaseResource {
@@ -10,7 +9,7 @@ export default class Tree extends BaseResource {
   }
 
   constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "things.trees.oak") 
+    super(ctx, opts, sprite_path || "things.trees.oak")
 
     this.ctx = ctx
     opts = opts || {}
