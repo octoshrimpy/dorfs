@@ -1,4 +1,6 @@
 import BaseHumanoid from "./base_humanoid.js"
+import Corpse from "./corpse.js"
+import Ghost from "./ghost.js"
 import BaseJob from "../../jobs/base_job.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
@@ -120,7 +122,6 @@ export default class Villager extends BaseHumanoid {
   }
 
   shouldFindFood() {
-    if (this.fullness < 10) { return true }
     if (this.unloading || this.collecting || this.fullness > 50) { return false }
 
     var storage = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
@@ -132,7 +133,7 @@ export default class Villager extends BaseHumanoid {
     let dest_obj = null
 
     if (this.shouldFindFood()) {
-      dest_obj = this.selected_storage
+      dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
     } else if (this.shouldUnload()) {
       this.collecting = false
       this.unloading = true
@@ -154,6 +155,19 @@ export default class Villager extends BaseHumanoid {
     }
 
     return dest_obj
+  }
+
+  die(cause) {
+    this.status = "dead"
+    this.cause_of_death = cause
+    console.log(this.name + " has died of " + cause);
+    new Corpse(this)
+    new Ghost(this)
+
+    this.hideSprite("tool_sprite")
+    this.hideSprite("highlight")
+
+    this.remove()
   }
 
   eatFrom(obj) {
@@ -210,6 +224,8 @@ export default class Villager extends BaseHumanoid {
   }
 
   tick() {
+    if (this.status == "dead") { return } // Stops next tick from coming back to life
+    if (this.fullness <= 0) { return this.die("starvation") }
     if (randOnePerNSec(100)) { this.fullness -= 1 }
 
     if (this.selected_resource && this.selected_resource.resources <= 0) {

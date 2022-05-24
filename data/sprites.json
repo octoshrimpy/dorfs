@@ -77,8 +77,8 @@
           "--unused-- beard_white": [9, 2]
         }
       },
-      "--unused-- ghost": {
-        "--unused-- idle": { "start": [6, 3], "length": 2 },
+      "ghost": {
+        "stand": { "start": [6, 3], "length": 2, "speed": 300 },
         "--unused-- haunt": { "start": [8, 3], "length": 2 }
       }
     },

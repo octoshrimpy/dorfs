@@ -82,7 +82,7 @@
 
 - [x] Wheat should grow in patches. Grows over time, can only be harvested once full, the falls back to initial state where it must grow over time.
 - [x] Bakers take wheat, craft to bread, and put bread in storage.
-- [ ] Dorfs get hungry, take bread from storage, and consume it.
+- [x] Dorfs get hungry, take bread from storage, and consume it.
 - [ ] Stuff shouldn't spawn on top of each other
 - [x] Remove \*Item classes, instead have a base item class that's defined in the resource
 - [ ] FOV
