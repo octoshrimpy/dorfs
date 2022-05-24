@@ -4,7 +4,7 @@ import Ghost from "./ghost.js"
 import BaseJob from "../../jobs/base_job.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
-import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec } from "/helpers.js"
+import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec } from "../../helpers.js"
 
 export default class Villager extends BaseHumanoid {
   static objs = []

@@ -1,6 +1,6 @@
 import BaseMob from "./base_mob.js"
 import Villager from "../villager/villager.js"
-import { rand, weightedSample } from "/helpers.js"
+import { rand, weightedSample } from "../../helpers.js"
 
 export default class Chicken extends BaseMob {
   static objs = []

@@ -1,5 +1,5 @@
 import BaseAlive from "../base_alive.js"
-import { randPerNSec } from "/helpers.js"
+import { randPerNSec } from "../../helpers.js"
 
 export default class BaseHumanoid extends BaseAlive {
   // #baseHealth = 20

@@ -1,5 +1,5 @@
 import BaseMob from "./base_mob.js"
-import { rand, weightedSample } from "/helpers.js"
+import { rand, weightedSample } from "../../helpers.js"
 
 export default class Cow extends BaseMob {
   static objs = []

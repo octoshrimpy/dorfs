@@ -1,5 +1,5 @@
 import BaseAlive from "../base_alive.js"
-import { rand, randPerNSec, normalDist, constrain } from "/helpers.js"
+import { rand, randPerNSec, normalDist, constrain } from "../../helpers.js"
 
 export default class Ghost extends BaseAlive {
   static objs = []

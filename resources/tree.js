@@ -1,5 +1,5 @@
 import BaseResource from "./base_resource.js"
-import { rand } from "/helpers.js"
+import { rand } from "../helpers.js"
 
 export default class Tree extends BaseResource {
   static objs = []

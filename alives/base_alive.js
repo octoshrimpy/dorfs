@@ -1,5 +1,5 @@
 import BaseObject from "../base_object.js"
-import { rand, scaleX, scaleY, scaleVal, constrain, normalDist } from "/helpers.js"
+import { rand, scaleX, scaleY, scaleVal, constrain, normalDist } from "..//helpers.js"
 
 export default class BaseAlive extends BaseObject  {
   // #baseHealth
