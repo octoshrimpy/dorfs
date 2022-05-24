@@ -5,7 +5,7 @@ import Baker        from "./jobs/baker.js"
 import Builder      from "./jobs/builder.js"
 import Farmer       from "./jobs/farmer.js"
 import Lumberjack   from "./jobs/lumberjack.js"
-import Miner        from "./jobs/miner.js"
+import Miner        from "./jobs/digger.js"
 import Smith        from "./jobs/smith.js"
 
 import Tree         from "./resources/tree.js"
@@ -32,7 +32,7 @@ import {
   times,
   idxFromPos,
   sample
-} from "/helpers.js"
+} from "./helpers.js"
 
 var map_w = 45, map_h = 23
 var config = {
