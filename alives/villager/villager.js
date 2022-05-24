@@ -236,7 +236,7 @@ export default class Villager extends BaseHumanoid {
     } else if (this.fullness <= 10) {
       if (Villager.objs.find(function(villager) { return villager.profession?.name == "baker" })) {
         this.takeProfession(BaseJob.profByName("Farmer"))
-      } else if (this.selected_storage.inventory.bread?.count < 100) {
+      } else if (this.selected_storage.inventory.wheat?.count < 100) {
         this.takeProfession(BaseJob.profByName("Farmer"))
       } else {
         this.takeProfession(BaseJob.profByName("Baker"))
