@@ -1,4 +1,4 @@
-import { sample } from "/helpers.js"
+import { sample } from "../helpers.js"
 
 export default class BaseJob {
   static jobs = []

@@ -1,5 +1,5 @@
 import BaseJob from "./base_job.js"
-import Rock from "../../resources/rock.js"
+import Rock from "../resources/rock.js"
 
 export default class Miner extends BaseJob {
   static push = BaseJob.jobs.push(this)

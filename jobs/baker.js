@@ -1,5 +1,5 @@
 import BaseJob from "./base_job.js"
-import Bakery from "../../buildings/bakery.js"
+import Bakery from "../buildings/bakery.js"
 
 export default class Baker extends BaseJob {
   static push = BaseJob.jobs.push(this)
