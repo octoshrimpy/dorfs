@@ -54,7 +54,7 @@ export default class BaseObject {
   }
 
   inspect() {
-    return this.constructor.name
+    return [this.constructor.name]
   }
 
   clearSprite() {

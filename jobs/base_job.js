@@ -6,4 +6,8 @@ export default class BaseJob {
   static randProf() {
     return sample(this.jobs)
   }
+
+  static profByName(name) {
+    return this.jobs.find(function(job) { return job.name == name })
+  }
 }

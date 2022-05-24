@@ -46,7 +46,7 @@ export default class Villager extends BaseHumanoid {
   inspect() {
     return [
       this.name,
-      "Profession: " + this.profession.name,
+      "Profession: " + this.profession?.name,
       this.bored ? "Wandering..." : (this.collecting ? "Collecting" : (this.unloading ? "Unloading" : "Traveling")),
       ...Object.entries(this.inventory).filter(function([name, item]) {
         return item.count > 0
@@ -160,6 +160,9 @@ export default class Villager extends BaseHumanoid {
   die(cause) {
     this.status = "dead"
     this.cause_of_death = cause
+    if (this.selected_resource?.collector == this) {
+      this.selected_resource.collector = undefined
+    }
     console.log(this.name + " has died of " + cause);
     new Corpse(this)
     new Ghost(this)
@@ -226,7 +229,17 @@ export default class Villager extends BaseHumanoid {
   tick() {
     if (this.status == "dead") { return } // Stops next tick from coming back to life
     if (this.fullness <= 0) { return this.die("starvation") }
-    if (randPerNSec(100)) { this.fullness -= 1 }
+    if (randPerNSec(60)) { this.fullness -= 1 }
+
+    if (this.fullness < 20 && this.fullness > 10) {
+      this.takeProfession(BaseJob.profByName("Farmer"))
+    } else if (this.fullness <= 10) {
+      if (!Villager.objs.find(function(villager) { return villager.profession?.name == "baker" })) {
+        this.takeProfession(BaseJob.profByName("Baker"))
+      } else {
+        this.takeProfession(BaseJob.profByName("Farmer"))
+      }
+    }
 
     if (this.selected_resource && this.selected_resource.resources <= 0) {
       this.collecting = false

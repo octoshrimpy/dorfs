@@ -122,10 +122,17 @@ function create() {
 function update() { // ~60fps
   BaseObject.tick()
 
-  if (randPerNSec(80)) { new Rock(ctx, randCoord()) }
-  if (randPerNSec(80)) { new Tree(ctx, randCoord()) }
+  if (randPerNSec(80) && Rock.objs.length < 10) { new Rock(ctx, randCoord()) }
+  if (randPerNSec(80) && Tree.objs.length < 10) { new Tree(ctx, randCoord()) }
 
-  ctx.overlay.setText(ctx.selected?.inspect())
+  ctx.overlay.setText([
+    ...(ctx.selected?.inspect() || []),
+    ...[null],
+    ...Villager.objs.map(function(villager) {
+      let length = 23
+      return villager.name + ":" + " ".repeat(length - villager.name.length - villager.fullness.toString().length) + villager.fullness
+    })
+  ])
 }
 
 function setupContext(env) {
