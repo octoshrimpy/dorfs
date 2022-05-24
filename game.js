@@ -24,7 +24,7 @@ import FloatingText from "./support/floating_text.js"
 import {
   rand,
   normalDist,
-  randOnePerNSec,
+  randPerNSec,
   scaleVal,
   scaleX,
   scaleY,
@@ -96,7 +96,7 @@ function create() {
     new Cow(ctx, randCoord())
   })
 
-  times(100, function() {
+  times(10, function() {
     new Chicken(ctx, randCoord())
   })
 
@@ -122,8 +122,8 @@ function create() {
 function update() { // ~60fps
   BaseObject.tick()
 
-  if (randOnePerNSec(80)) { new Rock(ctx, randCoord()) }
-  if (randOnePerNSec(80)) { new Tree(ctx, randCoord()) }
+  if (randPerNSec(80)) { new Rock(ctx, randCoord()) }
+  if (randPerNSec(80)) { new Tree(ctx, randCoord()) }
 
   ctx.overlay.setText(ctx.selected?.inspect())
 }

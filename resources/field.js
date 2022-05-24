@@ -1,6 +1,6 @@
 import BaseResource from "./base_resource.js"
 import Item from "../items/item.js"
-import { sample, normalDist, randOnePerNSec } from "/helpers.js"
+import { sample, normalDist, fnRandPerNMin } from "/helpers.js"
 
 export default class Field extends BaseResource {
   static objs = []
@@ -21,7 +21,7 @@ export default class Field extends BaseResource {
     this.min_collect_factor = 1 // per sec
     this.max_collect_factor = 5 // per sec
 
-    this.growth_speed = 30
+    this.growthRate = fnRandPerNMin(1.5)
     this.max_growth_state = 4
 
     this.resources = 0
@@ -44,7 +44,7 @@ export default class Field extends BaseResource {
   }
 
   tick() {
-    if (this.growth_state < this.max_growth_state && randOnePerNSec(30)) {
+    if (this.growth_state < this.max_growth_state && this.growthRate()) {
       this.growth_state += 1
       this.setSpriteByStage()
 

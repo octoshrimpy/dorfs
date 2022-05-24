@@ -4,7 +4,7 @@ import Ghost from "./ghost.js"
 import BaseJob from "../../jobs/base_job.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
-import { sum, sample, normalDist, scaleVal, randOnePerNSec, randNPerSec } from "/helpers.js"
+import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec } from "/helpers.js"
 
 export default class Villager extends BaseHumanoid {
   static objs = []
@@ -171,7 +171,7 @@ export default class Villager extends BaseHumanoid {
   }
 
   eatFrom(obj) {
-    if (randOnePerNSec(5) && obj.inventory.bread?.count > 0) {
+    if (randPerNSec(5) && obj.inventory.bread?.count > 0) {
       obj.inventory.bread.count -= 1
       this.fullness += 10
     }
@@ -201,7 +201,7 @@ export default class Villager extends BaseHumanoid {
       return
     }
 
-    if (randOnePerNSec(30)) { this.fullness -= 1 }
+    if (randPerNSec(30)) { this.fullness -= 1 }
 
     this.collecting = true
 
@@ -226,7 +226,7 @@ export default class Villager extends BaseHumanoid {
   tick() {
     if (this.status == "dead") { return } // Stops next tick from coming back to life
     if (this.fullness <= 0) { return this.die("starvation") }
-    if (randOnePerNSec(100)) { this.fullness -= 1 }
+    if (randPerNSec(100)) { this.fullness -= 1 }
 
     if (this.selected_resource && this.selected_resource.resources <= 0) {
       this.collecting = false

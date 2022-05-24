@@ -127,13 +127,13 @@
   - [ ] Limited tenants
   - [ ] Allows rest
   - [ ] Allows food (if available)
-- [ ] Bakery
-  - [ ] Allows crafting wheat -> bread
+- [x] Bakery
+  - [x] Allows crafting wheat -> bread
 - [ ] Smith
   - [ ] Allows crafting stone -> brick
 - [ ] Aging
-- [ ] Death
-  - [ ] Starvation
+- [x] Death
+  - [x] Starvation
   - [ ] Old Age
 - [ ] Birth
   - [ ] From a couple living together
@@ -141,6 +141,7 @@
   - [ ] Trees could be planted (or random?)
   - [ ] Fields can be planted and regrow constantly
   - [ ] ????? Mines ????? - Randomly get placed
+- [ ] Eventually: Save progress. 😱
 
 ---
 

@@ -79,13 +79,27 @@ export function rand(min, max) {
 }
 
 // Will return `true` approximately once every `n` seconds when called every tick
-export function randOnePerNSec(n) {
+export function randPerNSec(n) {
   return rand(fps * n) == 0
 }
 
 // Will return `true` approximately `n` times every second when called every tick
 export function randNPerSec(n) {
   return rand(fps / n) == 0
+}
+
+// Will return a function that can be called that will return `true` roughly n times when called every tick
+export function fnRandNPerSec(n) {
+  return function() { return randNPerSec(n) }
+}
+export function fnRandPerNSec(n) {
+  return function() { return randPerNSec(n) }
+}
+export function fnRandNPerMin(n) {
+  return function() { return randNPerSec(n * 60) }
+}
+export function fnRandPerNMin(n) {
+  return function() { return randPerNSec(n * 60) }
 }
 
 // Transforms `value` through a scale.

@@ -1,5 +1,5 @@
 import BaseAlive from "../base_alive.js"
-import { rand, randOnePerNSec, normalDist } from "/helpers.js"
+import { rand, randPerNSec, normalDist } from "/helpers.js"
 
 export default class Ghost extends BaseAlive {
   static objs = []
@@ -19,13 +19,13 @@ export default class Ghost extends BaseAlive {
   }
 
   tick() {
-    if (randOnePerNSec(this.wander_scale || 10)) {
+    if (randPerNSec(this.wander_scale || 10)) {
       this.wander()
     }
-    if (randOnePerNSec(1)) {
+    if (randPerNSec(1)) {
       this.sprite.alpha += (rand() - 0.5)/10
     }
-    if (randOnePerNSec(30)) {
+    if (randPerNSec(30)) {
       this.sprite.anims.msPerFrame = 1000 / (rand()*2)
     }
 
