@@ -84,11 +84,11 @@ function create() {
     new Villager(ctx, randCoord())
   })
 
-  times(2, function() {
+  times(3, function() {
     new Tree(ctx, randCoord())
   })
 
-  times(2, function() {
+  times(3, function() {
     new Rock(ctx, randCoord())
   })
 

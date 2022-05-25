@@ -57,6 +57,16 @@ export function sum(arr) {
   return arr.reduce(function(aggr, i) { return aggr + i }, 0)
 }
 
+// Get the lowest value from array
+export function min(arr) {
+  return sort(arr)[0]
+}
+
+// Get the highest value from array
+export function max(arr) {
+  return sort(arr)[arr.length - 1]
+}
+
 // Returns a random value from an array
 export function sample(arr) {
   return arr[rand(arr.length)]

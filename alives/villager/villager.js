@@ -4,7 +4,7 @@ import Ghost from "./ghost.js"
 import BaseJob from "../../jobs/base_job.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
-import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec } from "../../helpers.js"
+import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec, min } from "../../helpers.js"
 
 export default class Villager extends BaseHumanoid {
   static objs = []
@@ -41,6 +41,10 @@ export default class Villager extends BaseHumanoid {
     this.profession = undefined
     this.takeRandomProfession()
     this.tool_sprite = undefined
+  }
+
+  static hasAnyWithJob(job) {
+    return Villager.objs.find(function(villager) { return villager.profession?.name == job }) != undefined
   }
 
   inspect() {
@@ -89,6 +93,7 @@ export default class Villager extends BaseHumanoid {
     this.profession = new_profession
 
     if (new_profession != old_profession) {
+      this.clearSelectedResource()
       this.setSprite(this.profession?.sprite)
     }
     if (!this.profession) {
@@ -97,7 +102,11 @@ export default class Villager extends BaseHumanoid {
   }
 
   takeRandomProfession() {
-    this.takeProfession(BaseJob.randProf())
+    let new_prof = BaseJob.randProf()
+    // Only switch professions if there is work to be done.
+    if (new_prof?.workSite()?.nearest(this.sprite.x, this.sprite.y)) {
+      this.takeProfession(new_prof)
+    }
   }
 
   prepInventoryForProfession() {
@@ -119,6 +128,15 @@ export default class Villager extends BaseHumanoid {
 
   shouldUnload() {
     return this.unloading || this.fullInventory()
+  }
+
+  shouldEat() {
+    if (this.fullness >= 90) { return false } // Already full
+    if (!(this.selected_storage.inventory.bread?.count > 0)) { return false } // Can't eat if no food
+    if (this.fullness <= 20) { return true } // If starving, be selfish and eat
+
+    // Hungriest villager gets first dibs
+    return min(Villager.objs.map(function(villager) { return villager.fullness })) >= this.fullness
   }
 
   shouldFindFood() {
@@ -160,9 +178,7 @@ export default class Villager extends BaseHumanoid {
   die(cause) {
     this.status = "dead"
     this.cause_of_death = cause
-    if (this.selected_resource?.collector == this) {
-      this.selected_resource.collector = undefined
-    }
+    this.clearSelectedResource()
     console.log(this.name + " has died of " + cause);
     new Corpse(this)
     new Ghost(this)
@@ -204,7 +220,7 @@ export default class Villager extends BaseHumanoid {
       return
     }
 
-    if (randPerNSec(30)) { this.fullness -= 1 }
+    if (randPerNSec(20)) { this.fullness -= 1 }
 
     this.collecting = true
 
@@ -229,12 +245,12 @@ export default class Villager extends BaseHumanoid {
   tick() {
     if (this.status == "dead") { return } // Stops next tick from coming back to life
     if (this.fullness <= 0) { return this.die("starvation") }
-    if (randPerNSec(60)) { this.fullness -= 1 }
+    if (randPerNSec(50)) { this.fullness -= 1 }
 
     if (this.fullness < 20 && this.fullness > 10) {
       this.takeProfession(BaseJob.profByName("Farmer"))
     } else if (this.fullness <= 10) {
-      if (Villager.objs.find(function(villager) { return villager.profession?.name == "baker" })) {
+      if (Villager.hasAnyWithJob("Baker")) {
         this.takeProfession(BaseJob.profByName("Farmer"))
       } else if (this.selected_storage.inventory.wheat?.count < 100) {
         this.takeProfession(BaseJob.profByName("Farmer"))
@@ -255,10 +271,11 @@ export default class Villager extends BaseHumanoid {
       if (obj) {
         if (this.bored) { this.bored = false }
         this.destination = { x: obj.access_origin.x, y: obj.access_origin.y }
+        this.speed = this.walk_speed
 
         if (this.arrivedAtDest()) {
           if (obj.constructor.name == "Storage") {
-            if (this.inventoryWeight() == 0 && this.fullness < 90 && this.selected_storage.inventory.bread?.count > 0) {
+            if (this.shouldEat()) {
               this.eatFrom(obj)
             } else {
               this.unload(obj)
@@ -269,9 +286,15 @@ export default class Villager extends BaseHumanoid {
         }
       } else {
         if (!this.bored) { this.bored = true }
-        if (randNPerSec(10)) {
-          this.wander()
-          this.takeRandomProfession()
+        if (randPerNSec(3)) {
+          if (!Villager.hasAnyWithJob("Farmer") && BaseJob.profByName("Farmer")?.workSite()?.nearest(this.sprite.x, this.sprite.y)) {
+            return this.takeProfession(BaseJob.profByName("Farmer"))
+          } else if (!Villager.hasAnyWithJob("Baker") && this.selected_storage?.inventory?.wheat?.count > 100) {
+            return this.takeProfession(BaseJob.profByName("Baker"))
+          } else {
+            this.takeRandomProfession()
+            this.wander()
+          }
         }
       }
     }
