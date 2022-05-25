@@ -220,7 +220,7 @@ export default class Villager extends BaseHumanoid {
       return
     }
 
-    if (randPerNSec(20)) { this.fullness -= 1 }
+    if (randPerNSec(25)) { this.fullness -= 1 }
 
     this.collecting = true
 
@@ -245,7 +245,7 @@ export default class Villager extends BaseHumanoid {
   tick() {
     if (this.status == "dead") { return } // Stops next tick from coming back to life
     if (this.fullness <= 0) { return this.die("starvation") }
-    if (randPerNSec(50)) { this.fullness -= 1 }
+    if (randPerNSec(75)) { this.fullness -= 1 }
 
     if (this.fullness < 20 && this.fullness > 10) {
       this.takeProfession(BaseJob.profByName("Farmer"))

@@ -100,9 +100,9 @@ function create() {
     new Chicken(ctx, randCoord())
   })
 
-  times(normalDist(1, 5), function() {
-    var horz = normalDist(1, 10, 3, 3) // min, max, mult, bias
-    var vert = normalDist(1, 10, 3, 3)
+  times(normalDist(2, 5), function() {
+    var horz = normalDist(1, 10, 4, 4) // min, max, mult, bias
+    var vert = normalDist(1, 10, 4, 4)
     var start = randCoord()
 
     times(horz, function(x_idx) {
