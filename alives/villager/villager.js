@@ -2,6 +2,7 @@ import BaseHumanoid from "./base_humanoid.js"
 import Corpse from "./corpse.js"
 import Ghost from "./ghost.js"
 import BaseJob from "../../jobs/base_job.js"
+import Bakery from "../../buildings/bakery.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
 import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec, min } from "../../helpers.js"
@@ -41,10 +42,14 @@ export default class Villager extends BaseHumanoid {
     this.profession = undefined
     this.takeRandomProfession()
     this.tool_sprite = undefined
+
+    this.wander()
   }
 
-  static hasAnyWithJob(job) {
-    return Villager.objs.find(function(villager) { return villager.profession?.name == job }) != undefined
+  static countWithJob(job) {
+    return Villager.objs.filter(function(villager) {
+      return villager.profession?.name == job
+    }).length
   }
 
   inspect() {
@@ -101,6 +106,28 @@ export default class Villager extends BaseHumanoid {
     }
   }
 
+  chooseProfession() {
+    let this_prof = this.profession?.name
+    let is_baker = this_prof == "Baker"
+    let is_starving = this.fullness < 10
+    let has_many_farmers = Villager.countWithJob("Farmer") > 4
+    let has_baker = Villager.countWithJob("Baker") > 0
+    let has_fields = BaseJob.profByName("Farmer")?.workSite()?.nearest(this.sprite.x, this.sprite.y)
+    let has_wheat = this.selected_storage?.inventory?.wheat?.count > Bakery.craft_ratio
+
+    if (has_wheat && (is_baker || !has_baker)) {
+      this.takeProfession(BaseJob.profByName("Baker"))
+    } else if (!has_many_farmers && has_fields) {
+      this.takeProfession(BaseJob.profByName("Farmer"))
+    } else if (is_starving) {
+      // Sit and wait at storage for food
+      let obj = this.selected_storage
+      this.destination = { x: obj.access_origin.x, y: obj.access_origin.y }
+    } else {
+      this.takeRandomProfession()
+    }
+  }
+
   takeRandomProfession() {
     let new_prof = BaseJob.randProf()
     // Only switch professions if there is work to be done.
@@ -133,7 +160,7 @@ export default class Villager extends BaseHumanoid {
   shouldEat() {
     if (this.fullness >= 90) { return false } // Already full
     if (!(this.selected_storage.inventory.bread?.count > 0)) { return false } // Can't eat if no food
-    if (this.fullness <= 20) { return true } // If starving, be selfish and eat
+    if (this.fullness <= 50) { return true } // If hungry, be selfish and eat
 
     // Hungriest villager gets first dibs
     return min(Villager.objs.map(function(villager) { return villager.fullness })) >= this.fullness
@@ -207,6 +234,7 @@ export default class Villager extends BaseHumanoid {
         this.inventory[item_name].count -= 1
       } else {
         this.unloading = false
+        this.chooseProfession()
       }
     }
   }
@@ -247,18 +275,6 @@ export default class Villager extends BaseHumanoid {
     if (this.fullness <= 0) { return this.die("starvation") }
     if (randPerNSec(75)) { this.fullness -= 1 }
 
-    if (this.fullness < 20 && this.fullness > 10) {
-      this.takeProfession(BaseJob.profByName("Farmer"))
-    } else if (this.fullness <= 10) {
-      if (Villager.hasAnyWithJob("Baker")) {
-        this.takeProfession(BaseJob.profByName("Farmer"))
-      } else if (this.selected_storage.inventory.wheat?.count < 100) {
-        this.takeProfession(BaseJob.profByName("Farmer"))
-      } else {
-        this.takeProfession(BaseJob.profByName("Baker"))
-      }
-    }
-
     if (this.selected_resource && this.selected_resource.resources <= 0) {
       this.collecting = false
       this.clearSelectedResource()
@@ -287,25 +303,8 @@ export default class Villager extends BaseHumanoid {
       } else {
         if (!this.bored) { this.bored = true }
         if (randPerNSec(3)) {
-          let this_prof = this.profession?.name
-          let is_farmer = this_prof == "Farmer"
-          let is_baker = this_prof == "Baker"
-          let is_starving = this.fullness < 10
-          let has_farmer = is_farmer || Villager.hasAnyWithJob("Farmer")
-          let has_baker = is_baker || Villager.hasAnyWithJob("Baker")
-          let has_fields = BaseJob.profByName("Farmer")?.workSite()?.nearest(this.sprite.x, this.sprite.y)
-          let has_wheat = this.selected_storage?.inventory?.wheat?.count > 100
-
-          if (!has_wheat && has_fields && !is_farmer) {
-            this.takeProfession(BaseJob.profByName("Farmer"))
-          } else if (has_wheat && !has_baker) {
-            this.takeProfession(BaseJob.profByName("Baker"))
-          } else if (has_wheat && has_baker && is_starving && !is_farmer && !is_baker) {
-            // Sit and wait at storage for food
-            let obj = this.selected_storage
-            this.destination = { x: obj.access_origin.x, y: obj.access_origin.y }
-          } else {
-            this.takeRandomProfession()
+          this.chooseProfession()
+          if (!this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)) {
             this.wander()
           }
         }

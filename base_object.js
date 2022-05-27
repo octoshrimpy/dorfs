@@ -40,12 +40,17 @@ export default class BaseObject {
   }
 
   remove() {
+    if (this.ctx.selected == this) {
+      this.ctx.selected = undefined
+      this.selected = false
+    }
     this.removed = true
     this.clearSprite()
     this.constructor.clearRemoved()
   }
 
   clicked() {
+    if (this.removed) { return }
     if (this.ctx.selected) { this.ctx.selected.selected = false } // Unselect the previous selected
 
     this.ctx.selected = this

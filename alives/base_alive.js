@@ -1,5 +1,5 @@
 import BaseObject from "../base_object.js"
-import { rand, scaleX, scaleY, scaleVal, constrain, normalDist } from "..//helpers.js"
+import { rand, scaleX, scaleY, scaleVal, constrain, normalDist, speed_multiplier } from "../helpers.js"
 
 export default class BaseAlive extends BaseObject  {
   // #baseHealth
@@ -46,7 +46,7 @@ export default class BaseAlive extends BaseObject  {
   }
 
   moveTowardsDest(speed) { // speed is 0-100
-    speed = speed || this.speed || this.walk_speed
+    speed = (speed || this.speed || this.walk_speed) * speed_multiplier
     // https://phaser.io/news/2018/03/pathfinding-and-phaser-3
     if (!this.destination || !this.sprite) { return }
 
@@ -63,12 +63,13 @@ export default class BaseAlive extends BaseObject  {
     if (this.spriteHasAnim("walk")) {
       this.loopAnim("walk")
       var sprite_fps = scaleVal(speed, 0, 100, 0, 20)
-      this.sprite.anims.msPerFrame = 1000 / sprite_fps
+      this.sprite.anims.msPerFrame = (1000 / sprite_fps) * speed_multiplier
     }
     this.sprite.flipX = dx < 0
     var max_speed = 2, max_speed_scale = 100
     var scaled_speed = (speed / max_speed_scale) * max_speed
     var speed_scale = scaled_speed / (Math.abs(dx) + Math.abs(dy))
+    if (speed_scale > 1) { speed_scale = 1 }
 
     this.sprite.x += dx * speed_scale
     this.sprite.y += dy * speed_scale

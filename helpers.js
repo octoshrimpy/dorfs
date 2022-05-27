@@ -1,4 +1,5 @@
-var fps = 60
+export var speed_multiplier = 10
+export var fps = (60 / speed_multiplier)
 
 export function scaleX(n) { return n * 16 }
 export function scaleY(n) { return n * 16 }

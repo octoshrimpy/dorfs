@@ -21,7 +21,7 @@ export default class Field extends BaseResource {
     this.min_collect_factor = 1 // per sec
     this.max_collect_factor = 5 // per sec
 
-    this.growthRate = fnRandPerNMin(1.5)
+    this.growthRate = fnRandPerNMin(2)
     this.max_growth_state = 4
 
     this.resources = 0
