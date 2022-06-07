@@ -42,10 +42,6 @@ var config = {
   scale: {
     zoom: 1.5,
   },
-  fps: {
-    target: 500,
-    forceSetTimeOut: true
-  },
   scene: {
     preload: preload,
     create: create,
@@ -116,6 +112,7 @@ function create() {
   let storage = new Storage(ctx, { x: midpoint.x, y: midpoint.y })
   // storage.inventory.wheat = Field.newItem()
   // storage.inventory.wheat.count = 100
+  storage.clicked()
   new Bakery(ctx, { x: midpoint.x, y: 32 })
 }
 
@@ -125,6 +122,7 @@ function update() { // ~60fps
   if (randPerNSec(80) && Rock.objs.length < 10) { new Rock(ctx, randCoord()) }
   if (randPerNSec(80) && Tree.objs.length < 10) { new Tree(ctx, randCoord()) }
 
+  if (ctx.selected?.removed) { ctx.selected = undefined }
   ctx.overlay.setText([
     ...(ctx.selected?.inspect() || []),
     ...[null],
@@ -146,6 +144,7 @@ function setupContext(env) {
   ctx.addSpriteWithAnim = function(sprite_path, opts) {
     let obj
     try {
+      // Catch any error here and just render `placeholder` if it fails
       obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
     } catch(e) {}
     if (!obj) { return ctx.addSpriteWithAnim("placeholder", opts) }

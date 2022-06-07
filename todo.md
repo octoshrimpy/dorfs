@@ -80,6 +80,10 @@
 
 ## Rocco Notes
 
+- [ ] Rewire Dorf brains to allow objective thinking (I need 4 wood and 3 brick to work on this house)
+- [ ] Right click to remove ghost/corpse?
+- [x] When selected object is removed/dies, should unselect (or select the corpse?)
+- [?] BUG: "Panic mode" when low hunger where they continuously switch between farmer and baker and get nothing done
 - [x] Wheat should grow in patches. Grows over time, can only be harvested once full, the falls back to initial state where it must grow over time.
 - [x] Bakers take wheat, craft to bread, and put bread in storage.
 - [x] Dorfs get hungry, take bread from storage, and consume it.

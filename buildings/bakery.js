@@ -2,6 +2,7 @@ import Workshop from "./workshop.js"
 
 export default class Bakery extends Workshop {
   static objs = []
+  static craft_ratio = 75
   static item = {
     name: "bread",
     weight: 2
@@ -12,7 +13,6 @@ export default class Bakery extends Workshop {
     this.ctx = ctx
     this.opts = opts || {}
 
-    this.craft_ratio = 100
     this.min_collect_factor = 0.1 // per sec
     this.max_collect_factor = 0.2
   }
@@ -32,12 +32,12 @@ export default class Bakery extends Workshop {
   tick() {
     // This is super hacky. Definitely not permanent.
     // Bakers should collect wheat and use that as the resource when collecting from here.
-    this.resources = Math.floor(this.storageWheat() / this.craft_ratio)
+    this.resources = Math.floor(this.storageWheat() / this.constructor.craft_ratio)
   }
 
   collect() {
-    if (this.storageWheat() > this.craft_ratio) {
-      this.connected_storage.inventory.wheat.count -= this.craft_ratio
+    if (this.storageWheat() > this.constructor.craft_ratio) {
+      this.connected_storage.inventory.wheat.count -= this.constructor.craft_ratio
     }
   }
 }
