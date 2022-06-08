@@ -115,7 +115,8 @@
   - [x] Speed of collecting animation based on collect_speed
 - [x] Items should have weights
   - [x] Max inventory is based on weight, not count
-- [ ] Villagers should have hunger / sleep
+- [x] Villagers should have hunger
+- [ ] Villagers should have sleepies/tired
 - [ ] Storage should have max inventory
 - [x] Z index based on Y
 - [x] Names
@@ -130,7 +131,7 @@
 - [ ] House
   - [ ] Limited tenants
   - [ ] Allows rest
-  - [ ] Allows food (if available)
+  - [ ] Allows food (if available) [?] storage of food? @rockster160
 - [x] Bakery
   - [x] Allows crafting wheat -> bread
 - [ ] Smith

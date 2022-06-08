@@ -9,7 +9,9 @@
      }
   },
   "buildings": {
-    "bakery": { "base": { "start": [5, 1], "sheet": "big_master" } }
+    "bakery": { "base": { "start": [5, 1], "sheet": "big_master" } },
+    "house": { "base": { "start": [4, 1], "sheet": "big_master" } },
+    "quarry": { "base": { "start": [6, 1], "sheet": "big_master" } }
   },
   "things": {
     "rocks": {

@@ -6,6 +6,7 @@ import Bakery from "../../buildings/bakery.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
 import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec, min } from "../../helpers.js"
+import House from "../../buildings/house.js"
 
 export default class Villager extends BaseHumanoid {
   static objs = []
@@ -22,14 +23,22 @@ export default class Villager extends BaseHumanoid {
 
     this.destination = undefined
     this.inventory = {}
-    this.unloading = false
-    this.collecting = false
+    this.actions = {
+      unloading: false,
+      collecting: false,
+      sleeping: false,
+      wandering: false,
+      walkingToAction: false, // moving to storage, bed, looking for food, etc
+    }
+    // this.actions.unloading = false
+    // this.actions.collecting = false
+    // this.sleeping = false
     this.walk_speed = opts.walk_speed || normalDist(10, 70, 4) // 0-100
     this.collect_speed = opts.collect_speed || normalDist(10, 70, 4) // 0-100
     this.carry_capacity = opts.carry_capacity || normalDist(60, 120, 4)
     this.selected = false
     this.highlight = undefined
-    this.bored = false
+    this.bored = false // @think bored here vs line 36
     this.fullness = normalDist(50, 100, 5, 90)
     this.status = undefined // working, bored, starving, tired, etc
     // Certain statuses should take priority, and use the status to short-circuit other activities
@@ -42,6 +51,10 @@ export default class Villager extends BaseHumanoid {
     this.profession = undefined
     this.takeRandomProfession()
     this.tool_sprite = undefined
+
+    this.sleepies = 0
+    this.sleepies_rate = opts.sleepies_rate || normalDist(11, 20, 2)
+    this.selected_house = undefined
 
     this.wander()
   }
@@ -56,7 +69,7 @@ export default class Villager extends BaseHumanoid {
     return [
       this.name,
       "Profession: " + this.profession?.name,
-      this.bored ? "Wandering..." : (this.collecting ? "Collecting" : (this.unloading ? "Unloading" : "Traveling")),
+      this.bored ? "Wandering..." : (this.actions.collecting ? "Collecting" : (this.actions.unloading ? "Unloading" : "Traveling")),
       ...Object.entries(this.inventory).filter(function([name, item]) {
         return item.count > 0
       }).map(function([name, item]) {
@@ -67,6 +80,8 @@ export default class Villager extends BaseHumanoid {
       "Collect Speed: " + this.collect_speed,
       "Carry Capacity: " + this.carry_capacity,
       "Fullness: " + this.fullness,
+      "Sleepies: " + this.sleepies,
+      "Sleepies Rate: " + this.sleepies_rate,
       // "Home: " + this.home,
       // "Job Building: " + this.job_building,
       // "Selected Resource: " + this.selected_resource,
@@ -154,7 +169,7 @@ export default class Villager extends BaseHumanoid {
   }
 
   shouldUnload() {
-    return this.unloading || this.fullInventory()
+    return this.actions.unloading || this.fullInventory()
   }
 
   shouldEat() {
@@ -163,15 +178,34 @@ export default class Villager extends BaseHumanoid {
     if (this.fullness <= 50) { return true } // If hungry, be selfish and eat
 
     // Hungriest villager gets first dibs
-    return min(Villager.objs.map(function(villager) { return villager.fullness })) >= this.fullness
+    return min(Villager.objs.map(villager => villager.fullness )) >= this.fullness
   }
 
   shouldFindFood() {
-    if (this.unloading || this.collecting || this.fullness > 50) { return false }
+    if (this.actions.unloading || this.actions.collecting || this.fullness > 50) { return false }
 
     var storage = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
     this.selected_storage = storage
     return storage.inventory.bread?.count > 0
+  }
+
+  // taking turns sleeping
+  // shouldRest() {
+  //   if (this.sleepies >= 90) { return false } // not tired
+  //   if (this.selected_house?.isFull()) { return false } // cant sleep if no bed
+  //   if (this.sleepies <=50) {return true}
+
+  //   // most tired dorfs get first dibs
+  //   return min(Villager.objs.map(villager => villager.sleepies)) >= this.sleepies
+  // }
+
+  shouldFindRest() {
+    console.log("wants rest", this)
+    if (this.actions.unloading || this.actions.collecting || this.sleepies < 50) { return false }
+
+    var house = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
+    this.selected_house = house
+    return true
   }
 
   findDestination() {
@@ -180,11 +214,20 @@ export default class Villager extends BaseHumanoid {
     if (this.shouldFindFood()) {
       dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
     } else if (this.shouldUnload()) {
-      this.collecting = false
-      this.unloading = true
+      Object.keys(this.actions).forEach(item => {
+        this.actions[item] = false
+      })
+      this.actions.unloading = true
       dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
       this.selected_storage = dest_obj
-    } else {
+    } else if (this.shouldFindRest()) {
+      Object.keys(this.actions).forEach(item => {
+        this.actions[item] = false
+      })
+      this.actions.sleeping = true
+      dest_obj = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
+      this.selected_house = dest_obj
+    }else {
       if (this.selected_resource?.collector != this || this.selected_resource.removed) {
         this.clearSelectedResource()
       }
@@ -194,7 +237,7 @@ export default class Villager extends BaseHumanoid {
       if (this.selected_resource) {
         this.selected_resource.collector = this
       } else if (this.inventoryWeight() > 0) {
-        this.unloading = true
+        this.actions.unloading = true
         return this.findDestination()
       }
     }
@@ -233,7 +276,7 @@ export default class Villager extends BaseHumanoid {
         obj.inventory[item_name].count += 1
         this.inventory[item_name].count -= 1
       } else {
-        this.unloading = false
+        this.actions.unloading = false
         this.chooseProfession()
       }
     }
@@ -241,16 +284,16 @@ export default class Villager extends BaseHumanoid {
 
   collect(obj) {
     if (obj.resources <= 0) {
-      this.collecting = false
+      this.actions.collecting = false
       this.clearDest()
-      this.unloading = true
+      this.actions.unloading = true
       this.findDestination()
       return
     }
 
     if (randPerNSec(25)) { this.fullness -= 1 }
 
-    this.collecting = true
+    this.actions.collecting = true
 
     this.prepInventoryForProfession()
 
@@ -263,6 +306,15 @@ export default class Villager extends BaseHumanoid {
     }
   }
 
+  sleepIn(obj) {
+    Object.keys(this.actions).forEach(item => {
+      this.actions[item] = false
+    })
+    this.sleeping = true
+
+    obj.sleepyDorfs.push(this)
+  }
+
   clearSelectedResource() {
     if (this.selected_resource && this.selected_resource.collector == this) {
       this.selected_resource.collector = undefined
@@ -271,12 +323,13 @@ export default class Villager extends BaseHumanoid {
   }
 
   tick() {
-    if (this.status == "dead") { return } // Stops next tick from coming back to life
+    if (this.actionstatus == "dead") { return } // Stops next tick from coming back to life
     if (this.fullness <= 0) { return this.die("starvation") }
     if (randPerNSec(75)) { this.fullness -= 1 }
+    if (randNPerSec(75)) { this.sleepies += 1 }
 
     if (this.selected_resource && this.selected_resource.resources <= 0) {
-      this.collecting = false
+      this.actions.collecting = false
       this.clearSelectedResource()
       this.clearDest()
     }
@@ -296,6 +349,9 @@ export default class Villager extends BaseHumanoid {
             } else {
               this.unload(obj)
             }
+          } else 
+          if (obj.constructor.name == "House") {
+            this.sleepIn(obj)
           } else {
             this.collect(obj)
           }
@@ -323,8 +379,8 @@ export default class Villager extends BaseHumanoid {
   }
 
   draw() {
-    if (this.collecting && !this.tool_sprite) { this.showTool() }
-    if (!this.collecting && this.tool_sprite) { this.hideSprite("tool_sprite") }
+    if (this.actions.collecting && !this.tool_sprite) { this.showTool() }
+    if (!this.actions.collecting && this.tool_sprite) { this.hideSprite("tool_sprite") }
     if (this.tool_sprite) { this.followSprite(this.tool_sprite) }
 
     if (this.selected && !this.highlight) { this.showHighlight() }

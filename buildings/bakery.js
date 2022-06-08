@@ -17,7 +17,7 @@ export default class Bakery extends BaseWorkshop {
     this.max_collect_factor = 0.2
   }
 
-  storageWheat() {
+  getStorageWheat() {
     return this.connected_storage.inventory.wheat?.count || 0
   }
 
@@ -25,18 +25,18 @@ export default class Bakery extends BaseWorkshop {
     return [
       this.constructor.name,
       "Resources: " + this.resources,
-      "Storage Wheat: " + this.storageWheat()
+      "Storage Wheat: " + this.getStorageWheat()
     ]
   }
 
   tick() {
     // This is super hacky. Definitely not permanent.
     // Bakers should collect wheat and use that as the resource when collecting from here.
-    this.resources = Math.floor(this.storageWheat() / this.constructor.craft_ratio)
+    this.resources = Math.floor(this.getStorageWheat() / this.constructor.craft_ratio)
   }
 
   collect() {
-    if (this.storageWheat() > this.constructor.craft_ratio) {
+    if (this.getStorageWheat() > this.constructor.craft_ratio) {
       this.connected_storage.inventory.wheat.count -= this.constructor.craft_ratio
     }
   }

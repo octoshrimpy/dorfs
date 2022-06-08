@@ -19,7 +19,7 @@ import Storage      from "./resources/storage.js"
 
 import Bakery       from "./buildings/bakery.js"
 
-import House        from "./buildings"
+import House        from "./buildings/house.js"
 
 import FloatingText from "./support/floating_text.js"
 
@@ -115,7 +115,8 @@ function create() {
   // storage.inventory.wheat = Field.newItem()
   // storage.inventory.wheat.count = 100
   storage.clicked()
-  new Bakery(ctx, { x: midpoint.x, y: 32 })
+  new Bakery(ctx, { x: midpoint.x - (5 * 16), y: 32 })
+  new House(ctx, {x: midpoint.x - (15 * 16), y: 32})
 }
 
 function update() { // ~60fps
