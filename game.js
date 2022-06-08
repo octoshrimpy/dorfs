@@ -19,6 +19,8 @@ import Storage      from "./resources/storage.js"
 
 import Bakery       from "./buildings/bakery.js"
 
+import House        from "./buildings"
+
 import FloatingText from "./support/floating_text.js"
 
 import {

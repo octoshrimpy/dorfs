@@ -1,6 +1,6 @@
-import Workshop from "./workshop.js"
+import BaseWorkshop from "./baseWorkshop.js"
 
-export default class Bakery extends Workshop {
+export default class Bakery extends BaseWorkshop {
   static objs = []
   static craft_ratio = 75
   static item = {
