@@ -1,4 +1,4 @@
-import BaseWorkshop from "./baseWorkshop.js"
+import BaseWorkshop from "./base_workshop.js"
 
 export default class Bakery extends BaseWorkshop {
   static objs = []

@@ -1,8 +1,11 @@
 import BaseHumanoid from "./base_humanoid.js"
 import Corpse from "./corpse.js"
 import Ghost from "./ghost.js"
+
 import BaseJob from "../../jobs/base_job.js"
 import Bakery from "../../buildings/bakery.js"
+import House from "../../buildings/house.js"
+
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
 import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec, min } from "../../helpers.js"
@@ -75,10 +78,7 @@ export default class Villager extends BaseHumanoid {
     return [
       this.name,
       "Profession: " + this.profession?.name,
-      //TODO +rockster160 PLS NO THE AGONY
-
-      Object.entries(this.actions).filter(([act, on]) => on).map(([act, on]) => act.toString()),
-      // this.bored ? "Wandering..." : (this.actions.collecting ? "Collecting" : (this.actions.unloading ? "Unloading" : "Traveling")),
+      this.status,
       ...Object.entries(this.inventory).filter(function([name, item]) {
         return item.count > 0
       }).map(function([name, item]) {
@@ -276,7 +276,7 @@ export default class Villager extends BaseHumanoid {
     }
   }
 
-  unload(obj) {
+  unloadTo(obj) {
     if (randNPerSec(10)) {
       let [item_name, item] = Object.entries(this.inventory).find(function([name, item_ref]) {
         return item_ref.count > 0
@@ -403,34 +403,12 @@ export default class Villager extends BaseHumanoid {
   }
 
   draw() {
-    if (this.actions.collecting && !this.tool_sprite) { this.showTool() }
-    if (!this.actions.collecting && this.tool_sprite) { this.hideSprite("tool_sprite") }
+    if (this.isCollecting() && !this.tool_sprite) { this.showTool() }
+    if (!this.isCollecting() && this.tool_sprite) { this.hideSprite("tool_sprite") }
     if (this.tool_sprite) { this.followSprite(this.tool_sprite) }
 
     if (this.selected && !this.highlight) { this.showHighlight() }
     if (!this.selected && this.highlight) { this.hideSprite("highlight") }
     if (this.highlight) { this.followSprite(this.highlight, -1) }
   }
-
-  // getRandomDorfSprite(){
-  //   let list_wear           = ["blue_dark", "blue", "green_dark", "green"]
-  //   let list_skin           = ["fair", "light", "dark"]
-  //   let list_hair_color     = ["brown", "black", "ashen", "copper", "blonde", "redhead"]
-  //   let list_hair_color_old = ["silver", "white"]
-  //   let list_beard_style    = ["full", "managed", "handlebar", "pedostache", "clean"]
-  //   let list_hair_style     = ["bowl", "bald", "part", "mohawk", "zucc", "monk", "shag", "clean"]
-  //
-  //   let wear_pants  = this._getRandFrom(list_wear)
-  //   let wear_shirt  = this._getRandFrom(list_wear)
-  //   let skin  = this._getRandFrom(list_skin)
-  //   let hairs = this._getRandFrom(list_hair_color)
-  //   let beard = this._getRandFrom(list_beard_style)
-  //   let hair  = this._getRandFrom(list_hair_style)
-  //
-  //   return {wear_pants, wear_shirt, skin, hairs, beard, hair}
-  // }
-  //
-  // _getRandFrom(array) {
-  //   return array[Math.floor(Math.random() * array.length)]
-  // }
 }
