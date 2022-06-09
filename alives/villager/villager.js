@@ -259,7 +259,7 @@ export default class Villager extends BaseHumanoid {
     this.status = "dead"
     this.cause_of_death = cause
     this.clearSelectedResource()
-    console.log(this.name + " has died of " + cause);
+    console.log(this.name + " has died of " + cause)
     new Corpse(this)
     new Ghost(this)
 

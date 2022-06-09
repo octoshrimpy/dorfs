@@ -60,7 +60,7 @@ function preload() {
   this.load.spritesheet("big_master", "assets/big_master.png", { frameWidth: 32, frameHeight: 32 })
   this.load.spritesheet("big_master2x3", "assets/bigmaster2x3.png", { frameWidth: 32, frameHeight: 48 })
 
-  this.load.bitmapFont('dorfscratch', 'assets/fonts/dorfscratch-Regular.png', 'assets/fonts/dorfscratch-Regular.fnt');
+  this.load.bitmapFont("dorfscratch", "assets/fonts/dorfscratch-Regular.png", "assets/fonts/dorfscratch-Regular.fnt")
   // Add some custom function to take the hard width of sprites, which are always 1x1 ratio and then centers the origin
 
   this.input.mouse.disableContextMenu()
@@ -148,7 +148,9 @@ function setupContext(env) {
     try {
       // Catch any error here and just render `placeholder` if it fails
       obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
-    } catch(e) {}
+    } catch(e) {
+      //
+    }
     if (!obj) { return ctx.addSpriteWithAnim("placeholder", opts) }
     var first_anim = obj[Object.keys(obj)[0]]
     let sheet_name = first_anim.sheet || "master"
