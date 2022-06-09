@@ -1,0 +1,22 @@
+{
+  "name": "dorfs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "base_object.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/octoshrimpy/dorfs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/octoshrimpy/dorfs/issues"
+  },
+  "homepage": "https://github.com/octoshrimpy/dorfs#readme",
+  "devDependencies": {
+    "eslint": "^8.17.0"
+  }
+}
