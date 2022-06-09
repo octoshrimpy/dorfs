@@ -12,38 +12,29 @@ export default class House extends BaseWorkshop {
 
     this.min_rest_factor = 0.1
     this.max_rest_factor = 0.5
-    this.sleepyDorfs = []
+    
+    this.capacity = 2
+    this.tenants = []
   }
 
   inspect() {
     return [
       this.constructor.name,
-      "Sleeping Dorfs: ", this.getSleepyDorfs(),
-      "Food Storage: ", this.getSorageBread()
+      "Sleeping Dorfs: ", this.tenants.map(function(tenant) { return tenant.name }).join(", "),
     ]
   }
 
-  getSorageBread(){
-    return this.connected_storage.inventory.bread?.count || 0
-  }
-
-  getSleepyDorfs() {
-    return this.sleepyDorfs || 0
-  }
-
-  removeDorf(dorf) {
-
-  }
-
   isFull() {
-    return false
+    return this.tenants.length >= this.capacity
   }
 
-  tick() {
-    // if dorf is more rested than x, removeDorf()
-    let dorfs = this.getSleepyDorfs()
-    dorfs.forEach(dorf => {
-      //
+  add(dorf) {
+    if (!this.tenants.includes(dorf)) { this.tenants.push(dorf) }
+  }
+
+  remove(dorf) {
+    this.tenants = this.tenants.filter(function(tenant) {
+      return tenant != dorf
     })
   }
 }

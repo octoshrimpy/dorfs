@@ -29,6 +29,13 @@ export default class BaseAlive extends BaseObject  {
     }
   }
 
+  arrivedAt(obj) {
+    let x_near = Math.abs(this.sprite.x - obj.access_origin.x) < 5
+    let y_near = Math.abs(this.sprite.y - obj.access_origin.y) < 5
+
+    return x_near && y_near
+  }
+
   arrivedAtDest() {
     let x_near = Math.abs(this.sprite.x - this.destination.x) < 5
     let y_near = Math.abs(this.sprite.y - this.destination.y) < 5

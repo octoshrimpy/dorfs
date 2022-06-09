@@ -8,14 +8,26 @@ import House from "../../buildings/house.js"
 
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
-import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec, min } from "../../helpers.js"
-import House from "../../buildings/house.js"
+
+import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec, min, constrain } from "../../helpers.js"
+
+let Status = { // Is this against convention?
+  bored:      "bored",
+  dead:       "dead",
+
+  traveling:  "traveling", // TODO: Actually use this over having the busy status' while moving.
+
+  unloading:  "unloading",
+  collecting: "collecting",
+  sleeping:   "sleeping",
+}
 
 export default class Villager extends BaseHumanoid {
   static objs = []
 
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path || "alives.dorfs.adult")
+    this.setupEnums()
     this.ctx = ctx
     this.opts = opts || {}
 
@@ -26,46 +38,26 @@ export default class Villager extends BaseHumanoid {
 
     this.destination = undefined
     this.inventory = {}
-    this.actions = {
-      unloading: false,
-      collecting: false,
-      sleeping: false,
-      wandering: false,
-      walkingToAction: false, // moving to storage, bed, looking for food, etc
-    }
-    // this.actions.unloading = false
-    // this.actions.collecting = false
-    // this.sleeping = false
     this.walk_speed = opts.walk_speed || normalDist(10, 70, 4) // 0-100
     this.collect_speed = opts.collect_speed || normalDist(10, 70, 4) // 0-100
+    this.rest_speed = opts.rest_speed || normalDist(10, 70, 4) // 0-100
     this.carry_capacity = opts.carry_capacity || normalDist(60, 120, 4)
     this.selected = false
     this.highlight = undefined
-    this.bored = false // @think bored here vs line 36
     this.fullness = normalDist(50, 100, 5, 90)
-    this.status = undefined // working, bored, starving, tired, etc
-    // Certain statuses should take priority, and use the status to short-circuit other activities
-    // For example, immediately stop working and go find food when starving
+    this.energy = normalDist(50, 100, 5, 55)
+    this.status = Status.bored
+    this.busy_block = undefined
 
-    this.home = undefined
-    this.job_building = undefined
     this.selected_resource = undefined
     this.selected_storage = undefined
+    this.selected_house = undefined
+
     this.profession = undefined
     this.takeRandomProfession()
     this.tool_sprite = undefined
 
-    this.sleepies = 0
-    this.rest_speed = opts.rest_speed || normalDist(11, 20, 2)
-    this.selected_house = undefined
-
     this.wander()
-  }
-
-  resetActions() {
-    Object.keys(this.actions).forEach(item => {
-      this.actions[item] = false
-    })
   }
 
   static countWithJob(job) {
@@ -89,13 +81,31 @@ export default class Villager extends BaseHumanoid {
       "Collect Speed: " + this.collect_speed,
       "Carry Capacity: " + this.carry_capacity,
       "Fullness: " + this.fullness,
-      "Sleepies: " + this.sleepies,
-      "Sleepies Rate: " + this.rest_speed,
-      // "Home: " + this.home,
-      // "Job Building: " + this.job_building,
-      // "Selected Resource: " + this.selected_resource,
-      // "Selected Storage: " + this.selected_storage,
+      "Energy: " + this.energy,
     ]
+  }
+
+  setupEnums() {
+    let self = this
+    Object.keys(Status).forEach(function(status) {
+      let cap_status = status.replace(/\w/, function(l) { return l.toUpperCase() })
+      self["is" + cap_status] = function() {
+        return self.status == status
+      }
+      self["set" + cap_status] = function() {
+        self.status = status
+      }
+    })
+  }
+
+  isBusy() {
+    return [Status.unloading, Status.collecting, Status.sleeping].includes(this.status)
+  }
+
+  finishTask() {
+    this.busy_block = undefined
+    this.clearDest()
+    this.setBored()
   }
 
   showTool() {
@@ -146,7 +156,7 @@ export default class Villager extends BaseHumanoid {
     } else if (is_starving) {
       // Sit and wait at storage for food
       let obj = this.selected_storage
-      this.destination = { x: obj.access_origin.x, y: obj.access_origin.y }
+      this.destination = obj.access_origin
     } else {
       this.takeRandomProfession()
     }
@@ -178,7 +188,7 @@ export default class Villager extends BaseHumanoid {
   }
 
   shouldUnload() {
-    return this.actions.unloading || this.fullInventory()
+    return this.isUnloading() || this.fullInventory()
   }
 
   shouldEat() {
@@ -187,76 +197,57 @@ export default class Villager extends BaseHumanoid {
     if (this.fullness <= 50) { return true } // If hungry, be selfish and eat
 
     // Hungriest villager gets first dibs
-    return min(Villager.objs.map(villager => villager.fullness )) >= this.fullness
+    return min(Villager.objs.map(villager => villager.fullness)) >= this.fullness
+  }
+
+  shouldSleep() {
+    return this.energy < 100
   }
 
   shouldFindFood() {
-    if (this.actions.unloading || this.actions.collecting || this.fullness > 50) { return false }
+    if (this.isBusy() || this.fullness > 50) { return false }
 
-    var storage = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
+    let storage = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
     this.selected_storage = storage
     return storage.inventory.bread?.count > 0
   }
 
-  // taking turns sleeping
-  // shouldRest() {
-  //   if (this.sleepies >= 90) { return false } // not tired
-  //   if (this.selected_house?.isFull()) { return false } // cant sleep if no bed
-  //   if (this.sleepies <=50) {return true}
-
-  //   // most tired dorfs get first dibs
-  //   return min(Villager.objs.map(villager => villager.sleepies)) >= this.sleepies
-  // }
-
   shouldFindRest() {
-    if (
-      this.actions.unloading || 
-      this.actions.collecting || 
-      this.sleepies < 85
-    ) { return false }
+    if (this.isBusy() || this.energy > 50) { return false }
 
-    var house = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
-    this.selected_house = house
-    return true
+    this.selected_house = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
+    return this.selected_house && !this.selected_house.isFull()
   }
 
   findDestination() {
-    let dest_obj = null
-
     if (this.shouldFindFood()) {
-      dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
-    } else 
-    if (this.shouldUnload()) {
-      this.resetActions()
-      this.actions.unloading = true
-      dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
-      this.selected_storage = dest_obj
-    } else 
-    if (this.shouldFindRest()) {
-      this.resetActions()
-      this.actions.sleeping = true
-      dest_obj = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
-      this.selected_house = dest_obj
-    }else {
+      this.busy_block = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
+    } else if (this.shouldUnload()) {
+      this.setUnloading()
+      this.selected_storage = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
+      this.busy_block = this.selected_storage
+    } else if (this.shouldFindRest()) {
+      this.selected_house = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
+      this.busy_block = this.selected_house
+      this.selected_house.add(this)
+    } else {
       if (this.selected_resource?.collector != this || this.selected_resource.removed) {
         this.clearSelectedResource()
       }
-      dest_obj = this.selected_resource || this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)
-      this.selected_resource = dest_obj
+      this.selected_resource = this.selected_resource || this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)
+      this.busy_block = this.selected_resource
 
       if (this.selected_resource) {
         this.selected_resource.collector = this
       } else if (this.inventoryWeight() > 0) {
-        this.actions.unloading = true
-        return this.findDestination()
+        this.setUnloading()
+        this.findDestination()
       }
     }
-
-    return dest_obj
   }
 
   die(cause) {
-    this.status = "dead"
+    this.setDead()
     this.cause_of_death = cause
     this.clearSelectedResource()
     console.log(this.name + " has died of " + cause);
@@ -286,24 +277,23 @@ export default class Villager extends BaseHumanoid {
         obj.inventory[item_name].count += 1
         this.inventory[item_name].count -= 1
       } else {
-        this.actions.unloading = false
+        this.finishTask()
         this.chooseProfession()
       }
     }
   }
 
-  collect(obj) {
+  collectFrom(obj) {
     if (obj.resources <= 0) {
-      this.actions.collecting = false
-      this.clearDest()
-      this.actions.unloading = true
+      this.finishTask()
       this.findDestination()
       return
     }
 
     if (randPerNSec(25)) { this.fullness -= 1 }
+    if (randPerNSec(25)) { this.energy -= 1 }
 
-    this.actions.collecting = true
+    this.setCollecting()
 
     this.prepInventoryForProfession()
 
@@ -317,23 +307,12 @@ export default class Villager extends BaseHumanoid {
   }
 
   sleepIn(obj) {
-    // if (this.actions.sleeping) { return }
-
-    this.resetActions()
-    this.actions.sleeping = true
+    this.setSleeping()
 
     var restRatePerSec = scaleVal(this.rest_speed, 0, 100, obj.min_rest_factor, obj.max_rest_factor)
-    this.restRatePerSec = restRatePerSec
-    // console.log(this.name, "is resting", this.sleepies)
-    if (randNPerSec(restRatePerSec)) { 
-      console.log(this.name, "is still resting", this.sleepies)
-      if (this.sleepies > 50) {
-        this.sleepies -= 1
-      } else {
-        console.log("done sleeping")
-        this.resetActions()
-        this.clearDest()
-        this.findDestination()
+    if (this.energy < 100) {
+      if (randNPerSec(restRatePerSec)) {
+        this.energy += 1
       }
     }
   }
@@ -345,43 +324,59 @@ export default class Villager extends BaseHumanoid {
     this.selected_resource = undefined
   }
 
-  tick() {
-    if (this.actionstatus == "dead") { return } // Stops next tick from coming back to life
-    if (this.fullness <= 0) { return this.die("starvation") }
-    if (randPerNSec(75)) { this.fullness -= 1 }
-    if (randNPerSec(0.5) && !this.actions.sleeping) { this.sleepies += 1 }
+  workAtBlock() {
+    // TODO: The below tasks should ONLY do the task. Resetting destination and similar logic does
+    //   not belong in these functions.
+    if (this.busy_block.constructor.name == "Storage") {
+      if (this.shouldEat()) {
+        this.eatFrom(this.busy_block) // Only eats - Good
+      } else {
+        this.unloadTo(this.busy_block) // Resets busy after complete - Bad
+      }
+    } else if (this.busy_block.constructor.name == "House") {
+      if (this.shouldSleep()) {
+        this.sleepIn(this.busy_block) // Only sleeps - Good
+      } else {
+        this.busy_block.remove(this)
+        this.finishTask()
+      }
+    } else {
+      this.collectFrom(this.busy_block) // Resets after complete - Bad
+    }
+  }
 
-    if (this.selected_resource && this.selected_resource.resources <= 0) {
-      this.actions.collecting = false
+  gotoWork() {
+    this.destination = this.busy_block.access_origin
+    
+    if (this.energy > 50) {
+      this.speed = this.walk_speed
+    } else {
+      this.speed = constrain(0, this.walk_speed, scaleVal(this.energy, 0, 50, 0, this.walk_speed))
+    }
+  }
+
+  tick() {
+    if (this.isDead()) { return } // Stops next tick from coming back to life
+    if (this.fullness <= 0) { return this.die("starvation") }
+    if (this.energy <= 0) { return this.die("exhaustion") }
+    if (randPerNSec(75)) { this.fullness -= 1 }
+    if (!this.isSleeping() && randPerNSec(50)) { this.energy -= 1 }
+
+    if (this.isCollecting() && this.selected_resource?.resources <= 0) {
+      this.finishTask()
       this.clearSelectedResource()
-      this.clearDest()
     }
 
-    if (!this.destination) {
-      var obj = this.findDestination()
+    if (this.busy_block && this.arrivedAt(this.busy_block)) {
+      this.workAtBlock()
+    } else if (this.busy_block) {
+      this.destination = this.busy_block.access_origin
+    } else {
+      this.findDestination()
 
-      if (obj) {
-        if (this.bored) { this.bored = false } // no longer bored
-        this.destination = { x: obj.access_origin.x, y: obj.access_origin.y }
-        this.speed = this.walk_speed
-
-        if (this.arrivedAtDest()) {
-          if (obj.constructor.name == "Storage") {
-            if (this.shouldEat()) {
-              this.eatFrom(obj)
-            } else {
-              this.unload(obj)
-            }
-          } else 
-          if (obj.constructor.name == "House") {
-            this.sleepIn(obj)
-
-          } else {
-            this.collect(obj)
-          }
-        }
+      if (this.busy_block) {
+        this.gotoWork()
       } else {
-        if (!this.bored) { this.bored = true } // back to bored
         if (randPerNSec(3)) {
           this.chooseProfession()
           if (!this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)) {

@@ -77,7 +77,7 @@ function create() {
   ctx.world = world
 
   // new Villager(ctx, {...randCoord(), walk_speed: 70 })
-  times(1, function() {
+  times(10, function() {
     new Villager(ctx, randCoord())
   })
 
@@ -130,7 +130,8 @@ function update() { // ~60fps
     ...[null],
     ...Villager.objs.map(function(villager) {
       let length = 23
-      return villager.name + ":" + " ".repeat(length - villager.name.length - villager.fullness.toString().length) + villager.fullness
+      let whitespace = " ".repeat(length - villager.name.length - villager.fullness.toString().length)
+      return villager.name + ":" + whitespace + villager.fullness + " | " + villager.energy
     })
   ])
 }
