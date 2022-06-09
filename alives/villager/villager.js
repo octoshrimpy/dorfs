@@ -209,7 +209,11 @@ export default class Villager extends BaseHumanoid {
   // }
 
   shouldFindRest() {
-    if (this.actions.unloading || this.actions.collecting || this.sleepies < 60) { return false }
+    if (
+      this.actions.unloading || 
+      this.actions.collecting || 
+      this.sleepies < 85
+    ) { return false }
 
     var house = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
     this.selected_house = house
@@ -345,7 +349,7 @@ export default class Villager extends BaseHumanoid {
     if (this.actionstatus == "dead") { return } // Stops next tick from coming back to life
     if (this.fullness <= 0) { return this.die("starvation") }
     if (randPerNSec(75)) { this.fullness -= 1 }
-    if (randNPerSec(75) && !this.actions.sleeping) { this.sleepies += 1 }
+    if (randNPerSec(0.5) && !this.actions.sleeping) { this.sleepies += 1 }
 
     if (this.selected_resource && this.selected_resource.resources <= 0) {
       this.actions.collecting = false

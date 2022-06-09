@@ -18,7 +18,6 @@ import Chicken      from "./alives/mobs/chicken.js"
 import Storage      from "./resources/storage.js"
 
 import Bakery       from "./buildings/bakery.js"
-
 import House        from "./buildings/house.js"
 
 import FloatingText from "./support/floating_text.js"
@@ -78,7 +77,7 @@ function create() {
   ctx.world = world
 
   // new Villager(ctx, {...randCoord(), walk_speed: 70 })
-  times(10, function() {
+  times(1, function() {
     new Villager(ctx, randCoord())
   })
 
