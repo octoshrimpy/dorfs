@@ -21,8 +21,8 @@ export default class BaseObject {
   setSprite(sprite_str) {
     sprite_str = sprite_str || "placeholder"
     this.sprite_path = sprite_str
-    var old_sprite = this.sprite
-    var sprite_opts = this.opts
+    let old_sprite = this.sprite
+    let sprite_opts = this.opts
     if (old_sprite) {
       sprite_opts.x = old_sprite.x
       sprite_opts.y = old_sprite.y
@@ -31,7 +31,7 @@ export default class BaseObject {
     let new_sprite = this.ctx.addSpriteWithAnim(sprite_str, sprite_opts)
     new_sprite.name = sprite_str
     this.sprite_anims = Object.keys(new_sprite.anims.animationManager.anims.entries)
-    var self = this
+    let self = this
     new_sprite.setInteractive().on("pointerdown", function() { self.clicked() })
     this.sprite = new_sprite
     this.depth = this.sprite.y + this.sprite.height/2

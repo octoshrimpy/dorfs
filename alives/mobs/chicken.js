@@ -5,8 +5,12 @@ import { rand, weightedSample } from "../../helpers.js"
 export default class Chicken extends BaseMob {
   static objs = []
 
+  static randChickenSprite() {
+    return "alives.animals.chickens." + weightedSample(["white", 5], ["brown", 3], ["black", 1])
+  }
+
   constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "alives.animals.chickens." + weightedSample(["white", 5], ["brown", 3], ["black", 1]))
+    super(ctx, opts, sprite_path || super.randChickenSprite())
     this.ctx = ctx
     this.opts = opts || {}
 

@@ -9,7 +9,16 @@ import House from "../../buildings/house.js"
 import Item from "../../items/item.js"
 import Storage from "../../resources/storage.js"
 
-import { sum, sample, normalDist, scaleVal, randPerNSec, randNPerSec, min, constrain } from "../../helpers.js"
+import {
+  sum,
+  sample,
+  normalDist,
+  scaleVal,
+  randPerNSec,
+  randNPerSec,
+  min,
+  constrain
+} from "../../helpers.js"
 
 let Status = { // Is this against convention?
   bored:      "bored",
@@ -32,7 +41,7 @@ export default class Villager extends BaseHumanoid {
     this.opts = opts || {}
 
     this.name = function() {
-      var name_json = ctx.env.cache.json.get("names")
+      let name_json = ctx.env.cache.json.get("names")
       return [sample(name_json.first), sample(name_json.last)].join(" ")
     }()
 
@@ -114,12 +123,13 @@ export default class Villager extends BaseHumanoid {
 
     this.tool_sprite = this.ctx.addSpriteWithAnim(tool_path, { x: this.sprite.x, y: this.sprite.y })
     this.tool_sprite.anims.play([tool_path, "base"].join("."), true)
-    var sprite_fps = scaleVal(this.collect_speed, 0, 100, 0, 20)
+    let sprite_fps = scaleVal(this.collect_speed, 0, 100, 0, 20)
     this.tool_sprite.anims.msPerFrame = 1000 / sprite_fps
   }
 
   showHighlight() {
-    this.highlight = this.ctx.addSpriteWithAnim("tools.highlight", { x: this.sprite.x, y: this.sprite.y })
+    let coords = { x: this.sprite.x, y: this.sprite.y }
+    this.highlight = this.ctx.addSpriteWithAnim("tools.highlight", coords)
   }
 
   hideSprite(sprite) {
@@ -128,7 +138,7 @@ export default class Villager extends BaseHumanoid {
   }
 
   takeProfession(new_profession) {
-    var old_profession = this.profession
+    let old_profession = this.profession
     this.profession = new_profession
 
     if (new_profession != old_profession) {
@@ -193,7 +203,7 @@ export default class Villager extends BaseHumanoid {
 
   shouldEat() {
     if (this.fullness >= 90) { return false } // Already full
-    if (!(this.selected_storage.inventory.bread?.count > 0)) { return false } // Can't eat if no food
+    if (!(this.selected_storage.inventory.bread?.count > 0)) { return false } // No food to eat
     if (this.fullness <= 50) { return true } // If hungry, be selfish and eat
 
     // Hungriest villager gets first dibs
@@ -234,7 +244,9 @@ export default class Villager extends BaseHumanoid {
       if (this.selected_resource?.collector != this || this.selected_resource.removed) {
         this.clearSelectedResource()
       }
-      this.selected_resource = this.selected_resource || this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)
+      if (!this.selected_resource) {
+        this.selected_resource = this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)
+      }
       this.busy_block = this.selected_resource
 
       if (this.selected_resource) {
@@ -297,7 +309,11 @@ export default class Villager extends BaseHumanoid {
 
     this.prepInventoryForProfession()
 
-    var collectRatePerSec = scaleVal(this.collect_speed, 0, 100, obj.min_collect_factor, obj.max_collect_factor)
+    let collectRatePerSec = scaleVal(
+      this.collect_speed,
+      0, 100,
+      obj.min_collect_factor, obj.max_collect_factor
+    )
     if (randNPerSec(collectRatePerSec)) {
       if (obj.resources > 0) {
         this.inventory[obj.item.name].count += 1
@@ -309,7 +325,7 @@ export default class Villager extends BaseHumanoid {
   sleepIn(obj) {
     this.setSleeping()
 
-    var restRatePerSec = scaleVal(this.rest_speed, 0, 100, obj.min_rest_factor, obj.max_rest_factor)
+    let restRatePerSec = scaleVal(this.rest_speed, 0, 100, obj.min_rest_factor, obj.max_rest_factor)
     if (this.energy < 100) {
       if (randNPerSec(restRatePerSec)) {
         this.energy += 1

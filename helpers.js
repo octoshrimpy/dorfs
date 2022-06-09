@@ -1,10 +1,11 @@
-export var speed_multiplier = 10
-export var fps = (60 / speed_multiplier)
+export let speed_multiplier = 10
+export let fps = (60 / speed_multiplier)
 
 export function scaleX(n) { return n * 16 }
 export function scaleY(n) { return n * 16 }
 
-// Given a list of [item, weight] returns a flat list of the items multiplied by their weight as a large list
+// Given a list of [item, weight] returns a flat list of the items multiplied by their weight as a
+//   large list
 // [["this", 2], ["that", 1]]
 // Becomes: ["this", "this", "that"]
 export function weightedList() {
@@ -33,7 +34,9 @@ export function constrain(val, min, max) {
 export function normalDist(min, max, multiplier=3, bias=null) {
   bias = bias || ((max - min) / 2)
   let weighted_values = times(multiplier, function() { return rand(min, max) })
-  let norm = weighted_values.sort(function(a, b) { return Math.abs(a - bias) - Math.abs(b - bias) })[0]
+  let norm = weighted_values.sort(function(a, b) {
+    return Math.abs(a - bias) - Math.abs(b - bias)
+  })[0]
   let mix = rand()
 
   return Math.round((norm * (1 - mix)) + (bias * mix))
@@ -99,7 +102,8 @@ export function randNPerSec(n) {
   return rand(fps / n) == 0
 }
 
-// Will return a function that can be called that will return `true` roughly n times when called every tick
+// Will return a function that can be called that will return `true` roughly n times when called
+//   every tick
 export function fnRandNPerSec(n) {
   return function() { return randNPerSec(n) }
 }
@@ -118,8 +122,8 @@ export function fnRandPerNMin(n) {
 //   the equivalent between t1,t2
 // `value` can be used outside of the given ranges and will be scaled appropriately
 export function scaleVal(value, f1, f2, t1, t2) {
-  var tr = t2 - t1
-  var fr = f2 - f1
+  let tr = t2 - t1
+  let fr = f2 - f1
 
   return (value - f1) * tr / fr + t1
 }

@@ -77,11 +77,11 @@ export default class BaseResource extends BaseObject {
     sprite.y = alignToGrid(sprite.y, sprite.height, scaleY(0.5), sprite.originY)
     // Access Origin should be the "base" of the sprite.
     // Take the "y" (center point of sprite) and add half of the sprite height to align to the base.
-    // Add half of a scaleY (1 cell) so that the depth aligns with the center point of the bottom cell.
+    // Add half of scaleY (1 cell) so the depth aligns with the center point of the bottom cell.
     this.access_origin = { x: sprite.x, y: sprite.y + sprite.height/2 - scaleY(0.5) }
     sprite.depth = this.access_origin.y
 
-    // var circle = this.ctx.env.add.circle(this.access_origin.x, this.access_origin.y, 2, 0xFF0000)
+    // let circle = this.ctx.env.add.circle(this.access_origin.x, this.access_origin.y, 2, 0xFF0000)
     // circle.depth = sprite.depth
 
     return sprite

@@ -29,8 +29,8 @@ import {
 
 let Phaser = window.Phaser
 
-var map_w = 45, map_h = 23
-var config = {
+let map_w = 45, map_h = 23
+let config = {
   type: Phaser.AUTO,
   width: scaleX(map_w),
   height: scaleY(map_h),
@@ -49,13 +49,33 @@ let ctx, world, game = new Phaser.Game(config)
 function preload() {
   this.load.json("names", "data/names.json")
   this.load.json("sprites", "data/sprites.json")
-  this.load.spritesheet("slime", "assets/sprites/slimes/Slime_Medium_Blue.png", { frameWidth: 32, frameHeight: 32 })
-  this.load.spritesheet("master", "assets/master.png", { frameWidth: 16, frameHeight: 16 })
-  this.load.spritesheet("big_master", "assets/big_master.png", { frameWidth: 32, frameHeight: 32 })
-  this.load.spritesheet("big_master2x3", "assets/bigmaster2x3.png", { frameWidth: 32, frameHeight: 48 })
-
-  this.load.bitmapFont("dorfscratch", "assets/fonts/dorfscratch-Regular.png", "assets/fonts/dorfscratch-Regular.fnt")
-  // Add some custom function to take the hard width of sprites, which are always 1x1 ratio and then centers the origin
+  this.load.spritesheet(
+    "slime",
+    "assets/sprites/slimes/Slime_Medium_Blue.png",
+    { frameWidth: 32, frameHeight: 32 }
+  )
+  this.load.spritesheet(
+    "master",
+    "assets/master.png",
+    { frameWidth: 16, frameHeight: 16 }
+  )
+  this.load.spritesheet(
+    "big_master",
+    "assets/big_master.png",
+    { frameWidth: 32, frameHeight: 32 }
+  )
+  this.load.spritesheet(
+    "big_master2x3",
+    "assets/bigmaster2x3.png",
+    { frameWidth: 32, frameHeight: 48 }
+  )
+  this.load.bitmapFont(
+    "dorfscratch",
+    "assets/fonts/dorfscratch-Regular.png",
+    "assets/fonts/dorfscratch-Regular.fnt"
+  )
+  // Add some custom function to take the hard width of sprites, which are always 1x1 ratio and
+  //   then centers the origin
 
   this.input.mouse.disableContextMenu()
 }
@@ -92,9 +112,9 @@ function create() {
   })
 
   times(normalDist(2, 5), function() {
-    var horz = normalDist(1, 10, 4, 4) // min, max, mult, bias
-    var vert = normalDist(1, 10, 4, 4)
-    var start = randCoord()
+    let horz = normalDist(1, 10, 4, 4) // min, max, mult, bias
+    let vert = normalDist(1, 10, 4, 4)
+    let start = randCoord()
 
     times(horz, function(x_idx) {
       times(vert, function(y_idx) {
@@ -124,8 +144,9 @@ function update() { // ~60fps
     ...[null],
     ...Villager.objs.map(function(villager) {
       let length = 23
-      let whitespace = " ".repeat(length - villager.name.length - villager.fullness.toString().length)
-      return villager.name + ":" + whitespace + villager.fullness + " | " + villager.energy
+      let fullness = villager.fullness
+      let whitespace = " ".repeat(length - villager.name.length - fullness.toString().length)
+      return villager.name + ":" + whitespace + fullness + " | " + villager.energy
     })
   ])
 }
@@ -147,7 +168,7 @@ function setupContext(env) {
       // no-op
     }
     if (!obj) { return ctx.addSpriteWithAnim("placeholder", opts) }
-    var first_anim = obj[Object.keys(obj)[0]]
+    let first_anim = obj[Object.keys(obj)[0]]
     let sheet_name = first_anim.sheet || "master"
     let cell_size = ctx.env.game.textures.list[sheet_name].frames[0].width
     let sheet_width = ctx.env.game.textures.list[sheet_name].source[0].width
@@ -156,7 +177,7 @@ function setupContext(env) {
     for (let [key, anims] of Object.entries(obj)) {
       if (Array.isArray(anims)) { anims = { start: anims, length: 1 } }
 
-      var frames = times(anims.length, function(t) {
+      let frames = times(anims.length, function(t) {
         return idxFromPos(anims.start[0] + t, anims.start[1], sheet_cells_horz)
       })
 
@@ -173,14 +194,17 @@ function setupContext(env) {
     }
 
     if (!Array.isArray(first_anim)) { first_anim = first_anim.start }
-    var frame = idxFromPos(...first_anim, sheet_cells_horz)
+    let frame = idxFromPos(...first_anim, sheet_cells_horz)
 
     return ctx.env.add.sprite(opts.x, opts.y, sheet_name, frame)
   }
 }
 
 function generate_map(ctx, sprites) {
-  let flat_grass = idxFromPos(...sprites.ground.grass.flat), short_grass = idxFromPos(...sprites.ground.grass.short), long_grass = idxFromPos(...sprites.ground.grass.long), flowers = idxFromPos(...sprites.ground.grass.flowers)
+  let flat_grass = idxFromPos(...sprites.ground.grass.flat)
+  let short_grass = idxFromPos(...sprites.ground.grass.short)
+  let long_grass = idxFromPos(...sprites.ground.grass.long)
+  let flowers = idxFromPos(...sprites.ground.grass.flowers)
   let weights = weightedList([flat_grass, 500], [short_grass, 100], [long_grass, 50], [flowers, 1])
 
   let level = times(map_h, function() {
@@ -189,8 +213,8 @@ function generate_map(ctx, sprites) {
     })
   })
 
-  var map = ctx.make.tilemap({ data: level, tileWidth: 16, tileHeight: 16 })
-  var tiles = map.addTilesetImage("master")
+  let map = ctx.make.tilemap({ data: level, tileWidth: 16, tileHeight: 16 })
+  let tiles = map.addTilesetImage("master")
   map.createLayer(0, tiles, 0, 0)
   return map
 }

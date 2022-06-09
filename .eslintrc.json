@@ -9,25 +9,16 @@
     "sourceType": "module"
   },
   "rules": {
-    "indent": [
-      "error",
-      2
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "error",
-      "double"
-    ],
-    "semi": [
-      "error",
-      "never"
-    ],
-    "no-unused-vars": [
-      "error",
-      { "argsIgnorePattern": "^_" }
-    ]
+    "indent": ["error", 2],
+    "keyword-spacing": ["error", { "before": true, "overrides": { "catch": { "after": false } } }],
+    "linebreak-style": ["error", "unix"],
+    "max-len": ["error", { "code": 100 }],
+    "no-this-before-super": "off",
+    "no-var": "error",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "quotes": ["error", "double"],
+    "semi": ["error", "never"],
+    "space-before-blocks": ["error", "always"],
+    "space-before-function-paren": ["error", "never"]
   }
 }

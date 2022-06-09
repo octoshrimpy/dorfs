@@ -9,11 +9,10 @@ export default class FloatingText {
     this.y = this.opts.y || 16
     this.constructor.objs.push(this)
     this.text = this.opts.text
-    // this is for regular font
-    // this.text_obj = this.ctx.add.text(this.x, this.y, this.opts.text, { fontFamily: "DorfScratch" }).setDepth(10000)
 
     // this is for bitmap font
-    this.text_obj = this.ctx.add.bitmapText(this.x, this.y, "dorfscratch", this.opts.text).setDepth(10000)
+    this.text_obj = this.ctx.add.bitmapText(this.x, this.y, "dorfscratch", this.opts.text)
+    this.text_obj.setDepth(10000) // Super high Z index
     this.text_obj.setScale(0.5) // 1 is default, 2 is twice the size
   }
 
