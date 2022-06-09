@@ -53,10 +53,16 @@ export default class Villager extends BaseHumanoid {
     this.tool_sprite = undefined
 
     this.sleepies = 0
-    this.sleepies_rate = opts.sleepies_rate || normalDist(11, 20, 2)
+    this.rest_speed = opts.rest_speed || normalDist(11, 20, 2)
     this.selected_house = undefined
 
     this.wander()
+  }
+
+  resetActions() {
+    Object.keys(this.actions).forEach(item => {
+      this.actions[item] = false
+    })
   }
 
   static countWithJob(job) {
@@ -69,7 +75,10 @@ export default class Villager extends BaseHumanoid {
     return [
       this.name,
       "Profession: " + this.profession?.name,
-      this.bored ? "Wandering..." : (this.actions.collecting ? "Collecting" : (this.actions.unloading ? "Unloading" : "Traveling")),
+      //TODO +rockster160 PLS NO THE AGONY
+
+      Object.entries(this.actions).filter(([act, on]) => on).map(([act, on]) => act.toString()),
+      // this.bored ? "Wandering..." : (this.actions.collecting ? "Collecting" : (this.actions.unloading ? "Unloading" : "Traveling")),
       ...Object.entries(this.inventory).filter(function([name, item]) {
         return item.count > 0
       }).map(function([name, item]) {
@@ -81,7 +90,7 @@ export default class Villager extends BaseHumanoid {
       "Carry Capacity: " + this.carry_capacity,
       "Fullness: " + this.fullness,
       "Sleepies: " + this.sleepies,
-      "Sleepies Rate: " + this.sleepies_rate,
+      "Sleepies Rate: " + this.rest_speed,
       // "Home: " + this.home,
       // "Job Building: " + this.job_building,
       // "Selected Resource: " + this.selected_resource,
@@ -200,8 +209,7 @@ export default class Villager extends BaseHumanoid {
   // }
 
   shouldFindRest() {
-    console.log("wants rest", this)
-    if (this.actions.unloading || this.actions.collecting || this.sleepies < 50) { return false }
+    if (this.actions.unloading || this.actions.collecting || this.sleepies < 85) { return false }
 
     var house = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
     this.selected_house = house
@@ -213,17 +221,15 @@ export default class Villager extends BaseHumanoid {
 
     if (this.shouldFindFood()) {
       dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
-    } else if (this.shouldUnload()) {
-      Object.keys(this.actions).forEach(item => {
-        this.actions[item] = false
-      })
+    } else 
+    if (this.shouldUnload()) {
+      this.resetActions()
       this.actions.unloading = true
       dest_obj = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
       this.selected_storage = dest_obj
-    } else if (this.shouldFindRest()) {
-      Object.keys(this.actions).forEach(item => {
-        this.actions[item] = false
-      })
+    } else 
+    if (this.shouldFindRest()) {
+      this.resetActions()
       this.actions.sleeping = true
       dest_obj = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
       this.selected_house = dest_obj
@@ -307,12 +313,25 @@ export default class Villager extends BaseHumanoid {
   }
 
   sleepIn(obj) {
-    Object.keys(this.actions).forEach(item => {
-      this.actions[item] = false
-    })
-    this.sleeping = true
+    // if (this.actions.sleeping) { return }
 
-    obj.sleepyDorfs.push(this)
+    this.resetActions()
+    this.actions.sleeping = true
+
+    var restRatePerSec = scaleVal(this.rest_speed, 0, 100, obj.min_rest_factor, obj.max_rest_factor)
+    this.restRatePerSec = restRatePerSec
+    // console.log(this.name, "is resting", this.sleepies)
+    if (randNPerSec(restRatePerSec)) { 
+      console.log(this.name, "is still resting", this.sleepies)
+      if (this.sleepies > 50) {
+        this.sleepies -= 1
+      } else {
+        console.log("done sleeping")
+        this.resetActions()
+        this.clearDest()
+        this.findDestination()
+      }
+    }
   }
 
   clearSelectedResource() {
@@ -326,7 +345,7 @@ export default class Villager extends BaseHumanoid {
     if (this.actionstatus == "dead") { return } // Stops next tick from coming back to life
     if (this.fullness <= 0) { return this.die("starvation") }
     if (randPerNSec(75)) { this.fullness -= 1 }
-    if (randNPerSec(75)) { this.sleepies += 1 }
+    if (randNPerSec(75) && !this.actions.sleeping) { this.sleepies += 1 }
 
     if (this.selected_resource && this.selected_resource.resources <= 0) {
       this.actions.collecting = false
@@ -338,7 +357,7 @@ export default class Villager extends BaseHumanoid {
       var obj = this.findDestination()
 
       if (obj) {
-        if (this.bored) { this.bored = false }
+        if (this.bored) { this.bored = false } // no longer bored
         this.destination = { x: obj.access_origin.x, y: obj.access_origin.y }
         this.speed = this.walk_speed
 
@@ -352,12 +371,13 @@ export default class Villager extends BaseHumanoid {
           } else 
           if (obj.constructor.name == "House") {
             this.sleepIn(obj)
+
           } else {
             this.collect(obj)
           }
         }
       } else {
-        if (!this.bored) { this.bored = true }
+        if (!this.bored) { this.bored = true } // back to bored
         if (randPerNSec(3)) {
           this.chooseProfession()
           if (!this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)) {

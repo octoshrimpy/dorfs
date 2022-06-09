@@ -4,7 +4,6 @@ export default class House extends BaseWorkshop {
   static objs = []
   static well_rested = 85
   static rest_ratio = 20 // @think vs craft_ratio??
-  static sleepyDorfs = []
 
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path || "buildings.house")
@@ -13,6 +12,7 @@ export default class House extends BaseWorkshop {
 
     this.min_rest_factor = 0.1
     this.max_rest_factor = 0.5
+    this.sleepyDorfs = []
   }
 
   inspect() {
@@ -28,11 +28,7 @@ export default class House extends BaseWorkshop {
   }
 
   getSleepyDorfs() {
-    return this.constructor.sleepyDorfs || 0
-  }
-
-  addDorf(dorf) {
-
+    return this.sleepyDorfs || 0
   }
 
   removeDorf(dorf) {
@@ -47,7 +43,7 @@ export default class House extends BaseWorkshop {
     // if dorf is more rested than x, removeDorf()
     let dorfs = this.getSleepyDorfs()
     dorfs.forEach(dorf => {
-      
+      //
     })
   }
 }
