@@ -209,7 +209,7 @@ export default class Villager extends BaseHumanoid {
   // }
 
   shouldFindRest() {
-    if (this.actions.unloading || this.actions.collecting || this.sleepies < 85) { return false }
+    if (this.actions.unloading || this.actions.collecting || this.sleepies < 60) { return false }
 
     var house = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
     this.selected_house = house
