@@ -358,6 +358,9 @@ export default class Villager extends BaseHumanoid {
       }
     } else {
       this.collectFrom(this.busy_block) // Resets after complete - Bad
+      if (this.fullInventory()) {
+        this.finishTask()
+      }
     }
   }
 

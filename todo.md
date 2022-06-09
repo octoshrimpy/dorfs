@@ -80,6 +80,7 @@
 
 ## Rocco Notes
 
+- [x] BUG: Dorfs aren't respecting their inventory capacity
 - [ ] Rewire Dorf brains to allow objective thinking (I need 4 wood and 3 brick to work on this house)
 - [ ] Right click to remove ghost/corpse?
 - [x] When selected object is removed/dies, should unselect (or select the corpse?)
