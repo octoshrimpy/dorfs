@@ -1,6 +1,16 @@
 import BaseObject    from "./base_object.js"
 import Villager     from "./alives/villager/villager.js"
 
+/* eslint-disable no-unused-vars */
+// We have to initialize these classes here so that they are accessible by the BaseJob
+import Baker        from "./jobs/baker.js"
+import Builder      from "./jobs/builder.js"
+import Farmer       from "./jobs/farmer.js"
+import Lumberjack   from "./jobs/lumberjack.js"
+import Miner        from "./jobs/digger.js"
+import Smith        from "./jobs/smith.js"
+/* eslint-enable no-unused-vars */
+
 import Tree         from "./resources/tree.js"
 import Rock         from "./resources/rock.js"
 import Field        from "./resources/field.js"
