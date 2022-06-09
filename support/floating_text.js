@@ -13,7 +13,7 @@ export default class FloatingText {
     // this.text_obj = this.ctx.add.text(this.x, this.y, this.opts.text, { fontFamily: "DorfScratch" }).setDepth(10000)
 
     // this is for bitmap font
-    this.text_obj = this.ctx.add.bitmapText(this.x, this.y, 'dorfscratch', this.opts.text).setDepth(10000)
+    this.text_obj = this.ctx.add.bitmapText(this.x, this.y, "dorfscratch", this.opts.text).setDepth(10000)
     this.text_obj.setScale(0.5) // 1 is default, 2 is twice the size
   }
 

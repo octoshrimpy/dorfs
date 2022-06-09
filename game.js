@@ -1,13 +1,6 @@
 import BaseObject    from "./base_object.js"
 import Villager     from "./alives/villager/villager.js"
 
-import Baker        from "./jobs/baker.js"
-import Builder      from "./jobs/builder.js"
-import Farmer       from "./jobs/farmer.js"
-import Lumberjack   from "./jobs/lumberjack.js"
-import Miner        from "./jobs/digger.js"
-import Smith        from "./jobs/smith.js"
-
 import Tree         from "./resources/tree.js"
 import Rock         from "./resources/rock.js"
 import Field        from "./resources/field.js"
@@ -26,7 +19,6 @@ import {
   rand,
   normalDist,
   randPerNSec,
-  scaleVal,
   scaleX,
   scaleY,
   weightedList,
@@ -34,6 +26,8 @@ import {
   idxFromPos,
   sample
 } from "./helpers.js"
+
+let Phaser = window.Phaser
 
 var map_w = 45, map_h = 23
 var config = {
@@ -60,7 +54,7 @@ function preload() {
   this.load.spritesheet("big_master", "assets/big_master.png", { frameWidth: 32, frameHeight: 32 })
   this.load.spritesheet("big_master2x3", "assets/bigmaster2x3.png", { frameWidth: 32, frameHeight: 48 })
 
-  this.load.bitmapFont('dorfscratch', 'assets/fonts/dorfscratch-Regular.png', 'assets/fonts/dorfscratch-Regular.fnt');
+  this.load.bitmapFont("dorfscratch", "assets/fonts/dorfscratch-Regular.png", "assets/fonts/dorfscratch-Regular.fnt")
   // Add some custom function to take the hard width of sprites, which are always 1x1 ratio and then centers the origin
 
   this.input.mouse.disableContextMenu()
@@ -149,7 +143,9 @@ function setupContext(env) {
     try {
       // Catch any error here and just render `placeholder` if it fails
       obj = sprite_path.split(".").reduce(function(full, key) { return full[key] }, ctx.sprites)
-    } catch(e) {}
+    } catch(e) {
+      // no-op
+    }
     if (!obj) { return ctx.addSpriteWithAnim("placeholder", opts) }
     var first_anim = obj[Object.keys(obj)[0]]
     let sheet_name = first_anim.sheet || "master"
@@ -165,7 +161,7 @@ function setupContext(env) {
       })
 
       if (anims.length > 1) {
-        anims.start.forEach(function(anim) {
+        anims.start.forEach(function() {
           ctx.env.anims.create({
             key: sprite_path + "." + key,
             frames: ctx.env.anims.generateFrameNumbers(sheet_name, { frames: frames }),
@@ -187,14 +183,14 @@ function generate_map(ctx, sprites) {
   let flat_grass = idxFromPos(...sprites.ground.grass.flat), short_grass = idxFromPos(...sprites.ground.grass.short), long_grass = idxFromPos(...sprites.ground.grass.long), flowers = idxFromPos(...sprites.ground.grass.flowers)
   let weights = weightedList([flat_grass, 500], [short_grass, 100], [long_grass, 50], [flowers, 1])
 
-  let level = times(map_h, function(y) {
-    return times(map_w, function(x) {
+  let level = times(map_h, function() {
+    return times(map_w, function() {
       return sample(weights)
     })
   })
 
   var map = ctx.make.tilemap({ data: level, tileWidth: 16, tileHeight: 16 })
   var tiles = map.addTilesetImage("master")
-  var layer = map.createLayer(0, tiles, 0, 0)
+  map.createLayer(0, tiles, 0, 0)
   return map
 }

@@ -1,5 +1,4 @@
 import BaseResource from "./base_resource.js"
-import Item from "../items/item.js"
 import { sample, normalDist, fnRandPerNMin } from "../helpers.js"
 
 export default class Field extends BaseResource {

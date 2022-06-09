@@ -14,7 +14,7 @@ export default class Storage extends BaseResource {
   inspect() {
     return [
       "Storage",
-      ...Object.entries(this.inventory).filter(function([name, item]) {
+      ...Object.entries(this.inventory).filter(function([_name, item]) {
         return item.count > 0
       }).map(function([name, item]) {
         return name + ": " + item.count + " (" + item.totalWeight() + " lbs)"

@@ -1,5 +1,4 @@
 import BaseResource from "./base_resource.js"
-import Item from "../items/item.js"
 import { sample, normalDist } from "../helpers.js"
 
 export default class Rock extends BaseResource {

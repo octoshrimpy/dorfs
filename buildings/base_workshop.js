@@ -1,6 +1,5 @@
 import BaseResource from "../resources/base_resource.js"
 import Storage from "../resources/storage.js"
-import { scaleX, scaleY } from "../helpers.js"
 
 export default class BaseWorkshop extends BaseResource {
   constructor(ctx, opts, sprite_path) {

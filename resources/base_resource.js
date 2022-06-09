@@ -1,6 +1,6 @@
 import BaseObject from "../base_object.js"
 import Item from "../items/item.js"
-import { scaleVal, scaleX, scaleY } from "../helpers.js"
+import { scaleX, scaleY } from "../helpers.js"
 
 export default class BaseResource extends BaseObject {
   static nearest(x1, y1) {

@@ -71,7 +71,7 @@ export default class Villager extends BaseHumanoid {
       this.name,
       "Profession: " + this.profession?.name,
       this.status,
-      ...Object.entries(this.inventory).filter(function([name, item]) {
+      ...Object.entries(this.inventory).filter(function([_name, item]) {
         return item.count > 0
       }).map(function([name, item]) {
         return name + ": " + item.count + " (" + item.totalWeight() + " lbs)"
@@ -250,7 +250,7 @@ export default class Villager extends BaseHumanoid {
     this.setDead()
     this.cause_of_death = cause
     this.clearSelectedResource()
-    console.log(this.name + " has died of " + cause);
+    console.log(this.name + " has died of " + cause)
     new Corpse(this)
     new Ghost(this)
 
@@ -269,7 +269,7 @@ export default class Villager extends BaseHumanoid {
 
   unloadTo(obj) {
     if (randNPerSec(10)) {
-      let [item_name, item] = Object.entries(this.inventory).find(function([name, item_ref]) {
+      let [item_name, item] = Object.entries(this.inventory).find(function([_name, item_ref]) {
         return item_ref.count > 0
       }) || []
       if (item_name && this.inventory[item_name].count > 0) {
@@ -347,7 +347,7 @@ export default class Villager extends BaseHumanoid {
 
   gotoWork() {
     this.destination = this.busy_block.access_origin
-    
+
     if (this.energy > 50) {
       this.speed = this.walk_speed
     } else {
