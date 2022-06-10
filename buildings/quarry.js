@@ -38,7 +38,7 @@ export default class Quarry extends BaseWorkshop {
   }
 
   spawnRock() {
-    if (rand(2) == 0) {
+    if (rand(10) == 0) {
       new IronDeposit(this.ctx, this.randCoord())
     } else {
       new Rock(this.ctx, this.randCoord())
