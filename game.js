@@ -7,6 +7,7 @@ import Baker        from "./jobs/baker.js"
 import Builder      from "./jobs/builder.js"
 import Farmer       from "./jobs/farmer.js"
 import Lumberjack   from "./jobs/lumberjack.js"
+import Operator     from "./jobs/operator.js"
 import Miner        from "./jobs/digger.js"
 import Smith        from "./jobs/smith.js"
 /* eslint-enable no-unused-vars */
@@ -22,6 +23,7 @@ import Storage      from "./resources/storage.js"
 
 import Bakery       from "./buildings/bakery.js"
 import House        from "./buildings/house.js"
+import Quarry       from "./buildings/quarry.js"
 
 import FloatingText from "./support/floating_text.js"
 
@@ -109,7 +111,7 @@ function create() {
     new Tree(ctx, randCoord())
   })
 
-  times(3, function() {
+  times(1, function() {
     new Rock(ctx, randCoord())
   })
 
@@ -140,12 +142,12 @@ function create() {
   storage.clicked()
   new Bakery(ctx, { x: midpoint.x - (5 * 16), y: 32 })
   new House(ctx, {x: midpoint.x - (15 * 16), y: 32})
+  new Quarry(ctx, {x: midpoint.x + (15 * 16), y: 32})
 }
 
 function update() { // ~60fps
   BaseObject.tick()
 
-  if (randPerNSec(80) && Rock.objs.length < 10) { new Rock(ctx, randCoord()) }
   if (randPerNSec(80) && Tree.objs.length < 10) { new Tree(ctx, randCoord()) }
 
   if (ctx.selected?.removed) { ctx.selected = undefined }

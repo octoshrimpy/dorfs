@@ -194,7 +194,7 @@ export default class Villager extends BaseHumanoid {
 
   prepInventoryForProfession() {
     let site = this.profession?.workSite()
-    if (!site) { return }
+    if (!site?.item) { return }
 
     this.inventory[site.item.name] ||= site.newItem()
   }
@@ -328,7 +328,7 @@ export default class Villager extends BaseHumanoid {
     )
     if (randNPerSec(collectRatePerSec)) {
       if (obj.resources > 0) {
-        this.inventory[obj.item.name].count += 1
+        if (obj.item) { this.inventory[obj.item.name].count += 1 }
         obj.collect()
       }
     }
@@ -371,7 +371,7 @@ export default class Villager extends BaseHumanoid {
       }
     } else {
       this.collectFrom(this.busy_block) // Resets after complete - Bad
-      if (this.busy_block.constructor.building) {
+      if (this.busy_block?.constructor?.building) {
         this.hideSelf()
       }
       if (this.fullInventory()) {
