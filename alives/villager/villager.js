@@ -34,10 +34,9 @@ let Status = { // Is this against convention?
 export default class Villager extends BaseHumanoid {
   static objs = []
 
-  constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "alives.dorfs.adult")
+  constructor(opts, sprite_path) {
+    super(opts, sprite_path || "alives.dorfs.adult")
     this.setupEnums()
-    this.ctx = ctx
     this.opts = opts || {}
 
     this.name = function() {
@@ -47,10 +46,10 @@ export default class Villager extends BaseHumanoid {
 
     this.destination = undefined
     this.inventory = {}
-    this.walk_speed = opts.walk_speed || normalDist(10, 70, 4) // 0-100
-    this.collect_speed = opts.collect_speed || normalDist(10, 70, 4) // 0-100
-    this.rest_speed = opts.rest_speed || normalDist(10, 70, 4) // 0-100
-    this.carry_capacity = opts.carry_capacity || normalDist(60, 120, 4)
+    this.walk_speed = this.opts.walk_speed || normalDist(10, 70, 4) // 0-100
+    this.collect_speed = this.opts.collect_speed || normalDist(10, 70, 4) // 0-100
+    this.rest_speed = this.opts.rest_speed || normalDist(10, 70, 4) // 0-100
+    this.carry_capacity = this.opts.carry_capacity || normalDist(60, 120, 4)
     this.selected = false
     this.highlight = undefined
     this.fullness = normalDist(50, 100, 5, 90)
@@ -85,10 +84,6 @@ export default class Villager extends BaseHumanoid {
       }).map(function([name, item]) {
         return name + ": " + item.count + " (" + item.totalWeight() + " lbs)"
       }),
-      // "Destination: " + JSON.stringify(this.destination),
-      "Walk Speed: " + this.walk_speed,
-      "Collect Speed: " + this.collect_speed,
-      "Carry Capacity: " + this.carry_capacity,
       "Fullness: " + this.fullness,
       "Energy: " + this.energy,
     ]
@@ -122,7 +117,7 @@ export default class Villager extends BaseHumanoid {
     let tool_path = this.profession?.tool
     if (!tool_path) { return }
 
-    this.tool_sprite = this.ctx.addSpriteWithAnim(tool_path, { x: this.sprite.x, y: this.sprite.y })
+    this.tool_sprite = ctx.addSpriteWithAnim(tool_path, { x: this.sprite.x, y: this.sprite.y })
     this.tool_sprite.anims.play([tool_path, "base"].join("."), true)
     let sprite_fps = scaleVal(this.collect_speed, 0, 100, 0, 20)
     this.tool_sprite.anims.msPerFrame = 1000 / sprite_fps
@@ -130,7 +125,7 @@ export default class Villager extends BaseHumanoid {
 
   showHighlight() {
     let coords = { x: this.sprite.x, y: this.sprite.y }
-    this.highlight = this.ctx.addSpriteWithAnim("tools.highlight", coords)
+    this.highlight = ctx.addSpriteWithAnim("tools.highlight", coords)
   }
 
   hideSelf() {

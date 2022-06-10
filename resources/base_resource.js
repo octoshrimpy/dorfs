@@ -27,9 +27,8 @@ export default class BaseResource extends BaseObject {
     return new Item(this.item)
   }
 
-  constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path)
-    this.ctx = ctx
+  constructor(opts, sprite_path) {
+    super(opts, sprite_path)
     this.opts = opts || {}
 
     this.x = this.opts.x
@@ -90,7 +89,7 @@ export default class BaseResource extends BaseObject {
     this.access_origin = { x: sprite.x, y: sprite.y + sprite.height/2 - scaleY(0.5) }
     sprite.depth = this.access_origin.y
 
-    // let circle = this.ctx.env.add.circle(this.access_origin.x, this.access_origin.y, 2, 0xFF0000)
+    // let circle = ctx.env.add.circle(this.access_origin.x, this.access_origin.y, 2, 0xFF0000)
     // circle.depth = sprite.depth
 
     return sprite

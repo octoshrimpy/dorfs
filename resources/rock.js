@@ -8,10 +8,8 @@ export default class Rock extends BaseResource {
     weight: 10
   }
 
-  constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || sample(["things.rocks.pointyup", "things.rocks.pointyside"]))
-
-    this.ctx = ctx
+  constructor(opts, sprite_path) {
+    super(opts, sprite_path || sample(["things.rocks.pointyup", "things.rocks.pointyside"]))
     this.opts = opts || {}
 
     this.min_collect_factor = 0.5 // per sec

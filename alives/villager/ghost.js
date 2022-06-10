@@ -5,8 +5,7 @@ export default class Ghost extends BaseAlive {
   static objs = []
 
   constructor(villager) {
-    super(villager.ctx, { x: villager.sprite.x, y: villager.sprite.y }, "alives.dorfs.ghost")
-    this.ctx = villager.ctx
+    super({ x: villager.sprite.x, y: villager.sprite.y }, "alives.dorfs.ghost")
     this.name = villager.name
     this.cause = villager.cause_of_death
 

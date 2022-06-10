@@ -1,3 +1,5 @@
+import { randCoord } from "../helpers.js"
+
 export default class BaseObject {
   static global_objs = []
 
@@ -10,8 +12,7 @@ export default class BaseObject {
     })
   }
 
-  constructor(ctx, opts, sprite_path) {
-    this.ctx = ctx
+  constructor(opts, sprite_path) {
     this.opts = opts || {}
 
     this.setSprite(sprite_path)
@@ -23,12 +24,15 @@ export default class BaseObject {
     this.sprite_path = sprite_str
     let old_sprite = this.sprite
     let sprite_opts = this.opts
+    if (!sprite_opts.x && !sprite_opts.y) {
+      sprite_opts = { ...sprite_opts, ...randCoord() }
+    }
     if (old_sprite) {
       sprite_opts.x = old_sprite.x
       sprite_opts.y = old_sprite.y
       old_sprite.destroy(true)
     }
-    let new_sprite = this.ctx.addSpriteWithAnim(sprite_str, sprite_opts)
+    let new_sprite = ctx.addSpriteWithAnim(sprite_str, sprite_opts)
     new_sprite.name = sprite_str
     this.sprite_anims = Object.keys(new_sprite.anims.animationManager.anims.entries)
     let self = this
@@ -40,8 +44,8 @@ export default class BaseObject {
   }
 
   remove() {
-    if (this.ctx.selected == this) {
-      this.ctx.selected = undefined
+    if (ctx.selected == this) {
+      ctx.selected = undefined
       this.selected = false
     }
     this.removed = true
@@ -51,9 +55,9 @@ export default class BaseObject {
 
   clicked() {
     if (this.removed) { return }
-    if (this.ctx.selected) { this.ctx.selected.selected = false } // Unselect the previous selected
+    if (ctx.selected) { ctx.selected.selected = false } // Unselect the previous selected
 
-    this.ctx.selected = this
+    ctx.selected = this
     this.selected = true
     console.log(this)
   }

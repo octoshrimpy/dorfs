@@ -9,10 +9,8 @@ export default class IronDeposit extends Rock {
     weight: 20
   }
 
-  constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "things.rocks.iron.4")
-
-    this.ctx = ctx
+  constructor(opts, sprite_path) {
+    super(opts, sprite_path || "things.rocks.iron.4")
     this.opts = opts || {}
 
     this.min_collect_factor = 0.1 // per sec

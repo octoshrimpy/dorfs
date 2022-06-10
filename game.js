@@ -36,7 +36,8 @@ import {
   weightedList,
   times,
   idxFromPos,
-  sample
+  sample,
+  randCoord
 } from "./helpers.js"
 
 let Phaser = window.Phaser
@@ -56,7 +57,9 @@ let config = {
   }
 }
 
-let ctx, world, game = new Phaser.Game(config)
+window.ctx = {
+  game: new Phaser.Game(config)
+}
 
 function preload() {
   this.load.json("names", "data/names.json")
@@ -92,35 +95,30 @@ function preload() {
   this.input.mouse.disableContextMenu()
 }
 
-function randCoord() {
-  return { x: rand(32, config.width - 32), y: rand(32, config.height - 32) }
-}
-
 function create() {
-  setupContext(this)
-  world = generate_map(this, ctx.sprites)
+  ctx.env = this
+  setupContext()
+  ctx.world = generate_map(ctx.sprites)
 
-  ctx.world = world
-
-  // new Villager(ctx, {...randCoord(), walk_speed: 70 })
+  // new Villager({ walk_speed: 70 })
   times(10, function() {
-    new Villager(ctx, randCoord())
+    new Villager()
   })
 
   times(3, function() {
-    new Tree(ctx, randCoord())
+    new Tree()
   })
 
   times(1, function() {
-    new Rock(ctx, randCoord())
+    new Rock()
   })
 
   times(5, function() {
-    new Cow(ctx, randCoord())
+    new Cow()
   })
 
   times(10, function() {
-    new Chicken(ctx, randCoord())
+    new Chicken()
   })
 
   times(normalDist(2, 5), function() {
@@ -130,25 +128,25 @@ function create() {
 
     times(horz, function(x_idx) {
       times(vert, function(y_idx) {
-        new Field(ctx, { x: start.x + (x_idx * scaleX(1)), y: start.y + (y_idx * scaleY(0.5))})
+        new Field({ x: start.x + (x_idx * scaleX(1)), y: start.y + (y_idx * scaleY(0.5))})
       })
     })
   })
 
   let midpoint = { x: config.width/2, y: config.height/2 }
-  let storage = new Storage(ctx, { x: midpoint.x, y: midpoint.y })
+  let storage = new Storage({ x: midpoint.x, y: midpoint.y })
   // storage.inventory.wheat = Field.newItem()
   // storage.inventory.wheat.count = 100
   storage.clicked()
-  new Bakery(ctx, { x: midpoint.x - (5 * 16), y: 32 })
-  new House(ctx, {x: midpoint.x - (15 * 16), y: 32})
-  new Quarry(ctx, {x: midpoint.x + (15 * 16), y: 32})
+  new Bakery({ x: midpoint.x - (5 * 16), y: 32 })
+  new House({ x: midpoint.x - (15 * 16), y: 32 })
+  new Quarry({ x: midpoint.x + (15 * 16), y: 32 })
 }
 
 function update() { // ~60fps
   BaseObject.tick()
 
-  if (randPerNSec(80) && Tree.objs.length < 10) { new Tree(ctx, randCoord()) }
+  if (randPerNSec(80) && Tree.objs.length < 10) { new Tree() }
 
   if (ctx.selected?.removed) { ctx.selected = undefined }
   ctx.overlay.setText([
@@ -163,13 +161,9 @@ function update() { // ~60fps
   ])
 }
 
-function setupContext(env) {
-  ctx = {
-    env: env,
-    game: game,
-    sprites: env.cache.json.get("sprites"),
-    overlay: new FloatingText(env)
-  }
+function setupContext() {
+  ctx.sprites = ctx.env.cache.json.get("sprites")
+  ctx.overlay = new FloatingText()
 
   ctx.addSpriteWithAnim = function(sprite_path, opts) {
     let obj
@@ -212,7 +206,7 @@ function setupContext(env) {
   }
 }
 
-function generate_map(ctx, sprites) {
+function generate_map(sprites) {
   let flat_grass = idxFromPos(...sprites.ground.grass.flat)
   let short_grass = idxFromPos(...sprites.ground.grass.short)
   let long_grass = idxFromPos(...sprites.ground.grass.long)
@@ -225,7 +219,7 @@ function generate_map(ctx, sprites) {
     })
   })
 
-  let map = ctx.make.tilemap({ data: level, tileWidth: 16, tileHeight: 16 })
+  let map = ctx.env.make.tilemap({ data: level, tileWidth: 16, tileHeight: 16 })
   let tiles = map.addTilesetImage("master")
   map.createLayer(0, tiles, 0, 0)
   return map

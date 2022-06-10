@@ -8,11 +8,9 @@ export default class Tree extends BaseResource {
     weight: 3
   }
 
-  constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "things.trees.oak")
-
-    this.ctx = ctx
-    opts = opts || {}
+  constructor(opts, sprite_path) {
+    super(opts, sprite_path || "things.trees.oak")
+    this.opts = opts || {}
 
     this.min_collect_factor = 1 // per sec
     this.max_collect_factor = 4 // per sec

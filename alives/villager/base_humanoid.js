@@ -5,9 +5,8 @@ export default class BaseHumanoid extends BaseAlive {
   // #baseInventorySlots = 1
   // #inventory = []
 
-  constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path)
-    this.ctx = ctx
+  constructor(opts, sprite_path) {
+    super(opts, sprite_path)
     this.opts = opts || {}
   }
 }

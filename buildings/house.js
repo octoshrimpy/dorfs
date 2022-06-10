@@ -5,9 +5,8 @@ export default class House extends BaseWorkshop {
   static well_rested = 85
   static rest_ratio = 20 // @think vs craft_ratio??
 
-  constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "buildings.house")
-    this.ctx = ctx
+  constructor(opts, sprite_path) {
+    super(opts, sprite_path || "buildings.house")
     this.opts = opts || {}
 
     this.min_rest_factor = 0.1

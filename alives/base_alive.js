@@ -13,9 +13,8 @@ export default class BaseAlive extends BaseObject  {
   // #baseHealth
   // #baseMoveSpeed
 
-  constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path)
-    this.ctx = ctx
+  constructor(opts, sprite_path) {
+    super(opts, sprite_path)
     opts = opts || {}
     this.constructor.objs.push(this)
   }
@@ -24,10 +23,10 @@ export default class BaseAlive extends BaseObject  {
     if (!this.sprite) { return }
     let self = this
     let constrainWorldX = function(val) {
-      return constrain(val, scaleX(1), self.ctx.game.config.width - scaleX(1))
+      return constrain(val, scaleX(1), ctx.game.config.width - scaleX(1))
     }
     let constrainWorldY = function(val) {
-      return constrain(val, scaleY(1), self.ctx.game.config.height - scaleY(1))
+      return constrain(val, scaleY(1), ctx.game.config.height - scaleY(1))
     }
 
     this.speed = normalDist(0, this.walk_speed, 2, this.walk_speed*0.8)

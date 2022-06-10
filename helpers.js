@@ -28,6 +28,14 @@ export function constrain(val, min, max) {
   return sort([val, min, max])[1]
 }
 
+export function randCoord(padding=2) {
+  let world = ctx.world
+  return {
+    x: (rand(world.width - padding*2) + padding) * world.tileWidth,
+    y: (rand(world.height - padding*2) + padding) * world.tileHeight
+  }
+}
+
 // Returns an integer between min and max, inclusive.
 // Follows a bell curve- center numbers are `multiplier` times more likely to appear than outsides
 // If provided, `bias` will act as the top of the bell curve

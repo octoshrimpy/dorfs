@@ -8,9 +8,8 @@ export default class Field extends BaseResource {
     weight: 0.5
   }
 
-  constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "things.wheats.a.1")
-    this.ctx = ctx
+  constructor(opts, sprite_path) {
+    super(opts, sprite_path || "things.wheats.a.1")
     this.opts = opts || {}
 
     this.sprite_version = sample(["a", "b", "c"])

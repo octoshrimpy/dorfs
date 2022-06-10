@@ -5,8 +5,7 @@ export default class Corpse extends BaseObject {
 
   constructor(villager) {
     let coords = { x: villager.sprite.x, y: villager.sprite.y }
-    super(villager.ctx, coords, villager.sprite_path || "alives.dorfs.adult")
-    this.ctx = villager.ctx
+    super(coords, villager.sprite_path || "alives.dorfs.adult")
     this.name = villager.name
     this.cause = villager.cause_of_death
 

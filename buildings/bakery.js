@@ -8,9 +8,8 @@ export default class Bakery extends BaseWorkshop {
     weight: 2
   }
 
-  constructor(ctx, opts, sprite_path) {
-    super(ctx, opts, sprite_path || "buildings.bakery")
-    this.ctx = ctx
+  constructor(opts, sprite_path) {
+    super(opts, sprite_path || "buildings.bakery")
     this.opts = opts || {}
 
     this.min_collect_factor = 0.1 // per sec

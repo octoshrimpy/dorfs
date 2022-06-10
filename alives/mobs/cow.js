@@ -4,12 +4,11 @@ import { rand, weightedSample } from "../../helpers.js"
 export default class Cow extends BaseMob {
   static objs = []
 
-  constructor(ctx, opts, sprite_path) {
+  constructor(opts, sprite_path) {
     let randCowSprite = function() {
       return "alives.animals.cows." + weightedSample(["light", 2], ["white", 1], ["brown", 2])
     }
-    super(ctx, opts, sprite_path || randCowSprite())
-    this.ctx = ctx
+    super(opts, sprite_path || randCowSprite())
     this.opts = opts || {}
 
     this.destination = undefined

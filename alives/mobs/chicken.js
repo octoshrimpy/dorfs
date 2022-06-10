@@ -6,12 +6,11 @@ export default class Chicken extends BaseMob {
   static objs = []
 
 
-  constructor(ctx, opts, sprite_path) {
+  constructor(opts, sprite_path) {
     let randChickenSprite = function() {
       return "alives.animals.chickens." + weightedSample(["white", 5], ["brown", 3], ["black", 1])
     }
-    super(ctx, opts, sprite_path || randChickenSprite())
-    this.ctx = ctx
+    super(opts, sprite_path || randChickenSprite())
     this.opts = opts || {}
 
     this.destination = undefined
