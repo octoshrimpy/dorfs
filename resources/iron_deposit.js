@@ -33,6 +33,11 @@ export default class IronDeposit extends Rock {
 
   collect() {
     this.updateSprite()
-    super.collect()
+
+    // Would normally call this via super, but this is the grandparent
+    this.resources -= 1
+    if (this.resources <= 0) {
+      this.remove()
+    }
   }
 }
