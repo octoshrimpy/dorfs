@@ -168,7 +168,7 @@ export default class Villager extends BaseHumanoid {
     let is_starving = this.fullness < 10
     let has_many_farmers = Villager.countWithJob("Farmer") > 4
     let has_baker = Villager.countWithJob("Baker") > 0
-    let has_fields = BaseJob.profByName("Farmer")?.workSite()?.nearest(this.sprite.x, this.sprite.y)
+    let has_fields = BaseJob.profByName("Farmer")?.workSite()?.nearest(this)
     let has_wheat = this.selected_storage?.inventory?.wheat?.count > Bakery.craft_ratio
 
     if (has_wheat && (is_baker || !has_baker)) {
@@ -187,7 +187,7 @@ export default class Villager extends BaseHumanoid {
   takeRandomProfession() {
     let new_prof = BaseJob.randProf()
     // Only switch professions if there is work to be done.
-    if (new_prof?.workSite()?.nearest(this.sprite.x, this.sprite.y)) {
+    if (new_prof?.workSite()?.nearest(this)) {
       this.takeProfession(new_prof)
     }
   }
@@ -229,7 +229,7 @@ export default class Villager extends BaseHumanoid {
   shouldFindFood() {
     if (this.isBusy() || this.fullness > 50) { return false }
 
-    let storage = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
+    let storage = this.selected_storage || Storage.nearest(this)
     this.selected_storage = storage
     return storage.inventory.bread?.count > 0
   }
@@ -237,19 +237,19 @@ export default class Villager extends BaseHumanoid {
   shouldFindRest() {
     if (this.isBusy() || this.energy > 50) { return false }
 
-    this.selected_house = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
+    this.selected_house = this.selected_house || House.nearest(this)
     return this.selected_house && !this.selected_house.isFull()
   }
 
   findDestination() {
     if (this.shouldFindFood()) {
-      this.busy_block = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
+      this.busy_block = this.selected_storage || Storage.nearest(this)
     } else if (this.shouldUnload()) {
       this.setUnloading()
-      this.selected_storage = this.selected_storage || Storage.nearest(this.sprite.x, this.sprite.y)
+      this.selected_storage = this.selected_storage || Storage.nearest(this)
       this.busy_block = this.selected_storage
     } else if (this.shouldFindRest()) {
-      this.selected_house = this.selected_house || House.nearest(this.sprite.x, this.sprite.y)
+      this.selected_house = this.selected_house || House.nearest(this)
       this.busy_block = this.selected_house
       this.selected_house.add(this)
     } else {
@@ -257,7 +257,7 @@ export default class Villager extends BaseHumanoid {
         this.clearSelectedResource()
       }
       if (!this.selected_resource) {
-        this.selected_resource = this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)
+        this.selected_resource = this.profession?.workSite()?.nearest(this)
       }
       this.busy_block = this.selected_resource
 
@@ -414,7 +414,7 @@ export default class Villager extends BaseHumanoid {
       } else {
         if (randPerNSec(3)) {
           this.chooseProfession()
-          if (!this.profession?.workSite()?.nearest(this.sprite.x, this.sprite.y)) {
+          if (!this.profession?.workSite()?.nearest(this)) {
             this.wander()
           }
         }
