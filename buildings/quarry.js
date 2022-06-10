@@ -24,7 +24,8 @@ export default class Quarry extends BaseWorkshop {
     ]
   }
 
-  tick() {
+  available(collector) {
+    return Rock.objs.length < 5 && (!this.collector || collector == this.collector)
   }
 
   collect() {

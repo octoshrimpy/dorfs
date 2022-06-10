@@ -17,16 +17,16 @@ export default class Bakery extends BaseWorkshop {
     this.max_collect_factor = 0.2
   }
 
-  getStorageWheat() {
-    return this.connected_storage.inventory.wheat?.count || 0
-  }
-
   inspect() {
     return [
       this.constructor.name,
       "Resources: " + this.resources,
       "Storage Wheat: " + this.getStorageWheat()
     ]
+  }
+
+  getStorageWheat() {
+    return this.connected_storage.inventory.wheat?.count || 0
   }
 
   tick() {

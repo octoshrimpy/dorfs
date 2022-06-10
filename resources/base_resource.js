@@ -7,8 +7,7 @@ export default class BaseResource extends BaseObject {
     let x1 = obj.sprite.x
     let y1 = obj.sprite.y
     let with_resources = this.objs.filter(function(obj) {
-      // collector should be an array and allow multiple collectors from one resource
-      return obj.resources > 0 && obj.collector == undefined
+      return obj.available()
     })
     let with_dist = with_resources.map(function(obj) {
       let x2 = obj.sprite.x, y2 = obj.sprite.y
@@ -51,6 +50,10 @@ export default class BaseResource extends BaseObject {
       this.constructor.name,
       "Resources: " + this.resources
     ]
+  }
+
+  available(collector) {
+    return this.resources > 0 && (!this.collector || this.collector == collector)
   }
 
   collect() {

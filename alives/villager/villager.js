@@ -402,10 +402,14 @@ export default class Villager extends BaseHumanoid {
       this.clearSelectedResource()
     }
 
-    if (this.busy_block && this.arrivedAt(this.busy_block)) {
+    if (this.busy_block && this.busy_block.available(this) && this.arrivedAt(this.busy_block)) {
       this.workAtBlock()
     } else if (this.busy_block) {
-      this.destination = this.busy_block.access_origin
+      if (this.busy_block.available(this)) {
+        this.destination = this.busy_block.access_origin
+      } else {
+        this.busy_block = undefined
+      }
     } else {
       this.findDestination()
 

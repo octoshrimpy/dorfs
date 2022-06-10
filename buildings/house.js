@@ -12,7 +12,7 @@ export default class House extends BaseWorkshop {
 
     this.min_rest_factor = 0.1
     this.max_rest_factor = 0.5
-    
+
     this.capacity = 2
     this.tenants = []
   }
@@ -22,6 +22,10 @@ export default class House extends BaseWorkshop {
       this.constructor.name,
       "Sleeping Dorfs: ", this.tenants.map(function(tenant) { return tenant.name }).join(", "),
     ]
+  }
+
+  available(collector) {
+    return !this.isFull() || this.tenants.includes(collector)
   }
 
   isFull() {

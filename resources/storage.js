@@ -21,4 +21,8 @@ export default class Storage extends BaseResource {
       })
     ]
   }
+
+  available() {
+    return true
+  }
 }
