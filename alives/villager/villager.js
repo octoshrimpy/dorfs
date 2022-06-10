@@ -215,11 +215,12 @@ export default class Villager extends BaseHumanoid {
 
   shouldEat() {
     if (this.fullness >= 90) { return false } // Already full
-    if (!(this.selected_storage.inventory.bread?.count > 0)) { return false } // No food to eat
+    let bread_count = this.selected_storage.inventory.bread?.count || 0
+    if (bread_count == 0) { return false } // No food to eat
     if (this.fullness <= 50) { return true } // If hungry, be selfish and eat
 
-    // Hungriest villager gets first dibs
-    return min(Villager.objs.map(villager => villager.fullness)) >= this.fullness
+    // Hungriest villager gets first dibs if there isn't enough for everybody
+    return Villager.objs.sort((a, b) => a.fullness - b.fullness).indexOf(this) < bread_count
   }
 
   shouldSleep() {

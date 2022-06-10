@@ -20,5 +20,9 @@ export default class Rock extends BaseResource {
     this.resources = normalDist(25, 200)
   }
 
-  decay() {}
+  collect() {
+    let sprite_num = Math.floor((this.resources + 1) / 5) + 1
+    if (sprite_num <= 4) { this.setSprite("things.rocks.small." + sprite_num) }
+    super.collect()
+  }
 }

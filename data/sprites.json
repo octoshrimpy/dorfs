@@ -16,10 +16,22 @@
   "things": {
     "rocks": {
       "pointyup": { "base": { "start": [1, 1], "sheet": "big_master" } },
-      "pointyside": { "base": { "start": [2, 1], "sheet": "big_master" } }
+      "pointyside": { "base": { "start": [2, 1], "sheet": "big_master" } },
+      "small": {
+        "4": { "base": { "start": [1, 2] } },
+        "3": { "base": { "start": [2, 2] } },
+        "2": { "base": { "start": [3, 2] } },
+        "1": { "base": { "start": [4, 2] } }
+      }
     },
     "trees": {
-      "oak": { "base": { "start": [1, 1], "sheet": "big_master2x3" } }
+      "oak": { "base": { "start": [1, 1], "sheet": "big_master2x3" } },
+      "small": {
+        "4": { "base": { "start": [1, 3] } },
+        "3": { "base": { "start": [2, 3] } },
+        "2": { "base": { "start": [3, 3] } },
+        "1": { "base": { "start": [4, 3] } }
+      }
     },
     "wheats": {
       "a": {

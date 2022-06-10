@@ -20,5 +20,9 @@ export default class Tree extends BaseResource {
     this.resources = rand(50, 100)
   }
 
-  growth() {}
+  collect() {
+    let sprite_num = Math.floor((this.resources + 1) / 5) + 1
+    if (sprite_num <= 4) { this.setSprite("things.trees.small." + sprite_num) }
+    super.collect()
+  }
 }
