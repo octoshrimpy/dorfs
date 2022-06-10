@@ -17,7 +17,8 @@ import {
   randPerNSec,
   randNPerSec,
   min,
-  constrain
+  constrain,
+  speed_multiplier
 } from "../../helpers.js"
 
 let Status = { // Is this against convention?
@@ -112,6 +113,7 @@ export default class Villager extends BaseHumanoid {
   }
 
   finishTask() {
+    this.showSelf()
     this.busy_block = undefined
     this.clearDest()
     this.setBored()
@@ -130,6 +132,16 @@ export default class Villager extends BaseHumanoid {
   showHighlight() {
     let coords = { x: this.sprite.x, y: this.sprite.y }
     this.highlight = this.ctx.addSpriteWithAnim("tools.highlight", coords)
+  }
+
+  hideSelf() {
+    let delay = 100 / speed_multiplier
+    this.hide_delay = setTimeout(() => this.sprite.visible = false, delay) // +octoshrimpy - Happy?
+  }
+
+  showSelf() {
+    clearTimeout(this.hide_delay)
+    this.sprite.visible = true
   }
 
   hideSprite(sprite) {
@@ -352,12 +364,16 @@ export default class Villager extends BaseHumanoid {
     } else if (this.busy_block.constructor.name == "House") {
       if (this.shouldSleep()) {
         this.sleepIn(this.busy_block) // Only sleeps - Good
+        this.hideSelf()
       } else {
         this.busy_block.remove(this)
         this.finishTask()
       }
     } else {
       this.collectFrom(this.busy_block) // Resets after complete - Bad
+      if (this.busy_block.constructor.building) {
+        this.hideSelf()
+      }
       if (this.fullInventory()) {
         this.finishTask()
       }

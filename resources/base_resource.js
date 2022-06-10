@@ -3,7 +3,9 @@ import Item from "../items/item.js"
 import { scaleX, scaleY } from "../helpers.js"
 
 export default class BaseResource extends BaseObject {
-  static nearest(x1, y1) {
+  static nearest(obj) {
+    let x1 = obj.sprite.x
+    let y1 = obj.sprite.y
     let with_resources = this.objs.filter(function(obj) {
       // collector should be an array and allow multiple collectors from one resource
       return obj.resources > 0 && obj.collector == undefined

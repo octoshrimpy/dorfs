@@ -10,6 +10,7 @@ export default class Rock extends BaseResource {
 
   constructor(ctx, opts, sprite_path) {
     super(ctx, opts, sprite_path || sample(["things.rocks.pointyup", "things.rocks.pointyside"]))
+
     this.ctx = ctx
     this.opts = opts || {}
 
