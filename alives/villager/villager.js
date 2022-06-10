@@ -16,7 +16,6 @@ import {
   scaleVal,
   randPerNSec,
   randNPerSec,
-  min,
   constrain,
   speed_multiplier
 } from "../../helpers.js"
@@ -55,7 +54,7 @@ export default class Villager extends BaseHumanoid {
     this.selected = false
     this.highlight = undefined
     this.fullness = normalDist(50, 100, 5, 90)
-    this.energy = normalDist(50, 100, 5, 55)
+    this.energy = normalDist(50, 100, 5, 80)
     this.status = Status.bored
     this.busy_block = undefined
 
@@ -192,13 +191,6 @@ export default class Villager extends BaseHumanoid {
     }
   }
 
-  prepInventoryForProfession() {
-    let site = this.profession?.workSite()
-    if (!site?.item) { return }
-
-    this.inventory[site.item.name] ||= site.newItem()
-  }
-
   inventoryWeight() {
     return sum(Object.values(this.inventory).map(function(item) {
       return item.totalWeight()
@@ -308,6 +300,13 @@ export default class Villager extends BaseHumanoid {
     }
   }
 
+  addToInventory(item, count=1) {
+    if (!item || !count) { return }
+
+    this.inventory[item.name] ||= new Item({ ...item, count: 0 })
+    this.inventory[item.name].count += count
+  }
+
   collectFrom(obj) {
     if (obj.resources <= 0) {
       this.finishTask()
@@ -320,8 +319,6 @@ export default class Villager extends BaseHumanoid {
 
     this.setCollecting()
 
-    this.prepInventoryForProfession()
-
     let collectRatePerSec = scaleVal(
       this.collect_speed,
       0, 100,
@@ -329,7 +326,7 @@ export default class Villager extends BaseHumanoid {
     )
     if (randNPerSec(collectRatePerSec)) {
       if (obj.resources > 0) {
-        if (obj.item) { this.inventory[obj.item.name].count += 1 }
+        this.addToInventory(obj.item)
         obj.collect()
       }
     }

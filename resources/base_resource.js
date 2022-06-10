@@ -42,7 +42,7 @@ export default class BaseResource extends BaseObject {
     this.max_collect_factor = 0.5 // per sec
     this.resources = 100
     this.item = this.constructor.item
-    this.constructor.objs.push(this)
+    this.addToClassObjs()
   }
 
   inspect() {
@@ -50,6 +50,10 @@ export default class BaseResource extends BaseObject {
       this.constructor.name,
       "Resources: " + this.resources
     ]
+  }
+
+  addToClassObjs() {
+    this.constructor.objs.push(this)
   }
 
   available(collector) {

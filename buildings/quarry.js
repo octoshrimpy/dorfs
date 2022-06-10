@@ -1,5 +1,6 @@
 import BaseWorkshop from "./base_workshop.js"
 import Rock from "../resources/rock.js"
+import IronDeposit from "../resources/iron_deposit.js"
 import { rand } from "../helpers.js"
 
 export default class Quarry extends BaseWorkshop {
@@ -28,12 +29,24 @@ export default class Quarry extends BaseWorkshop {
     return Rock.objs.length < 5 && (!this.collector || collector == this.collector)
   }
 
-  collect() {
+  randCoord() {
     let world = this.ctx.world
-    new Rock(this.ctx, {
+    return {
       x: (rand(world.width - 8) + 4) * world.tileWidth,
       y: (rand(world.height - 8) + 4) * world.tileHeight
-    })
+    }
+  }
+
+  spawnRock() {
+    if (rand(10) == 0) {
+      new IronDeposit(this.ctx, this.randCoord())
+    } else {
+      new Rock(this.ctx, this.randCoord())
+    }
+  }
+
+  collect() {
+    this.spawnRock()
     this.collected_total += 1
     if (this.collector.energy < 50 || this.collector.fullness < 50) {
       this.collector.finishTask()
