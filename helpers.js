@@ -33,6 +33,24 @@ export function randCoord(padding=2) {
   }
 }
 
+// 2,2 -> 32,32
+export function cardToCoord(x, y) {
+  if (!y) { return scaleX(x) }
+  return {
+    x: scaleX(x),
+    y: scaleY(y),
+  }
+}
+
+// 32,32 -> 2,2
+export function coordToCard(x, y) {
+  if (!y) { return Math.floor(x / scaleX(1)) }
+  return {
+    x: Math.floor(x / scaleX(1)),
+    y: Math.floor(y / scaleY(1)),
+  }
+}
+
 // Returns an integer between min and max, inclusive.
 // Follows a bell curve- center numbers are `multiplier` times more likely to appear than outsides
 // If provided, `bias` will act as the top of the bell curve

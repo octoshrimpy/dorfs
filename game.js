@@ -172,12 +172,10 @@ function setupControls() {
   arrows.left.on("down", function(evt) {
     let new_speed = constrain(ctx.game.speed - speed_increment, ...speed_constraints)
     ctx.game.speed = new_speed
-    console.log("New speed: " + new_speed);
   })
   arrows.right.on("down", function(evt) {
     let new_speed = constrain(ctx.game.speed + speed_increment, ...speed_constraints)
     ctx.game.speed = new_speed
-    console.log("New speed: " + new_speed);
   })
 }
 

@@ -1,4 +1,4 @@
-import { randCoord } from "../helpers.js"
+import { randCoord, coordToCard, cardToCoord } from "../helpers.js"
 
 export default class BaseObject {
   static global_objs = []
@@ -19,6 +19,16 @@ export default class BaseObject {
     this.constructor.global_objs.push(this)
   }
 
+  setCardinal() {
+    this.feet = { x: this.sprite.x, y: this.sprite.y + (this.sprite.height/2) - 1 }
+    this.x = this.feet.x
+    this.y = this.feet.y
+
+    let cardinal = coordToCard(this.x, this.y)
+    this.cx = cardinal.x
+    this.cy = cardinal.y
+  }
+
   setSprite(sprite_str) {
     sprite_str = sprite_str || "placeholder"
     this.sprite_path = sprite_str
@@ -28,8 +38,13 @@ export default class BaseObject {
       sprite_opts = { ...sprite_opts, ...randCoord() }
     }
     if (old_sprite) {
-      sprite_opts.x = old_sprite.x
-      sprite_opts.y = old_sprite.y
+      if (this.access_origin) {
+        sprite_opts.x = this.access_origin.x
+        sprite_opts.y = this.access_origin.y
+      } else {
+        sprite_opts.x = old_sprite.x
+        sprite_opts.y = old_sprite.y
+      }
       old_sprite.destroy(true)
     }
     let new_sprite = ctx.addSpriteWithAnim(sprite_str, sprite_opts)
@@ -39,6 +54,7 @@ export default class BaseObject {
     new_sprite.setInteractive().on("pointerdown", function() { self.clicked() })
     this.sprite = new_sprite
     this.depth = this.sprite.y + this.sprite.height/2
+    this.setCardinal()
 
     return new_sprite
   }

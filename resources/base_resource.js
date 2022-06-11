@@ -73,11 +73,11 @@ export default class BaseResource extends BaseObject {
       if (pointer.rightButtonDown()) { self.remove() }
     })
 
-    let alignToGrid = function(val, size, scale, origin_multiplier) {
+    let alignToGrid = function(val, size, scale, origin_multiplier, variance=1) {
       let origin_offset = size * origin_multiplier
       val += origin_offset
       let aligned = Math.round(val / scale) * scale
-      let variance = Math.random() - 0.5
+      variance = (Math.random() - 0.5) * variance // Can be up to this much off in any direction
 
       return aligned + variance - origin_offset
     }
@@ -86,6 +86,8 @@ export default class BaseResource extends BaseObject {
     // Access Origin should be the "base" of the sprite.
     // Take the "y" (center point of sprite) and add half of the sprite height to align to the base.
     // Add half of scaleY (1 cell) so the depth aligns with the center point of the bottom cell.
+    this.sprite = sprite
+    this.setCardinal()
     this.access_origin = { x: sprite.x, y: sprite.y + sprite.height/2 - scaleY(0.5) }
     sprite.depth = this.access_origin.y
 
