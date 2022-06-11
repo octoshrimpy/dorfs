@@ -17,7 +17,6 @@ import {
   randPerNSec,
   randNPerSec,
   constrain,
-  speed_multiplier
 } from "../../helpers.js"
 
 let Status = { // Is this against convention?
@@ -129,7 +128,7 @@ export default class Villager extends BaseHumanoid {
   }
 
   hideSelf() {
-    let delay = 100 / speed_multiplier
+    let delay = 100 / ctx.game.speed
     this.hide_delay = setTimeout(() => this.sprite.visible = false, delay) // +octoshrimpy - Happy?
   }
 

@@ -80,6 +80,9 @@
 
 ## Rocco Notes
 
+- [ ] BUG: Object decay is center based rather than object.origin based, so there is a jump
+- [ ] BUG: Job workers remain invisible after leaving the buildings
+- [ ] BUG: While a dorf is inside a building, if they are selected, the highlight remains visible
 - [x] BUG: Dorfs aren't respecting their inventory capacity
 - [ ] Rewire Dorf brains to allow objective thinking (I need 4 wood and 3 brick to work on this house)
 - [ ] Right click to remove ghost/corpse?

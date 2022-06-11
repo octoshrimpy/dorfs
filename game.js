@@ -37,7 +37,8 @@ import {
   times,
   idxFromPos,
   sample,
-  randCoord
+  randCoord,
+  constrain
 } from "./helpers.js"
 
 let Phaser = window.Phaser
@@ -98,6 +99,7 @@ function preload() {
 function create() {
   ctx.env = this
   setupContext()
+  setupControls()
   ctx.world = generate_map(ctx.sprites)
 
   // new Villager({ walk_speed: 70 })
@@ -161,7 +163,26 @@ function update() { // ~60fps
   ])
 }
 
+function setupControls() {
+  let speed_constraints = [1, 10]
+  let speed_increment = 1
+
+  let arrows = ctx.env.input.keyboard.createCursorKeys()
+
+  arrows.left.on("down", function(evt) {
+    let new_speed = constrain(ctx.game.speed - speed_increment, ...speed_constraints)
+    ctx.game.speed = new_speed
+    console.log("New speed: " + new_speed);
+  })
+  arrows.right.on("down", function(evt) {
+    let new_speed = constrain(ctx.game.speed + speed_increment, ...speed_constraints)
+    ctx.game.speed = new_speed
+    console.log("New speed: " + new_speed);
+  })
+}
+
 function setupContext() {
+  ctx.game.speed = 1
   ctx.sprites = ctx.env.cache.json.get("sprites")
   ctx.overlay = new FloatingText()
 

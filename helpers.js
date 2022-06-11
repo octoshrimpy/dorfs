@@ -1,6 +1,3 @@
-export let speed_multiplier = 10
-export let fps = (60 / speed_multiplier)
-
 export function scaleX(n) { return n * 16 }
 export function scaleY(n) { return n * 16 }
 
@@ -100,14 +97,18 @@ export function rand(min, max) {
   return Math.floor(rand() * (max - min) + min)
 }
 
+export function fps() {
+  return 60 / ctx.game.speed
+}
+
 // Will return `true` approximately once every `n` seconds when called every tick
 export function randPerNSec(n) {
-  return rand(fps * n) == 0
+  return rand(fps() * n) == 0
 }
 
 // Will return `true` approximately `n` times every second when called every tick
 export function randNPerSec(n) {
-  return rand(fps / n) == 0
+  return rand(fps() / n) == 0
 }
 
 // Will return a function that can be called that will return `true` roughly n times when called

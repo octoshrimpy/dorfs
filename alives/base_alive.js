@@ -5,8 +5,7 @@ import {
   scaleY,
   scaleVal,
   constrain,
-  normalDist,
-  speed_multiplier
+  normalDist
 } from "../helpers.js"
 
 export default class BaseAlive extends BaseObject  {
@@ -60,7 +59,7 @@ export default class BaseAlive extends BaseObject  {
   }
 
   moveTowardsDest(speed) { // speed is 0-100
-    speed = (speed || this.speed || this.walk_speed) * speed_multiplier
+    speed = (speed || this.speed || this.walk_speed) * ctx.game.speed
     // https://phaser.io/news/2018/03/pathfinding-and-phaser-3
     if (!this.destination || !this.sprite) { return }
 
@@ -77,7 +76,7 @@ export default class BaseAlive extends BaseObject  {
     if (this.spriteHasAnim("walk")) {
       this.loopAnim("walk")
       let sprite_fps = scaleVal(speed, 0, 100, 0, 20)
-      this.sprite.anims.msPerFrame = (1000 / sprite_fps) * speed_multiplier
+      this.sprite.anims.msPerFrame = (1000 / sprite_fps) * ctx.game.speed
     }
     this.sprite.flipX = dx < 0
     let max_speed = 2, max_speed_scale = 100
