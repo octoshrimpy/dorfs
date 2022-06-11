@@ -177,6 +177,12 @@ function setupControls() {
     let new_speed = constrain(ctx.game.speed + speed_increment, ...speed_constraints)
     ctx.game.speed = new_speed
   })
+  arrows.up.on("down", function(evt) {
+    new Tree({ x: ctx.game.input.mousePointer.x, y: ctx.game.input.mousePointer.y })
+  })
+  arrows.down.on("down", function(evt) {
+    new Rock({ x: ctx.game.input.mousePointer.x, y: ctx.game.input.mousePointer.y })
+  })
 }
 
 function setupContext() {
