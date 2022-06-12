@@ -43,13 +43,16 @@ import {
 
 let Phaser = window.Phaser
 
+//@todo +rocco these are just magic numbers
 let map_w = 45, map_h = 23
 let config = {
+  pixelArt: true,
   type: Phaser.AUTO,
   width: scaleX(map_w),
   height: scaleY(map_h),
   scale: {
-    zoom: 1.5,
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
   },
   scene: {
     preload: preload,
@@ -85,11 +88,7 @@ function preload() {
     "assets/bigmaster2x3.png",
     { frameWidth: 32, frameHeight: 48 }
   )
-  this.load.bitmapFont(
-    "dorfscratch",
-    "assets/fonts/dorfscratch-Regular.png",
-    "assets/fonts/dorfscratch-Regular.fnt"
-  )
+
   // Add some custom function to take the hard width of sprites, which are always 1x1 ratio and
   //   then centers the origin
 

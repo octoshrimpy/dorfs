@@ -4,19 +4,29 @@
     <meta charset="UTF-8" />
     <title>Phaser Game</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
-    <link rel="preload" as="font" href="assets/fonts/dorfscratch-Regular.otf" type="font/ttf">
+    <!-- <link rel="preload" as="font" href="/assets/fonts/dorfscratch-Regular.otf"> -->
     <style type="text/css">
         html { width: 100%; }
         body {
             margin: 0 auto;
         }
         @font-face {
-          font-family: DorfScratch;
-          src: url("assets/dorfscratch-Regular.otf");
+          font-family: "dorfscratch";
+          src: url("/assets/fonts/dorfscratch.ttf");
+          font-smooth: never;
+          -webkit-font-smoothing : none;
+        }
+        @font-face {
+          font-family: "dorfbold";
+          src: url("/assets/fonts/dorfbold.ttf");
+          font-smooth: never;
+          -webkit-font-smoothing : none;
         }
     </style>
 </head>
 <body>
   <script type="module" src="game.js"></script>
+  <div style="font-family:dorfscratch; position:absolute; left:-1000px; visibility:hidden;">.</div>
+  <div style="font-family:dorfscratch_bmp; position:absolute; left:-1000px; visibility:hidden;">.</div>
 </body>
 </html>
