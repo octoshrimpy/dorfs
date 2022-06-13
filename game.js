@@ -50,10 +50,6 @@ let config = {
   type: Phaser.AUTO,
   width: scaleX(map_w),
   height: scaleY(map_h),
-  scale: {
-    // mode: Phaser.Scale.FIT,
-    // autoCenter: Phaser.Scale.CENTER_BOTH
-  },
   scene: {
     preload: preload,
     create: create,
@@ -136,9 +132,7 @@ function create() {
 
   let midpoint = { x: config.width/2, y: config.height/2 }
   let storage = new Storage({ x: midpoint.x, y: midpoint.y })
-  // storage.inventory.wheat = Field.newItem()
-  // storage.inventory.wheat.count = 100
-  storage.clicked()
+  storage.clicked() // Pre-select storage
   new Bakery({ x: midpoint.x - (5 * 16), y: 32 })
   new House({ x: midpoint.x - (15 * 16), y: 32 })
   new Quarry({ x: midpoint.x + (15 * 16), y: 32 })
@@ -211,7 +205,7 @@ function setupContext() {
         return idxFromPos(anims.start[0] + t, anims.start[1], sheet_cells_horz)
       })
 
-      if (anims.length > 1) {
+      if (anims.length > 0) {
         anims.start.forEach(function() {
           ctx.env.anims.create({
             key: sprite_path + "." + key,
