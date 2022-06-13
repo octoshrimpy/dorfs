@@ -11,7 +11,7 @@ export default class FloatingText {
 
     // this is for font
     // used https://yal.cc/r/20/pixelfont/ to convert aseprite font into ttf, use json files
-    this.text_obj = window.ctx.env.add.text(-16, -16, "", {fontFamily: "dorfscratch", fontSize: 16})
+    this.text_obj = window.ctx.env.add.text(-16, -16, "", {fontFamily: "kerriefont-mono", fontSize: 16})
     this.text_obj.setDepth(10000) // Super high Z index
     this.text_obj.setResolution(3) // this makes the font clearer to read
     this.text_obj.setShadow(-4, 4, 'rgba(0,0,0)', 0)
