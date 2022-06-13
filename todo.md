@@ -74,7 +74,8 @@
 
 ## Known Bugs
 
--
+- [ ] BUG: when harvesting, not going to standing sprite. flamingo lumberjack
+
 
 ---
 

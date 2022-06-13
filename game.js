@@ -51,8 +51,8 @@ let config = {
   width: scaleX(map_w),
   height: scaleY(map_h),
   scale: {
-    mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH
+    // mode: Phaser.Scale.FIT,
+    // autoCenter: Phaser.Scale.CENTER_BOTH
   },
   scene: {
     preload: preload,
