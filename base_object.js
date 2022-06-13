@@ -107,7 +107,17 @@ export default class BaseObject {
   // Class method
   static tick() {
     this.global_objs.forEach(function(obj) {
+      // let circle = ctx.env.add.circle(this.access_origin.x, this.access_origin.y, 2, 0xFF0000)
+      // circle.depth = sprite.depth
       obj.tick()
+      obj.tracker = obj.tracker || ctx.env.add.polygon(obj.x, obj.y, "0 0 0 16 16 16 16 0", 0xFF0000, 0.2)
+      // Polygon x,y are the center of the polygon
+      obj.tracker.x = cardToCoord(obj.cx) + 8
+      obj.tracker.y = cardToCoord(obj.cy) + 8
+      if (obj.removed) {
+        obj.tracker.destroy(true)
+        obj.tracker = undefined
+      }
     })
   }
 
