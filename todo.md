@@ -6,7 +6,6 @@
 - [ ] :octoshrimpy Export font as 16x instead of 32x
 - [ ] fix building signs, remove pink from doors
 - [x] Tents/Houses/Sleepies
-- [ ] Each piece of Dorf separate and white-scaled. So pure white, but make the shadows grey
   - @think not necessary with sprite recoloring
   - https://github.com/Colbydude/phaser-3-palette-swapping-example
 - [ ] Beard/hair, skin, pants, shirt each as separate full white sprites
@@ -15,7 +14,7 @@
 - [ ] Different sprite sheets for trees / 2x3 sprites
 - [ ] Maybe have a sprite variation of carrying a sack/backpack when inventory is full?
   - @think not MVP?
-- [ ] GUI
+- [o] GUI
   - [ ] Overall (Resources, villager count, babies, villagers per profession...)
     - [ ] mini versions of stuff for UI
       - [ ] child
@@ -41,6 +40,7 @@
   - [x] Builder
   - [x] Baker
   - [x] Smith
+- [-] Each piece of Dorf separate and white-scaled. So pure white, but make the shadows grey
 
 ## old ideas
 
