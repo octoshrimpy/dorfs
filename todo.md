@@ -81,6 +81,10 @@
 
 ## Rocco Notes
 
+- [ ] THINK: dorfs poop. that's it. just poop.
+- [ ] BUG: ghosts jitter up and down, while walking or standing, randomly
+- [ ] BUG: corpses have wrong z-index (RIP owen, died under the quarry)
+- [ ] BUG: dorfs don't release quarry when sleeping 
 - [ ] BUG: Object decay is center based rather than object.origin based, so there is a jump
 - [ ] BUG: Job workers remain invisible after leaving the buildings
 - [ ] BUG: While a dorf is inside a building, if they are selected, the highlight remains visible

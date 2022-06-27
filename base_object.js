@@ -1,4 +1,4 @@
-import { randCoord, coordToCard, cardToCoord } from "../helpers.js"
+import { randCoord, coordToCard, cardToCoord } from "./helpers.js"
 
 export default class BaseObject {
   static global_objs = []
